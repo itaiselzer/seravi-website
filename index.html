@@ -9,15 +9,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f6f4ee;          /* warm paper */
+    --bg:#f6f4ee;
     --bg-2:#efece3;
-    --ink:#1c2b29;         /* deep teal-ink */
+    --ink:#1c2b29;
     --ink-soft:#4a5b58;
-    --teal:#16635a;        /* serene deep green-teal */
+    --teal:#16635a;
     --teal-deep:#0e453f;
     --sand:#e7e1d3;
     --glow:#cfe7df;
-    --accent:#d98b5f;      /* warm apricot accent, used sparingly */
+    --accent:#d98b5f;
     --white:#fffdf8;
     --radius:18px;
     --maxw:1100px;
@@ -36,7 +36,6 @@
   a{color:inherit;text-decoration:none}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
 
-  /* ---------- nav ---------- */
   nav{
     position:sticky;top:0;z-index:50;
     backdrop-filter:blur(10px);
@@ -61,7 +60,6 @@
   .btn.ghost:hover{background:rgba(22,99,90,.06);transform:none}
   .nav-cta{display:flex;gap:14px;align-items:center}
 
-  /* ---------- hero ---------- */
   .hero{position:relative;padding:96px 0 80px;overflow:hidden}
   .hero::before{
     content:"";position:absolute;top:-200px;right:-200px;width:620px;height:620px;border-radius:50%;
@@ -82,7 +80,6 @@
   .reassure span{display:flex;align-items:center;gap:7px}
   .check{color:var(--teal);font-weight:600}
 
-  /* hero visual: stylised phone showing calm glucose graph */
   .device{
     position:relative;justify-self:center;width:280px;height:560px;border-radius:42px;
     background:linear-gradient(160deg,#13332f,#0c2925);padding:14px;
@@ -98,19 +95,16 @@
   .pulse-dot{fill:#7ee3c6}
   .device .notch{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:96px;height:22px;background:#0a201d;border-radius:0 0 14px 14px;z-index:3}
 
-  /* ---------- trust strip ---------- */
   .strip{background:var(--ink);color:#cdd8d4;padding:20px 0}
   .strip .wrap{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;font-size:.92rem;align-items:center}
   .strip b{color:#fff;font-weight:600}
 
-  /* ---------- section base ---------- */
   section.block{padding:92px 0}
   .section-head{text-align:center;max-width:640px;margin:0 auto 58px}
   .section-head .eyebrow{margin-bottom:18px}
   .section-head h2{font-size:clamp(2rem,3.6vw,2.8rem);margin-bottom:16px}
   .section-head p{color:var(--ink-soft);font-size:1.08rem}
 
-  /* ---------- features ---------- */
   .features{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
   .card{
     background:var(--white);border-radius:var(--radius);padding:34px 30px;
@@ -124,7 +118,6 @@
   .card h3{font-size:1.25rem;margin-bottom:10px}
   .card p{color:var(--ink-soft);font-size:.98rem}
 
-  /* ---------- how it works ---------- */
   .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;counter-reset:step;position:relative}
   .step{padding:0 26px;text-align:center;position:relative}
   .step .num{
@@ -137,7 +130,6 @@
   .step p{color:var(--ink-soft);font-size:.97rem}
   .steps::before{content:"";position:absolute;top:29px;left:16%;right:16%;height:2px;background:linear-gradient(90deg,var(--teal),var(--glow),var(--teal));z-index:1}
 
-  /* ---------- pricing ---------- */
   .pricing-wrap{background:var(--bg-2)}
   .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch}
   .plan{
@@ -157,7 +149,6 @@
   .plan li .c{color:var(--teal);font-weight:700;flex-shrink:0}
   .plan .btn{width:100%;justify-content:center}
 
-  /* ---------- about ---------- */
   .about{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
   .about .panel{background:linear-gradient(160deg,var(--teal),var(--teal-deep));border-radius:24px;padding:48px;color:#dff0ea;position:relative;overflow:hidden}
   .about .panel::after{content:"";position:absolute;bottom:-80px;right:-80px;width:240px;height:240px;border-radius:50%;background:rgba(207,231,223,.12)}
@@ -166,14 +157,12 @@
   .about h2{font-size:clamp(1.9rem,3.4vw,2.6rem);margin-bottom:18px}
   .about > div > p{color:var(--ink-soft);margin-bottom:16px}
 
-  /* ---------- final cta ---------- */
   .final{text-align:center;padding:110px 0;position:relative;overflow:hidden}
   .final::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,var(--glow),transparent 60%);opacity:.6}
   .final-inner{position:relative;z-index:1}
   .final h2{font-size:clamp(2.2rem,4.4vw,3.4rem);margin-bottom:20px}
   .final p{color:var(--ink-soft);font-size:1.15rem;margin-bottom:34px;max-width:46ch;margin-left:auto;margin-right:auto}
 
-  /* ---------- footer ---------- */
   footer{background:var(--ink);color:#a9b8b4;padding:54px 0 34px;font-size:.92rem}
   .foot-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:30px;margin-bottom:34px}
   .foot-grid .logo{color:#fff}
@@ -182,11 +171,9 @@
   .foot-col a:hover{color:#fff}
   .foot-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.85rem;color:#8a9b96}
 
-  /* ---------- reveal animation ---------- */
   .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease}
   .reveal.in{opacity:1;transform:none}
 
-  /* ---------- responsive ---------- */
   @media(max-width:880px){
     .hero-grid{grid-template-columns:1fr;gap:48px}
     .device{order:-1;width:240px;height:480px}
@@ -200,7 +187,6 @@
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="wrap nav-inner">
     <a href="#" class="logo"><span class="dot"></span>Seravi</a>
@@ -211,13 +197,12 @@
       <a href="#about">About</a>
     </div>
     <div class="nav-cta">
-      <a href="#" class="nav-links" style="color:var(--ink-soft);font-size:.95rem">Sign in</a>
-      <a href="#pricing" class="btn">Start my site</a>
+      <a href="#" id="signInLink" class="nav-links" style="color:var(--ink-soft);font-size:.95rem">Sign in</a>
+      <a href="#" id="startBtn" class="btn">Start my site</a>
     </div>
   </div>
 </nav>
 
-<!-- HERO -->
 <header class="hero">
   <div class="wrap hero-grid">
     <div>
@@ -225,7 +210,7 @@
       <h1>Your glucose data, <em>always there.</em> Without the hassle.</h1>
       <p class="lead">Seravi sets up and runs your Nightscout site for you. No servers, no setup, no stress — just sign in and go.</p>
       <div class="hero-cta">
-        <a href="#pricing" class="btn">Start my site →</a>
+        <a href="#" id="startBtnHero" class="btn">Start my site →</a>
         <a href="#how" class="btn ghost">See how it works</a>
       </div>
       <div class="reassure">
@@ -235,7 +220,6 @@
       </div>
     </div>
 
-    <!-- phone visual -->
     <div class="device">
       <div class="notch"></div>
       <div class="screen">
@@ -266,7 +250,6 @@
   </div>
 </header>
 
-<!-- TRUST STRIP -->
 <div class="strip">
   <div class="wrap">
     <span><b>EU data centres</b> — your data stays in Europe</span>
@@ -275,7 +258,6 @@
   </div>
 </div>
 
-<!-- HOW IT WORKS -->
 <section class="block" id="how">
   <div class="wrap">
     <div class="section-head reveal">
@@ -303,7 +285,6 @@
   </div>
 </section>
 
-<!-- FEATURES -->
 <section class="block" id="features" style="background:var(--bg-2)">
   <div class="wrap">
     <div class="section-head reveal">
@@ -346,7 +327,6 @@
   </div>
 </section>
 
-<!-- PRICING -->
 <section class="block pricing-wrap" id="pricing">
   <div class="wrap">
     <div class="section-head reveal">
@@ -365,7 +345,7 @@
           <li><span class="c">✓</span> Automatic updates</li>
           <li><span class="c">✓</span> Human support</li>
         </ul>
-        <a href="#" class="btn ghost">Choose monthly</a>
+        <a href="#" class="btn ghost plan-btn" data-plan="monthly">Choose monthly</a>
       </div>
       <div class="plan featured reveal">
         <div class="tag">Best value</div>
@@ -378,7 +358,7 @@
           <li><span class="c">✓</span> Priority support</li>
           <li><span class="c">✓</span> Locked-in price</li>
         </ul>
-        <a href="#" class="btn">Start yearly →</a>
+        <a href="#" class="btn plan-btn" data-plan="yearly">Start yearly →</a>
       </div>
       <div class="plan reveal">
         <div class="pname">6 months</div>
@@ -390,13 +370,12 @@
           <li><span class="c">✓</span> Automatic updates</li>
           <li><span class="c">✓</span> Human support</li>
         </ul>
-        <a href="#" class="btn ghost">Choose 6 months</a>
+        <a href="#" class="btn ghost plan-btn" data-plan="sixmonth">Choose 6 months</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ABOUT -->
 <section class="block" id="about">
   <div class="wrap about">
     <div class="reveal">
@@ -413,16 +392,14 @@
   </div>
 </section>
 
-<!-- FINAL CTA -->
 <section class="final">
   <div class="wrap final-inner reveal">
     <h2>Ready when you are.</h2>
     <p>Set up your private Nightscout site in minutes. Cancel any time — no lock-in, no fuss.</p>
-    <a href="#pricing" class="btn" style="padding:16px 34px;font-size:1.05rem">Start my site →</a>
+    <a href="#" id="startBtnFinal" class="btn" style="padding:16px 34px;font-size:1.05rem">Start my site →</a>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="wrap">
     <div class="foot-grid">
@@ -456,16 +433,34 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // gentle staggered reveal on scroll
-  const obs = new IntersectionObserver((entries)=>{
-    entries.forEach((e,i)=>{
-      if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); }
+  const SUPABASE_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co";
+  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1eW9kdW1jcGxicXd4bWtmZHlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTU3ODQsImV4cCI6MjA5NTUzMTc4NH0.gGIqbHu-MWW8QmJdIehR5qJB8W2sQMB3kXTMyi0rld8";
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  async function signInWithGoogle(plan){
+    if(plan){ try{ localStorage.setItem('seravi_plan', plan); }catch(e){} }
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + '/dashboard.html' }
     });
-  },{threshold:.15});
-  document.querySelectorAll('.reveal').forEach((el,i)=>{
-    el.style.transitionDelay=(i%3*0.08)+'s';
-    obs.observe(el);
+    if(error){
+      alert("Sign-in isn't quite ready yet: " + error.message +
+            "\n\n(If you're the owner: enable Google under Authentication → Providers in Supabase.)");
+    }
+  }
+
+  function hook(id, plan){
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('click', (e)=>{ e.preventDefault(); signInWithGoogle(plan); });
+  }
+  hook('signInLink', null);
+  hook('startBtn', null);
+  hook('startBtnHero', null);
+  hook('startBtnFinal', null);
+  document.querySelectorAll('.plan-btn').forEach(btn=>{
+    btn.addEventListener('click',(e)=>{ e.preventDefault(); signInWithGoogle(btn.dataset.plan); });
   });
 </script>
 </body>
