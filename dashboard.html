@@ -16,7 +16,7 @@
   .wrap{max-width:880px;margin:0 auto;padding:0 28px}
   nav{backdrop-filter:blur(10px);background:rgba(246,244,238,.8);border-bottom:1px solid rgba(28,43,41,.06)}
   .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
-  .logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:1.4rem;font-weight:600}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:1.4rem;font-weight:600;cursor:pointer}
   .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--glow)}
   .signout{font-size:.92rem;color:var(--ink-soft);cursor:pointer;background:none;border:1.5px solid rgba(28,43,41,.15);padding:9px 18px;border-radius:999px;font-family:inherit}
   .signout:hover{border-color:var(--teal);color:var(--teal)}
@@ -26,12 +26,15 @@
   .btn.ghost{background:transparent;color:var(--teal);box-shadow:none;border:1.5px solid rgba(22,99,90,.25)}
   .btn.ghost:hover{background:rgba(22,99,90,.06);transform:none}
   .btn.small{padding:9px 18px;font-size:.9rem;box-shadow:none}
+  .backlink{display:inline-flex;align-items:center;gap:7px;color:var(--ink-soft);font-size:.92rem;cursor:pointer;margin-bottom:36px;transition:color .2s}
+  .backlink:hover{color:var(--teal)}
+  .backlink svg{width:16px;height:16px}
   #loading,#gate{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px}
   .spinner{width:42px;height:42px;border:4px solid var(--glow);border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
   #app{display:none;padding:48px 0 80px}
   .hello{margin-bottom:8px;font-size:2rem}
-  .sub{color:var(--ink-soft);margin-bottom:36px}
+  .sub{color:var(--ink-soft);margin-bottom:6px}
   .panel{background:var(--white);border:1px solid rgba(28,43,41,.07);border-radius:var(--radius);padding:32px;margin-bottom:22px;box-shadow:0 14px 40px -30px rgba(14,69,63,.4)}
   .panel h3{font-size:1.2rem;margin-bottom:6px}
   .panel .muted{color:var(--ink-soft);font-size:.96rem;margin-bottom:20px}
@@ -57,8 +60,8 @@
   .planopt.featured{border-color:var(--accent)}
   .tagbest{background:var(--accent);color:#fff;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px;display:inline-block;margin-bottom:8px}
   .planpill{display:inline-block;background:var(--teal);color:#fff;font-size:.82rem;font-weight:500;padding:4px 13px;border-radius:999px}
-  .secret-toggle{margin-top:20px}
-  .secret-box{margin-top:18px;display:none}
+  .secret-toggle{margin-top:20px;text-align:center}
+  .secret-box{margin-top:18px;display:none;max-width:440px;margin-left:auto;margin-right:auto}
   .warn{background:var(--warn-bg);border:1px solid rgba(154,106,30,.25);border-radius:12px;padding:16px 18px;color:var(--warn);font-size:.9rem;margin-bottom:18px}
   .warn strong{color:#7c5413}
   .inputrow{display:flex;align-items:stretch;border:1.5px solid rgba(28,43,41,.18);border-radius:12px;overflow:hidden;background:var(--white)}
@@ -66,11 +69,11 @@
   .inputrow input{flex:1;border:none;padding:13px 14px;font-family:inherit;font-size:1rem;background:transparent;color:var(--ink);outline:none}
   .genbtn{border:none;background:var(--glow);color:var(--teal-deep);padding:0 16px;font-family:inherit;font-size:.85rem;font-weight:500;cursor:pointer;white-space:nowrap}
   .genbtn:hover{background:#bfe0d6}
-  .check{font-size:.84rem;margin-top:7px;min-height:1.1em}
+  .check{font-size:.84rem;margin-top:7px;min-height:1.1em;text-align:center}
   .check.ok{color:var(--teal)}
   .check.bad{color:var(--bad)}
-  .secret-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
-  .secret-msg{font-size:.9rem;margin-top:14px;display:none}
+  .secret-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;justify-content:center}
+  .secret-msg{font-size:.9rem;margin-top:14px;display:none;text-align:center}
   .secret-msg.ok{color:var(--teal);display:block}
   .secret-msg.bad{color:var(--bad);display:block}
   @media(max-width:680px){.planrow{grid-template-columns:1fr}}
@@ -80,7 +83,7 @@
 
 <nav>
   <div class="wrap nav-inner">
-    <a href="/" class="logo"><span class="dot"></span>Seravi</a>
+    <div class="logo" id="logoLink"><span class="dot"></span>Seravi</div>
     <button class="signout" id="signOut" style="display:none">Sign out</button>
   </div>
 </nav>
@@ -100,6 +103,10 @@
   <div class="wrap">
     <h1 class="hello" id="hello">Welcome 👋</h1>
     <p class="sub" id="email"></p>
+    <div class="backlink" id="backLink">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      <span>Back to main page</span>
+    </div>
 
     <div class="panel" id="sitePanel" style="display:none">
       <h3>Your Nightscout site</h3>
@@ -119,7 +126,7 @@
         <div class="warn">
           <strong>Important:</strong> Changing your API secret will restart your site (about 1–3 minutes of downtime) and will <strong>stop your CGM data from uploading</strong> until you update the secret in your uploader app (xDrip, Loop, Dexcom bridge, etc.) to match.
         </div>
-        <label style="display:block;font-size:.9rem;font-weight:500;margin-bottom:7px">New API secret</label>
+        <label style="display:block;font-size:.9rem;font-weight:500;margin-bottom:7px;text-align:center">New API secret</label>
         <div class="inputrow">
           <input id="newSecret" type="text" placeholder="At least 12 characters" autocomplete="off" spellcheck="false">
           <button class="genbtn" id="genSecretBtn" type="button">Generate</button>
@@ -208,7 +215,6 @@
       document.getElementById('siteRows').style.display='block';
       const a=document.getElementById('siteUrl'); a.href=url; a.textContent=url;
       document.getElementById('siteSecret').textContent = site.api_secret || '—';
-      // show the change-secret control only when active and has a coolify_uuid
       if(site.coolify_uuid){ document.getElementById('secretToggle').style.display='block'; }
     } else {
       document.getElementById('sitePrep').style.display='inline-flex';
@@ -238,7 +244,6 @@
     }, 6000);
   }
 
-  // ---- Change API secret UI ----
   let secretOK = false;
   function setupSecretUI(){
     const toggle = document.getElementById('changeSecretBtn');
@@ -250,7 +255,7 @@
     const genBtn = document.getElementById('genSecretBtn');
     const msg = document.getElementById('secretMsg');
 
-    toggle.addEventListener('click', ()=>{ box.style.display='block'; toggle.style.display='none'; });
+    toggle.addEventListener('click', ()=>{ box.style.display='block'; document.getElementById('secretToggle').style.display='none'; });
     cancelBtn.addEventListener('click', ()=>{
       box.style.display='none';
       document.getElementById('secretToggle').style.display='block';
@@ -343,6 +348,9 @@
     show('app');
   })();
 
+  // logo and back arrow both go to main page WITHOUT logging out
+  document.getElementById('logoLink').addEventListener('click', ()=>{ window.location.href='/'; });
+  document.getElementById('backLink').addEventListener('click', ()=>{ window.location.href='/'; });
   document.getElementById('signOut').addEventListener('click', async ()=>{ await sb.auth.signOut(); window.location.href='/'; });
 </script>
 </body>
