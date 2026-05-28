@@ -9,69 +9,31 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f6f4ee;
-    --bg-2:#efece3;
-    --ink:#1c2b29;
-    --ink-soft:#4a5b58;
-    --teal:#16635a;
-    --teal-deep:#0e453f;
-    --sand:#e7e1d3;
-    --glow:#cfe7df;
-    --accent:#d98b5f;
-    --white:#fffdf8;
-    --radius:18px;
-    --maxw:1100px;
+    --bg:#f6f4ee;--bg-2:#efece3;--ink:#1c2b29;--ink-soft:#4a5b58;--teal:#16635a;
+    --teal-deep:#0e453f;--sand:#e7e1d3;--glow:#cfe7df;--accent:#d98b5f;--white:#fffdf8;--radius:18px;--maxw:1100px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{
-    font-family:'Outfit',sans-serif;
-    background:var(--bg);
-    color:var(--ink);
-    line-height:1.6;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
+  body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   h1,h2,h3{font-family:'Fraunces',serif;font-weight:500;line-height:1.08;letter-spacing:-0.01em}
   a{color:inherit;text-decoration:none}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
-
-  nav{
-    position:sticky;top:0;z-index:50;
-    backdrop-filter:blur(10px);
-    background:rgba(246,244,238,.78);
-    border-bottom:1px solid rgba(28,43,41,.06);
-  }
+  nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:rgba(246,244,238,.78);border-bottom:1px solid rgba(28,43,41,.06)}
   .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
   .logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:1.45rem;font-weight:600;letter-spacing:-.02em}
   .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--glow)}
   .nav-links{display:flex;gap:32px;align-items:center}
   .nav-links a{font-size:.95rem;color:var(--ink-soft);transition:color .2s}
   .nav-links a:hover{color:var(--teal)}
-  .btn{
-    display:inline-flex;align-items:center;gap:9px;
-    background:var(--teal);color:var(--white);
-    padding:13px 24px;border-radius:999px;font-size:.96rem;font-weight:500;
-    border:none;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, background .2s;
-    box-shadow:0 6px 22px -8px rgba(22,99,90,.6);
-  }
+  .btn{display:inline-flex;align-items:center;gap:9px;background:var(--teal);color:var(--white);padding:13px 24px;border-radius:999px;font-size:.96rem;font-weight:500;border:none;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, background .2s;box-shadow:0 6px 22px -8px rgba(22,99,90,.6)}
   .btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px -8px rgba(22,99,90,.7);background:var(--teal-deep)}
   .btn.ghost{background:transparent;color:var(--teal);box-shadow:none;border:1.5px solid rgba(22,99,90,.25)}
   .btn.ghost:hover{background:rgba(22,99,90,.06);transform:none}
   .nav-cta{display:flex;gap:14px;align-items:center}
-
   .hero{position:relative;padding:96px 0 80px;overflow:hidden}
-  .hero::before{
-    content:"";position:absolute;top:-200px;right:-200px;width:620px;height:620px;border-radius:50%;
-    background:radial-gradient(circle at center, var(--glow), transparent 65%);
-    opacity:.85;z-index:0;
-  }
+  .hero::before{content:"";position:absolute;top:-200px;right:-200px;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle at center, var(--glow), transparent 65%);opacity:.85;z-index:0}
   .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center}
-  .eyebrow{
-    display:inline-flex;align-items:center;gap:8px;
-    font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);
-    background:rgba(22,99,90,.08);padding:7px 15px;border-radius:999px;margin-bottom:26px;font-weight:500;
-  }
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);background:rgba(22,99,90,.08);padding:7px 15px;border-radius:999px;margin-bottom:26px;font-weight:500}
   .hero h1{font-size:clamp(2.6rem,5.2vw,4rem);margin-bottom:22px}
   .hero h1 em{font-style:italic;color:var(--teal)}
   .hero p.lead{font-size:1.18rem;color:var(--ink-soft);max-width:30ch;margin-bottom:34px}
@@ -79,12 +41,7 @@
   .reassure{margin-top:22px;font-size:.9rem;color:var(--ink-soft);display:flex;gap:18px;flex-wrap:wrap}
   .reassure span{display:flex;align-items:center;gap:7px}
   .check{color:var(--teal);font-weight:600}
-
-  .device{
-    position:relative;justify-self:center;width:280px;height:560px;border-radius:42px;
-    background:linear-gradient(160deg,#13332f,#0c2925);padding:14px;
-    box-shadow:0 40px 80px -30px rgba(14,69,63,.6), inset 0 0 0 1.5px rgba(255,255,255,.06);
-  }
+  .device{position:relative;justify-self:center;width:280px;height:560px;border-radius:42px;background:linear-gradient(160deg,#13332f,#0c2925);padding:14px;box-shadow:0 40px 80px -30px rgba(14,69,63,.6), inset 0 0 0 1.5px rgba(255,255,255,.06)}
   .screen{width:100%;height:100%;border-radius:30px;background:linear-gradient(180deg,#0f2c28,#0a201d);overflow:hidden;position:relative;display:flex;flex-direction:column}
   .screen-top{padding:26px 22px 0;color:#cfe7df}
   .screen-top .now{font-family:'Fraunces',serif;font-size:3.1rem;color:#fff;line-height:1}
@@ -94,49 +51,30 @@
   .graph svg{position:absolute;inset:0;width:100%;height:100%}
   .pulse-dot{fill:#7ee3c6}
   .device .notch{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:96px;height:22px;background:#0a201d;border-radius:0 0 14px 14px;z-index:3}
-
   .strip{background:var(--ink);color:#cdd8d4;padding:20px 0}
   .strip .wrap{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;font-size:.92rem;align-items:center}
   .strip b{color:#fff;font-weight:600}
-
   section.block{padding:92px 0}
   .section-head{text-align:center;max-width:640px;margin:0 auto 58px}
   .section-head .eyebrow{margin-bottom:18px}
   .section-head h2{font-size:clamp(2rem,3.6vw,2.8rem);margin-bottom:16px}
   .section-head p{color:var(--ink-soft);font-size:1.08rem}
-
   .features{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
-  .card{
-    background:var(--white);border-radius:var(--radius);padding:34px 30px;
-    border:1px solid rgba(28,43,41,.06);
-    box-shadow:0 14px 40px -28px rgba(14,69,63,.4);
-    transition:transform .22s ease, box-shadow .22s ease;
-  }
+  .card{background:var(--white);border-radius:var(--radius);padding:34px 30px;border:1px solid rgba(28,43,41,.06);box-shadow:0 14px 40px -28px rgba(14,69,63,.4);transition:transform .22s ease, box-shadow .22s ease}
   .card:hover{transform:translateY(-5px);box-shadow:0 26px 56px -28px rgba(14,69,63,.5)}
   .card .ico{width:50px;height:50px;border-radius:14px;background:var(--glow);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
   .card .ico svg{width:26px;height:26px;stroke:var(--teal-deep);fill:none;stroke-width:1.7}
   .card h3{font-size:1.25rem;margin-bottom:10px}
   .card p{color:var(--ink-soft);font-size:.98rem}
-
   .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;counter-reset:step;position:relative}
   .step{padding:0 26px;text-align:center;position:relative}
-  .step .num{
-    width:58px;height:58px;border-radius:50%;margin:0 auto 22px;
-    background:var(--teal);color:#fff;font-family:'Fraunces',serif;font-size:1.5rem;
-    display:flex;align-items:center;justify-content:center;position:relative;z-index:2;
-    box-shadow:0 0 0 8px var(--bg), 0 10px 24px -10px rgba(22,99,90,.6);
-  }
+  .step .num{width:58px;height:58px;border-radius:50%;margin:0 auto 22px;background:var(--teal);color:#fff;font-family:'Fraunces',serif;font-size:1.5rem;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;box-shadow:0 0 0 8px var(--bg), 0 10px 24px -10px rgba(22,99,90,.6)}
   .step h3{font-size:1.2rem;margin-bottom:8px}
   .step p{color:var(--ink-soft);font-size:.97rem}
   .steps::before{content:"";position:absolute;top:29px;left:16%;right:16%;height:2px;background:linear-gradient(90deg,var(--teal),var(--glow),var(--teal));z-index:1}
-
   .pricing-wrap{background:var(--bg-2)}
   .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch}
-  .plan{
-    background:var(--white);border-radius:var(--radius);padding:36px 30px;
-    border:1px solid rgba(28,43,41,.08);display:flex;flex-direction:column;
-    position:relative;transition:transform .2s ease;
-  }
+  .plan{background:var(--white);border-radius:var(--radius);padding:36px 30px;border:1px solid rgba(28,43,41,.08);display:flex;flex-direction:column;position:relative;transition:transform .2s ease}
   .plan:hover{transform:translateY(-4px)}
   .plan.featured{border:2px solid var(--teal);box-shadow:0 30px 60px -30px rgba(22,99,90,.5)}
   .plan .tag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 16px;border-radius:999px;font-weight:600}
@@ -148,7 +86,6 @@
   .plan li{display:flex;gap:10px;align-items:flex-start;padding:7px 0;font-size:.96rem;color:var(--ink-soft)}
   .plan li .c{color:var(--teal);font-weight:700;flex-shrink:0}
   .plan .btn{width:100%;justify-content:center}
-
   .about{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
   .about .panel{background:linear-gradient(160deg,var(--teal),var(--teal-deep));border-radius:24px;padding:48px;color:#dff0ea;position:relative;overflow:hidden}
   .about .panel::after{content:"";position:absolute;bottom:-80px;right:-80px;width:240px;height:240px;border-radius:50%;background:rgba(207,231,223,.12)}
@@ -156,13 +93,11 @@
   .about .panel p{position:relative;font-size:1.02rem}
   .about h2{font-size:clamp(1.9rem,3.4vw,2.6rem);margin-bottom:18px}
   .about > div > p{color:var(--ink-soft);margin-bottom:16px}
-
   .final{text-align:center;padding:110px 0;position:relative;overflow:hidden}
   .final::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,var(--glow),transparent 60%);opacity:.6}
   .final-inner{position:relative;z-index:1}
   .final h2{font-size:clamp(2.2rem,4.4vw,3.4rem);margin-bottom:20px}
   .final p{color:var(--ink-soft);font-size:1.15rem;margin-bottom:34px;max-width:46ch;margin-left:auto;margin-right:auto}
-
   footer{background:var(--ink);color:#a9b8b4;padding:54px 0 34px;font-size:.92rem}
   .foot-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:30px;margin-bottom:34px}
   .foot-grid .logo{color:#fff}
@@ -170,19 +105,17 @@
   .foot-col a{display:block;padding:5px 0;color:#a9b8b4;transition:color .2s}
   .foot-col a:hover{color:#fff}
   .foot-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.85rem;color:#8a9b96}
-
   .reveal{opacity:1;transform:none;transition:opacity .7s ease, transform .7s ease}
   .reveal.in{opacity:1;transform:none}
-
-  @media(max-width:880px){
-    .hero-grid{grid-template-columns:1fr;gap:48px}
-    .device{order:-1;width:240px;height:480px}
-    .features,.plans,.steps{grid-template-columns:1fr}
-    .steps::before{display:none}
-    .step{margin-bottom:36px}
-    .about{grid-template-columns:1fr}
-    .nav-links{display:none}
-  }
+  .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(20,30,28,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center}
+  .modal-card{background:var(--white);border-radius:22px;padding:38px 34px;max-width:380px;width:90%;text-align:center;box-shadow:0 40px 90px -30px rgba(14,69,63,.6);position:relative}
+  .modal-close{position:absolute;top:16px;right:18px;background:none;border:none;font-size:1.5rem;color:var(--ink-soft);cursor:pointer;line-height:1}
+  .prov-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:11px;padding:13px;border-radius:12px;font-family:inherit;font-size:1rem;font-weight:500;cursor:pointer;margin-bottom:12px;transition:border-color .2s,opacity .2s}
+  .prov-google{background:var(--white);color:var(--ink);border:1.5px solid rgba(28,43,41,.18)}
+  .prov-google:hover{border-color:var(--teal)}
+  .prov-apple{background:#111;color:#fff;border:none}
+  .prov-apple:hover{opacity:.85}
+  @media(max-width:880px){.hero-grid{grid-template-columns:1fr;gap:48px}.device{order:-1;width:240px;height:480px}.features,.plans,.steps{grid-template-columns:1fr}.steps::before{display:none}.step{margin-bottom:36px}.about{grid-template-columns:1fr}.nav-links{display:none}}
 </style>
 </head>
 <body>
@@ -219,7 +152,6 @@
         <span><span class="check">✓</span> Cancel anytime</span>
       </div>
     </div>
-
     <div class="device">
       <div class="notch"></div>
       <div class="screen">
@@ -230,18 +162,11 @@
         </div>
         <div class="graph">
           <svg viewBox="0 0 280 260" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#7ee3c6" stop-opacity=".35"/>
-                <stop offset="100%" stop-color="#7ee3c6" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
+            <defs><linearGradient id="fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7ee3c6" stop-opacity=".35"/><stop offset="100%" stop-color="#7ee3c6" stop-opacity="0"/></linearGradient></defs>
             <line x1="0" y1="90" x2="280" y2="90" stroke="#2e5750" stroke-width="1" stroke-dasharray="4 6"/>
             <line x1="0" y1="170" x2="280" y2="170" stroke="#2e5750" stroke-width="1" stroke-dasharray="4 6"/>
-            <path d="M0,150 C40,140 60,120 90,128 C120,136 140,110 170,118 C200,126 220,140 250,132 L280,130"
-                  fill="none" stroke="#7ee3c6" stroke-width="3" stroke-linecap="round"/>
-            <path d="M0,150 C40,140 60,120 90,128 C120,136 140,110 170,118 C200,126 220,140 250,132 L280,130 L280,260 L0,260 Z"
-                  fill="url(#fill)"/>
+            <path d="M0,150 C40,140 60,120 90,128 C120,136 140,110 170,118 C200,126 220,140 250,132 L280,130" fill="none" stroke="#7ee3c6" stroke-width="3" stroke-linecap="round"/>
+            <path d="M0,150 C40,140 60,120 90,128 C120,136 140,110 170,118 C200,126 220,140 250,132 L280,130 L280,260 L0,260 Z" fill="url(#fill)"/>
             <circle class="pulse-dot" cx="280" cy="130" r="5"/>
           </svg>
         </div>
@@ -266,21 +191,9 @@
       <p>We removed every confusing step. You bring your account — we handle the rest.</p>
     </div>
     <div class="steps">
-      <div class="step reveal">
-        <div class="num">1</div>
-        <h3>Sign in</h3>
-        <p>Use your Google or Apple account. No passwords to invent, no forms to wrestle with.</p>
-      </div>
-      <div class="step reveal">
-        <div class="num">2</div>
-        <h3>We build it</h3>
-        <p>Your private Nightscout site is created and secured automatically. Nothing for you to configure.</p>
-      </div>
-      <div class="step reveal">
-        <div class="num">3</div>
-        <h3>Connect &amp; go</h3>
-        <p>Open the Seravi app, link your CGM, and your numbers start flowing. That's it.</p>
-      </div>
+      <div class="step reveal"><div class="num">1</div><h3>Sign in</h3><p>Use your Google or Apple account. No passwords to invent, no forms to wrestle with.</p></div>
+      <div class="step reveal"><div class="num">2</div><h3>We build it</h3><p>Your private Nightscout site is created and secured automatically. Nothing for you to configure.</p></div>
+      <div class="step reveal"><div class="num">3</div><h3>Connect &amp; go</h3><p>Open the Seravi app, link your CGM, and your numbers start flowing. That's it.</p></div>
     </div>
   </div>
 </section>
@@ -293,36 +206,12 @@
       <p>The technical parts of Nightscout — gone. You just get a site that works.</p>
     </div>
     <div class="features">
-      <div class="card reveal">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/></svg></div>
-        <h3>Truly hands-off setup</h3>
-        <p>We create your site, set the secrets, and keep it running. You never touch a server or a line of config.</p>
-      </div>
-      <div class="card reveal">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg></div>
-        <h3>Private &amp; EU-hosted</h3>
-        <p>Your data lives in European data centres, encrypted and backed up regularly. Yours alone.</p>
-      </div>
-      <div class="card reveal">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v4h-4"/></svg></div>
-        <h3>Always up to date</h3>
-        <p>We keep your Nightscout synced with the latest release, so you're never left behind.</p>
-      </div>
-      <div class="card reveal">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div>
-        <h3>Unlimited storage</h3>
-        <p>Keep your history for as long as you like. No limits, no surprise "you're out of space" emails.</p>
-      </div>
-      <div class="card reveal">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 8v4l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg></div>
-        <h3>Share with care teams</h3>
-        <p>Give parents, partners, or clinicians a secure view — and revoke it any time, instantly.</p>
-      </div>
-      <div class="card reveal">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M21 12a8 8 0 0 1-8 8H6l-3 3V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8z"/></svg></div>
-        <h3>Real human support</h3>
-        <p>Stuck connecting your CGM? A real person who knows diabetes tech replies — not a bot.</p>
-      </div>
+      <div class="card reveal"><div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/></svg></div><h3>Truly hands-off setup</h3><p>We create your site, set the secrets, and keep it running. You never touch a server or a line of config.</p></div>
+      <div class="card reveal"><div class="ico"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg></div><h3>Private &amp; EU-hosted</h3><p>Your data lives in European data centres, encrypted and backed up regularly. Yours alone.</p></div>
+      <div class="card reveal"><div class="ico"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v4h-4"/></svg></div><h3>Always up to date</h3><p>We keep your Nightscout synced with the latest release, so you're never left behind.</p></div>
+      <div class="card reveal"><div class="ico"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div><h3>Unlimited storage</h3><p>Keep your history for as long as you like. No limits, no surprise "you're out of space" emails.</p></div>
+      <div class="card reveal"><div class="ico"><svg viewBox="0 0 24 24"><path d="M12 8v4l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg></div><h3>Share with care teams</h3><p>Give parents, partners, or clinicians a secure view — and revoke it any time, instantly.</p></div>
+      <div class="card reveal"><div class="ico"><svg viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M21 12a8 8 0 0 1-8 8H6l-3 3V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8z"/></svg></div><h3>Real human support</h3><p>Stuck connecting your CGM? A real person who knows diabetes tech replies — not a bot.</p></div>
     </div>
   </div>
 </section>
@@ -335,43 +224,9 @@
       <p>No tiers of confusing add-ons. Pick how you'd like to pay.</p>
     </div>
     <div class="plans">
-      <div class="plan reveal">
-        <div class="pname">Monthly</div>
-        <div class="price">€5<small>/mo</small></div>
-        <div class="per">billed monthly</div>
-        <ul>
-          <li><span class="c">✓</span> Your private Nightscout site</li>
-          <li><span class="c">✓</span> EU hosting &amp; backups</li>
-          <li><span class="c">✓</span> Automatic updates</li>
-          <li><span class="c">✓</span> Human support</li>
-        </ul>
-        <a href="#" class="btn ghost plan-btn" data-plan="monthly">Choose monthly</a>
-      </div>
-      <div class="plan featured reveal">
-        <div class="tag">Best value</div>
-        <div class="pname">Yearly</div>
-        <div class="price">€50<small>/yr</small></div>
-        <div class="per">two months free</div>
-        <ul>
-          <li><span class="c">✓</span> Everything in monthly</li>
-          <li><span class="c">✓</span> Save ~17% vs monthly</li>
-          <li><span class="c">✓</span> Priority support</li>
-          <li><span class="c">✓</span> Locked-in price</li>
-        </ul>
-        <a href="#" class="btn plan-btn" data-plan="yearly">Start yearly →</a>
-      </div>
-      <div class="plan reveal">
-        <div class="pname">6 months</div>
-        <div class="price">€27<small>/6mo</small></div>
-        <div class="per">billed twice a year</div>
-        <ul>
-          <li><span class="c">✓</span> Your private Nightscout site</li>
-          <li><span class="c">✓</span> EU hosting &amp; backups</li>
-          <li><span class="c">✓</span> Automatic updates</li>
-          <li><span class="c">✓</span> Human support</li>
-        </ul>
-        <a href="#" class="btn ghost plan-btn" data-plan="sixmonth">Choose 6 months</a>
-      </div>
+      <div class="plan reveal"><div class="pname">Monthly</div><div class="price">€5<small>/mo</small></div><div class="per">billed monthly</div><ul><li><span class="c">✓</span> Your private Nightscout site</li><li><span class="c">✓</span> EU hosting &amp; backups</li><li><span class="c">✓</span> Automatic updates</li><li><span class="c">✓</span> Human support</li></ul><a href="#" class="btn ghost plan-btn" data-plan="monthly">Choose monthly</a></div>
+      <div class="plan featured reveal"><div class="tag">Best value</div><div class="pname">Yearly</div><div class="price">€50<small>/yr</small></div><div class="per">two months free</div><ul><li><span class="c">✓</span> Everything in monthly</li><li><span class="c">✓</span> Save ~17% vs monthly</li><li><span class="c">✓</span> Priority support</li><li><span class="c">✓</span> Locked-in price</li></ul><a href="#" class="btn plan-btn" data-plan="yearly">Start yearly →</a></div>
+      <div class="plan reveal"><div class="pname">6 months</div><div class="price">€27<small>/6mo</small></div><div class="per">billed twice a year</div><ul><li><span class="c">✓</span> Your private Nightscout site</li><li><span class="c">✓</span> EU hosting &amp; backups</li><li><span class="c">✓</span> Automatic updates</li><li><span class="c">✓</span> Human support</li></ul><a href="#" class="btn ghost plan-btn" data-plan="sixmonth">Choose 6 months</a></div>
     </div>
   </div>
 </section>
@@ -403,28 +258,10 @@
 <footer>
   <div class="wrap">
     <div class="foot-grid">
-      <div>
-        <a href="#" class="logo"><span class="dot"></span>Seravi</a>
-        <p style="margin-top:14px;max-width:26ch">Effortless, EU-hosted Nightscout for everyone living with diabetes.</p>
-      </div>
-      <div class="foot-col">
-        <h4>Product</h4>
-        <a href="#how">How it works</a>
-        <a href="#features">Features</a>
-        <a href="#pricing">Pricing</a>
-      </div>
-      <div class="foot-col">
-        <h4>Company</h4>
-        <a href="#about">About</a>
-        <a href="#">Contact</a>
-        <a href="#">Support</a>
-      </div>
-      <div class="foot-col">
-        <h4>Legal</h4>
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="#">Data &amp; GDPR</a>
-      </div>
+      <div><a href="#" class="logo"><span class="dot"></span>Seravi</a><p style="margin-top:14px;max-width:26ch">Effortless, EU-hosted Nightscout for everyone living with diabetes.</p></div>
+      <div class="foot-col"><h4>Product</h4><a href="#how">How it works</a><a href="#features">Features</a><a href="#pricing">Pricing</a></div>
+      <div class="foot-col"><h4>Company</h4><a href="#about">About</a><a href="#">Contact</a><a href="#">Support</a></div>
+      <div class="foot-col"><h4>Legal</h4><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Data &amp; GDPR</a></div>
     </div>
     <div class="foot-bottom">
       <span>© 2026 Seravi. Not affiliated with the Nightscout Foundation.</span>
@@ -433,37 +270,46 @@
   </div>
 </footer>
 
+<!-- sign-in chooser modal -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal-card">
+    <button class="modal-close" id="authClose">×</button>
+    <div class="logo" style="justify-content:center;margin-bottom:14px"><span class="dot"></span>Seravi</div>
+    <h3 style="font-family:'Fraunces',serif;font-size:1.4rem;margin-bottom:8px">Let's set up your site</h3>
+    <p style="color:var(--ink-soft);font-size:.95rem;margin-bottom:26px">Choose how you'd like to continue. No passwords to remember.</p>
+    <button class="prov-btn prov-google" id="googleBtn">
+      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.3 13.2 17.6 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.5 3-2.2 5.5-4.7 7.2l7.3 5.7C43.9 38 46.5 31.8 46.5 24.5z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.9-6.1C1 16.5 0 20.1 0 24s1 7.5 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.3 0 11.6-2.1 15.5-5.6l-7.3-5.7c-2 1.4-4.7 2.3-8.2 2.3-6.4 0-11.7-3.7-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+      Continue with Google
+    </button>
+    <button class="prov-btn prov-apple" id="appleBtn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.05 12.04c-.03-2.6 2.13-3.85 2.22-3.91-1.21-1.77-3.09-2.01-3.76-2.04-1.6-.16-3.12.94-3.93.94-.81 0-2.06-.92-3.39-.89-1.74.03-3.35 1.01-4.25 2.57-1.81 3.14-.46 7.79 1.3 10.34.86 1.25 1.88 2.65 3.22 2.6 1.29-.05 1.78-.83 3.34-.83 1.56 0 2 .83 3.37.81 1.39-.03 2.27-1.27 3.12-2.53.98-1.45 1.39-2.85 1.41-2.92-.03-.01-2.7-1.04-2.73-4.12zM14.53 4.5c.71-.86 1.19-2.06 1.06-3.25-1.02.04-2.26.68-2.99 1.54-.66.76-1.23 1.98-1.08 3.15 1.14.09 2.3-.58 3.01-1.44z"/></svg>
+      Continue with Apple
+    </button>
+    <p style="color:var(--ink-soft);font-size:.78rem;margin-top:20px;line-height:1.4">By continuing you agree to our Terms &amp; Privacy Policy. Cancel any time.</p>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co";
   const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1eW9kdW1jcGxicXd4bWtmZHlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTU3ODQsImV4cCI6MjA5NTUzMTc4NH0.gGIqbHu-MWW8QmJdIehR5qJB8W2sQMB3kXTMyi0rld8";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-
-  async function signInWithGoogle(plan){
-    if(plan){ try{ localStorage.setItem('seravi_plan', plan); }catch(e){} }
-    const { error } = await sb.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: window.location.origin + '/dashboard.html',
-        queryParams: { prompt: 'select_account' }
-      }
-    });
-    if(error){
-      alert("Sign-in isn't quite ready yet: " + error.message);
-    }
+  const modal = document.getElementById('authModal');
+  function openAuth(plan){ if(plan){ try{ localStorage.setItem('seravi_plan', plan); }catch(e){} } modal.style.display='flex'; }
+  function closeAuth(){ modal.style.display='none'; }
+  async function signIn(provider){
+    const opts = { redirectTo: window.location.origin + '/dashboard.html' };
+    if(provider==='google'){ opts.queryParams = { prompt:'select_account' }; }
+    const { error } = await sb.auth.signInWithOAuth({ provider:provider, options:opts });
+    if(error){ alert("Sign-in isn't quite ready yet: " + error.message); }
   }
-
-  function hook(id, plan){
-    const el = document.getElementById(id);
-    if(el) el.addEventListener('click', function(e){ e.preventDefault(); signInWithGoogle(plan); });
-  }
-  hook('signInLink', null);
-  hook('startBtn', null);
-  hook('startBtnHero', null);
-  hook('startBtnFinal', null);
-  document.querySelectorAll('.plan-btn').forEach(function(btn){
-    btn.addEventListener('click', function(e){ e.preventDefault(); signInWithGoogle(btn.dataset.plan); });
-  });
+  document.getElementById('googleBtn').addEventListener('click', function(){ signIn('google'); });
+  document.getElementById('appleBtn').addEventListener('click', function(){ signIn('apple'); });
+  document.getElementById('authClose').addEventListener('click', closeAuth);
+  modal.addEventListener('click', function(e){ if(e.target===modal) closeAuth(); });
+  function hook(id, plan){ const el=document.getElementById(id); if(el) el.addEventListener('click', function(e){ e.preventDefault(); openAuth(plan); }); }
+  hook('signInLink', null); hook('startBtn', null); hook('startBtnHero', null); hook('startBtnFinal', null);
+  document.querySelectorAll('.plan-btn').forEach(function(btn){ btn.addEventListener('click', function(e){ e.preventDefault(); openAuth(btn.dataset.plan); }); });
 </script>
 </body>
 </html>
