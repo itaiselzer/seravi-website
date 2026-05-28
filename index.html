@@ -443,7 +443,10 @@
     if(plan){ try{ localStorage.setItem('seravi_plan', plan); }catch(e){} }
     const { error } = await sb.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin + '/dashboard.html' }
+      options: {
+        redirectTo: window.location.origin + '/dashboard.html',
+        queryParams: { prompt: 'select_account' }
+      }
     });
     if(error){
       alert("Sign-in isn't quite ready yet: " + error.message);
