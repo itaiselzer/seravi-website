@@ -80,7 +80,6 @@
     <h1 class="hello" id="hello">Welcome 👋</h1>
     <p class="sub" id="email"></p>
 
-    <!-- shown when the user has a site (pending or active) -->
     <div class="panel" id="sitePanel" style="display:none">
       <h3>Your Nightscout site</h3>
       <p class="muted" id="siteMuted">Here's your private Nightscout site.</p>
@@ -92,7 +91,6 @@
       </div>
     </div>
 
-    <!-- shown when the user has NO site yet: choose a plan -->
     <div class="panel" id="planPanel" style="display:none">
       <h3>Choose your plan</h3>
       <p class="muted">Pick how you'd like to pay. You can cancel any time.</p>
@@ -125,7 +123,7 @@
   let currentEmail = "", session = null, user = null;
 
   function show(id){ ['loading','gate','app'].forEach(x=>{ document.getElementById(x).style.display = (x===id ? (x==='app'?'block':'flex') : 'none'); }); }
- function goCheckout(plan){
+  function goCheckout(plan){
     let url = LINKS[plan]; if(!url) return;
     if(currentEmail){ url += (url.indexOf('?')>-1?'&':'?') + 'prefilled_email=' + encodeURIComponent(currentEmail); }
     if(user && user.id){ url += '&client_reference_id=' + encodeURIComponent(user.id); }
@@ -134,12 +132,16 @@
 
   async function triggerFactory(){
     try{
-      await fetch(FACTORY_URL, {
+      const r = await fetch(FACTORY_URL, {
         method:'POST',
         headers:{ 'Authorization':'Bearer '+session.access_token, 'Content-Type':'application/json' },
         body:'{}'
       });
-    }catch(e){}
+      const text = await r.text();
+      alert("FACTORY RESPONSE\nstatus: " + r.status + "\n\n" + text);
+    }catch(e){
+      alert("FACTORY CALL FAILED (could not reach it):\n" + e);
+    }
   }
 
   function renderSite(site){
@@ -161,7 +163,6 @@
     }
   }
 
-  // poll the sites row until it flips to active, then re-render
   function pollRow(){
     let tries=0;
     const t=setInterval(async ()=>{
@@ -188,7 +189,6 @@
     document.getElementById('acctEmail').textContent = email;
     document.getElementById('signOut').style.display = 'inline-block';
 
-    // do they have a site row?
     let site = null;
     try{
       const { data: row } = await sb.from('sites').select('*').eq('user_id', user.id).maybeSingle();
@@ -196,12 +196,10 @@
     }catch(e){}
 
     if(!site){
-      // no site yet → show plan chooser
       document.getElementById('planPanel').style.display='block';
     } else if(site.status === 'active'){
       renderSite(site);
     } else {
-      // pending → trigger the factory (safety net) and poll
       renderSite(site);
       await triggerFactory();
       pollRow();
