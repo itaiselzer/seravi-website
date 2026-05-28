@@ -30,6 +30,7 @@
   .btn.ghost{background:transparent;color:var(--teal);box-shadow:none;border:1.5px solid rgba(22,99,90,.25)}
   .btn.ghost:hover{background:rgba(22,99,90,.06);transform:none}
   .nav-cta{display:flex;gap:14px;align-items:center}
+  .nav-greet{font-size:.95rem;color:var(--ink-soft)}
   .hero{position:relative;padding:96px 0 80px;overflow:hidden}
   .hero::before{content:"";position:absolute;top:-200px;right:-200px;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle at center, var(--glow), transparent 65%);opacity:.85;z-index:0}
   .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center}
@@ -129,9 +130,13 @@
       <a href="#pricing">Pricing</a>
       <a href="#about">About</a>
     </div>
-    <div class="nav-cta">
+    <div class="nav-cta" id="navCtaLoggedOut">
       <a href="#" id="signInLink" class="nav-links" style="color:var(--ink-soft);font-size:.95rem">Sign in</a>
       <a href="#" id="startBtn" class="btn">Start my site</a>
+    </div>
+    <div class="nav-cta" id="navCtaLoggedIn" style="display:none">
+      <span class="nav-greet" id="navGreet">Hi</span>
+      <a href="/dashboard.html" class="btn">Dashboard →</a>
     </div>
   </div>
 </nav>
@@ -310,6 +315,21 @@
   function hook(id, plan){ const el=document.getElementById(id); if(el) el.addEventListener('click', function(e){ e.preventDefault(); openAuth(plan); }); }
   hook('signInLink', null); hook('startBtn', null); hook('startBtnHero', null); hook('startBtnFinal', null);
   document.querySelectorAll('.plan-btn').forEach(function(btn){ btn.addEventListener('click', function(e){ e.preventDefault(); openAuth(btn.dataset.plan); }); });
+
+  // Reflect existing session: if already logged in, show greeting + Dashboard instead of Sign in / Start
+  (async ()=>{
+    try{
+      const { data } = await sb.auth.getSession();
+      if(data && data.session){
+        const u = data.session.user;
+        const m = u.user_metadata || {};
+        let name = m.full_name || m.name || m.given_name || (u.email ? u.email.split('@')[0] : "there");
+        document.getElementById('navGreet').textContent = "Hi, " + name.split(' ')[0];
+        document.getElementById('navCtaLoggedOut').style.display = 'none';
+        document.getElementById('navCtaLoggedIn').style.display = 'flex';
+      }
+    }catch(e){}
+  })();
 </script>
 </body>
 </html>
