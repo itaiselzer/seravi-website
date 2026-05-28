@@ -45,6 +45,10 @@
   .done .big{width:64px;height:64px;border-radius:50%;background:var(--glow);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:1.8rem}
   .formerr{color:var(--bad);font-size:.9rem;margin-top:14px;display:none}
   .formerr.show{display:block}
+  .livebox{margin-top:22px;background:var(--bg-2);border-radius:12px;padding:18px;font-size:.95rem}
+  .livebox a{color:var(--teal);font-weight:600;word-break:break-all}
+  .preprow{display:flex;align-items:center;gap:12px;justify-content:center;color:var(--ink-soft);font-size:.95rem;margin-top:18px}
+  .minispin{width:20px;height:20px;border:3px solid var(--glow);border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite}
 </style>
 </head>
 <body>
@@ -96,8 +100,20 @@
     <div class="panel done" id="donePanel" style="display:none">
       <div class="big">✓</div>
       <h2 style="font-size:1.5rem;margin-bottom:10px">You're all set!</h2>
-      <p style="color:var(--ink-soft);margin-bottom:22px">Your site <strong id="doneAddr"></strong> is being prepared. We'll let you know the moment it's ready.</p>
-      <a href="/dashboard.html" class="submit" style="display:inline-block;max-width:240px;text-decoration:none;text-align:center">Go to my dashboard</a>
+      <p style="color:var(--ink-soft);margin-bottom:6px">Your site is being built:</p>
+      <p style="margin-bottom:8px"><strong id="doneAddr"></strong></p>
+
+      <div id="prepRow" class="preprow">
+        <div class="minispin"></div>
+        <span>Preparing your site… this can take a few minutes.</span>
+      </div>
+
+      <div id="liveBox" class="livebox" style="display:none">
+        🎉 Your site is live! Open it here:<br>
+        <a id="liveLink" href="#" target="_blank"></a>
+      </div>
+
+      <a href="/dashboard.html" class="submit" style="display:inline-block;max-width:240px;text-decoration:none;text-align:center;margin-top:22px">Go to my dashboard</a>
     </div>
   </div>
 </main>
@@ -106,10 +122,11 @@
 <script>
   const SUPABASE_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co";
   const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1eW9kdW1jcGxicXd4bWtmZHlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTU3ODQsImV4cCI6MjA5NTUzMTc4NH0.gGIqbHu-MWW8QmJdIehR5qJB8W2sQMB3kXTMyi0rld8";
+  const FACTORY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/factory";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
   const RESERVED = ['www','api','app','admin','mail','ftp','dashboard','setup','login','seravi','support','help','status','blog','test'];
-  let user = null, userOK = false, secretOK = false, checkTimer = null;
+  let user = null, session = null, userOK = false, secretOK = false, checkTimer = null;
 
   function show(id){ ['loading','gate','app'].forEach(x=>{ document.getElementById(x).style.display = (x===id ? (x==='app'?'block':'flex') : 'none'); }); }
   function refreshSubmit(){ document.getElementById('submitBtn').disabled = !(userOK && secretOK); }
@@ -153,11 +170,36 @@
     secretInput.value=s; validateSecret();
   });
 
+  // Poll the user's own site until it responds, then reveal the link
+  async function pollUntilLive(fqdn){
+    const url = "https://" + fqdn;
+    let tries = 0;
+    const maxTries = 40; // ~ up to a few minutes
+    const timer = setInterval(async ()=>{
+      tries++;
+      try{
+        // a no-cors ping; if it doesn't throw, the host is responding
+        await fetch(url, { mode: 'no-cors' });
+        clearInterval(timer);
+        document.getElementById('prepRow').style.display='none';
+        const lb = document.getElementById('liveBox'); lb.style.display='block';
+        const a = document.getElementById('liveLink'); a.href=url; a.textContent=url;
+      }catch(e){
+        if(tries >= maxTries){
+          clearInterval(timer);
+          document.getElementById('prepRow').innerHTML =
+            'Your site is taking a little longer than usual. It will appear on your <a href="/dashboard.html" style="color:var(--teal);font-weight:600">dashboard</a> shortly.';
+        }
+      }
+    }, 6000);
+  }
+
   document.getElementById('submitBtn').addEventListener('click', async ()=>{
     const btn=document.getElementById('submitBtn'); const err=document.getElementById('formErr');
     err.classList.remove('show'); btn.disabled=true; btn.textContent='Creating…';
     const username = userInput.value.trim();
     const secret = secretInput.value;
+    const fqdn = username + '.seravi.eu';
     try{
       const { error } = await sb.from('sites').insert({
         user_id: user.id,
@@ -165,7 +207,7 @@
         username: username,
         api_secret: secret,
         status: 'pending',
-        subdomain: username + '.seravi.eu'
+        subdomain: fqdn
       });
       if(error){
         if((error.message||'').toLowerCase().includes('duplicate')){
@@ -175,9 +217,27 @@
         }
         err.classList.add('show'); btn.disabled=false; btn.textContent='Create my site'; return;
       }
-      document.getElementById('doneAddr').textContent = username + '.seravi.eu';
+
+      // show the "preparing" screen
+      document.getElementById('doneAddr').textContent = fqdn;
       document.getElementById('formPanel').style.display='none';
       document.getElementById('donePanel').style.display='block';
+
+      // auto-trigger the factory with the user's session token
+      try{
+        await fetch(FACTORY_URL, {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + session.access_token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({})
+        });
+      }catch(e){ /* even if this fails, the pending row exists; dashboard will recover */ }
+
+      // begin polling for the site to come alive
+      pollUntilLive(fqdn);
+
     }catch(e){
       err.textContent='Something went wrong. Please try again.'; err.classList.add('show');
       btn.disabled=false; btn.textContent='Create my site';
@@ -187,9 +247,10 @@
   (async ()=>{
     const { data } = await sb.auth.getSession();
     if(!data.session){ show('gate'); return; }
-    user = data.session.user;
+    session = data.session;
+    user = session.user;
     try{
-      const { data: existing } = await sb.from('sites').select('username').eq('user_id', user.id).maybeSingle();
+      const { data: existing } = await sb.from('sites').select('username,status,subdomain').eq('user_id', user.id).maybeSingle();
       if(existing){ window.location.href='/dashboard.html'; return; }
     }catch(e){}
     show('app');
