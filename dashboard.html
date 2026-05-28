@@ -22,6 +22,8 @@
   .signout:hover{border-color:var(--teal);color:var(--teal)}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--teal);color:var(--white);padding:13px 24px;border-radius:999px;font-size:.96rem;font-weight:500;border:none;cursor:pointer;transition:transform .18s,background .2s;box-shadow:0 6px 22px -8px rgba(22,99,90,.6);font-family:inherit}
   .btn:hover{transform:translateY(-2px);background:var(--teal-deep)}
+  .btn.ghost{background:transparent;color:var(--teal);box-shadow:none;border:1.5px solid rgba(22,99,90,.25)}
+  .btn.ghost:hover{background:rgba(22,99,90,.06);transform:none}
   #loading,#gate{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px}
   .spinner{width:42px;height:42px;border:4px solid var(--glow);border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
@@ -52,6 +54,7 @@
   .planopt .go{display:inline-block;background:var(--teal);color:#fff;padding:9px 0;width:100%;border-radius:999px;font-size:.88rem;font-weight:500}
   .planopt.featured{border-color:var(--accent)}
   .tagbest{background:var(--accent);color:#fff;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px;display:inline-block;margin-bottom:8px}
+  .planpill{display:inline-block;background:var(--teal);color:#fff;font-size:.82rem;font-weight:500;padding:4px 13px;border-radius:999px}
   @media(max-width:680px){.planrow{grid-template-columns:1fr}}
 </style>
 </head>
@@ -105,6 +108,14 @@
       <h3>Account</h3>
       <div class="row"><span class="k">Signed in as</span><span class="v" id="acctEmail">—</span></div>
     </div>
+
+    <div class="panel" id="billingPanel" style="display:none">
+      <h3>Billing</h3>
+      <p class="muted">Your current subscription.</p>
+      <div class="row"><span class="k">Plan</span><span class="v"><span class="planpill" id="billPlan">—</span></span></div>
+      <div class="row"><span class="k">Price</span><span class="v" id="billPrice">—</span></div>
+      <div class="row"><span class="k">Status</span><span class="v" id="billStatus">Active</span></div>
+    </div>
   </div>
 </main>
 
@@ -120,6 +131,9 @@
     sixmonth: "https://buy.stripe.com/test_3cIbJ08lH3EH8Du8tT0ZW02",
     yearly:   "https://buy.stripe.com/test_3cIaEW6dz6QTcTK11r0ZW03"
   };
+  const PLAN_LABELS = { monthly: "Monthly", sixmonth: "6 Months", yearly: "Yearly", unknown: "Active plan" };
+  const PLAN_PRICES = { monthly: "€5 / month", sixmonth: "€27 / 6 months", yearly: "€50 / year", unknown: "—" };
+
   let currentEmail = "", session = null, user = null;
 
   function show(id){ ['loading','gate','app'].forEach(x=>{ document.getElementById(x).style.display = (x===id ? (x==='app'?'block':'flex') : 'none'); }); }
@@ -161,6 +175,15 @@
     }
   }
 
+  function renderBilling(payment){
+    if(!payment) return;
+    const plan = payment.plan || 'unknown';
+    document.getElementById('billingPanel').style.display='block';
+    document.getElementById('billPlan').textContent = PLAN_LABELS[plan] || PLAN_LABELS.unknown;
+    document.getElementById('billPrice').textContent = PLAN_PRICES[plan] || '—';
+    document.getElementById('billStatus').textContent = payment.paid ? 'Active' : 'Inactive';
+  }
+
   function pollRow(){
     let tries=0;
     const t=setInterval(async ()=>{
@@ -187,6 +210,13 @@
     document.getElementById('acctEmail').textContent = email;
     document.getElementById('signOut').style.display = 'inline-block';
 
+    // billing info
+    try{
+      const { data: pay } = await sb.from('payments').select('*').eq('user_id', user.id).maybeSingle();
+      if(pay) renderBilling(pay);
+    }catch(e){}
+
+    // site info
     let site = null;
     try{
       const { data: row } = await sb.from('sites').select('*').eq('user_id', user.id).maybeSingle();
