@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Set up your Seravi site</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#f6f4ee;--bg-2:#efece3;--ink:#1c2b29;--ink-soft:#4a5b58;--teal:#16635a;--teal-deep:#0e453f;--glow:#cfe7df;--white:#fffdf8;--accent:#d98b5f;--bad:#b4452f;--radius:18px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:500;letter-spacing:-.01em;line-height:1.1}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:600px;margin:0 auto;padding:0 28px}
+  nav{backdrop-filter:blur(10px);background:rgba(246,244,238,.8);border-bottom:1px solid rgba(28,43,41,.06)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;max-width:600px;margin:0 auto;padding:0 28px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:1.4rem;font-weight:600}
+  .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--glow)}
+  #loading,#gate{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px}
+  .spinner{width:42px;height:42px;border:4px solid var(--glow);border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #app{display:none;padding:50px 0 80px}
+  .step-label{font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:500;margin-bottom:10px}
+  h1.title{font-size:1.9rem;margin-bottom:8px}
+  .lead{color:var(--ink-soft);margin-bottom:34px}
+  .panel{background:var(--white);border:1px solid rgba(28,43,41,.07);border-radius:var(--radius);padding:32px;box-shadow:0 14px 40px -30px rgba(14,69,63,.4)}
+  label{display:block;font-size:.9rem;font-weight:500;margin:22px 0 7px}
+  label:first-of-type{margin-top:0}
+  .hint{font-size:.82rem;color:var(--ink-soft);margin-top:6px}
+  .inputrow{display:flex;align-items:stretch;border:1.5px solid rgba(28,43,41,.18);border-radius:12px;overflow:hidden;background:var(--white)}
+  .inputrow:focus-within{border-color:var(--teal)}
+  .inputrow input{flex:1;border:none;padding:13px 14px;font-family:inherit;font-size:1rem;background:transparent;color:var(--ink);outline:none}
+  .suffix{display:flex;align-items:center;padding:0 14px;background:var(--bg-2);color:var(--ink-soft);font-size:.92rem;white-space:nowrap}
+  .genbtn{border:none;background:var(--glow);color:var(--teal-deep);padding:0 16px;font-family:inherit;font-size:.85rem;font-weight:500;cursor:pointer;white-space:nowrap}
+  .genbtn:hover{background:#bfe0d6}
+  .check{font-size:.84rem;margin-top:7px;min-height:1.1em}
+  .check.ok{color:var(--teal)}
+  .check.bad{color:var(--bad)}
+  .submit{margin-top:30px;width:100%;background:var(--teal);color:#fff;border:none;padding:15px;border-radius:999px;font-family:inherit;font-size:1.02rem;font-weight:500;cursor:pointer;transition:background .2s,transform .15s}
+  .submit:hover:not(:disabled){background:var(--teal-deep);transform:translateY(-1px)}
+  .submit:disabled{opacity:.5;cursor:not-allowed}
+  .done{text-align:center;padding:20px 0}
+  .done .big{width:64px;height:64px;border-radius:50%;background:var(--glow);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:1.8rem}
+  .formerr{color:var(--bad);font-size:.9rem;margin-top:14px;display:none}
+  .formerr.show{display:block}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo"><span class="dot"></span>Seravi</a>
+  </div>
+</nav>
+
+<div id="loading" class="wrap">
+  <div class="spinner"></div>
+  <p style="color:var(--ink-soft)">Loading…</p>
+</div>
+
+<div id="gate" class="wrap" style="display:none">
+  <h2>Please sign in</h2>
+  <p style="color:var(--ink-soft);max-width:34ch">You need to be signed in to set up your site.</p>
+  <a href="/" class="submit" style="max-width:220px;display:inline-block;text-align:center;text-decoration:none">Back to home</a>
+</div>
+
+<main id="app">
+  <div class="wrap">
+    <div class="step-label">Final step</div>
+    <h1 class="title">Set up your Nightscout site</h1>
+    <p class="lead">Two quick details and we'll build your private site.</p>
+
+    <div class="panel" id="formPanel">
+      <label for="username">Choose your site address</label>
+      <div class="inputrow">
+        <input id="username" type="text" placeholder="yourname" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <span class="suffix">.seravi.eu</span>
+      </div>
+      <div class="check" id="userCheck"></div>
+      <p class="hint">Lowercase letters, numbers and hyphens only. This becomes your site's web address.</p>
+
+      <label for="secret">Your API secret</label>
+      <div class="inputrow">
+        <input id="secret" type="text" placeholder="At least 12 characters" autocomplete="off" spellcheck="false">
+        <button class="genbtn" id="genBtn" type="button">Generate</button>
+      </div>
+      <div class="check" id="secretCheck"></div>
+      <p class="hint">This protects your site. Keep it private — you'll use it to connect your CGM. Migrating from an existing Nightscout? Enter your current secret to keep your uploader working.</p>
+
+      <button class="submit" id="submitBtn" disabled>Create my site</button>
+      <div class="formerr" id="formErr"></div>
+    </div>
+
+    <div class="panel done" id="donePanel" style="display:none">
+      <div class="big">✓</div>
+      <h2 style="font-size:1.5rem;margin-bottom:10px">You're all set!</h2>
+      <p style="color:var(--ink-soft);margin-bottom:22px">Your site <strong id="doneAddr"></strong> is being prepared. We'll let you know the moment it's ready.</p>
+      <a href="/dashboard.html" class="submit" style="display:inline-block;max-width:240px;text-decoration:none;text-align:center">Go to my dashboard</a>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co";
+  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1eW9kdW1jcGxicXd4bWtmZHlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTU3ODQsImV4cCI6MjA5NTUzMTc4NH0.gGIqbHu-MWW8QmJdIehR5qJB8W2sQMB3kXTMyi0rld8";
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  const RESERVED = ['www','api','app','admin','mail','ftp','dashboard','setup','login','seravi','support','help','status','blog','test'];
+  let user = null, userOK = false, secretOK = false, checkTimer = null;
+
+  function show(id){ ['loading','gate','app'].forEach(x=>{ document.getElementById(x).style.display = (x===id ? (x==='app'?'block':'flex') : 'none'); }); }
+  function refreshSubmit(){ document.getElementById('submitBtn').disabled = !(userOK && secretOK); }
+
+  const userInput = document.getElementById('username');
+  const userCheck = document.getElementById('userCheck');
+  userInput.addEventListener('input', ()=>{
+    let v = userInput.value.toLowerCase().replace(/[^a-z0-9-]/g,'');
+    userInput.value = v;
+    userOK = false; refreshSubmit();
+    clearTimeout(checkTimer);
+    if(v.length < 3){ userCheck.className='check bad'; userCheck.textContent = v.length?'Too short (min 3 characters).':''; return; }
+    if(RESERVED.includes(v)){ userCheck.className='check bad'; userCheck.textContent='That name is reserved — pick another.'; return; }
+    userCheck.className='check'; userCheck.textContent='Checking availability…';
+    checkTimer = setTimeout(async ()=>{
+      try{
+        const { data, error } = await sb.from('sites').select('username').eq('username', v).maybeSingle();
+        if(error){ userCheck.className='check'; userCheck.textContent=''; userOK=true; refreshSubmit(); return; }
+        if(data){ userCheck.className='check bad'; userCheck.textContent='Sorry, that address is taken.'; userOK=false; }
+        else { userCheck.className='check ok'; userCheck.textContent='✓ '+v+'.seravi.eu is available'; userOK=true; }
+      }catch(e){ userCheck.className='check'; userCheck.textContent=''; userOK=true; }
+      refreshSubmit();
+    }, 450);
+  });
+
+  const secretInput = document.getElementById('secret');
+  const secretCheck = document.getElementById('secretCheck');
+  function validateSecret(){
+    const v = secretInput.value;
+    if(v.length === 0){ secretCheck.textContent=''; secretOK=false; }
+    else if(v.length < 12){ secretCheck.className='check bad'; secretCheck.textContent='Needs at least 12 characters ('+v.length+'/12).'; secretOK=false; }
+    else { secretCheck.className='check ok'; secretCheck.textContent='✓ Looks good'; secretOK=true; }
+    refreshSubmit();
+  }
+  secretInput.addEventListener('input', validateSecret);
+
+  document.getElementById('genBtn').addEventListener('click', ()=>{
+    const chars='abcdefghijkmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ23456789';
+    let s=''; const arr=new Uint32Array(20); crypto.getRandomValues(arr);
+    for(let i=0;i<20;i++){ s+=chars[arr[i]%chars.length]; }
+    secretInput.value=s; validateSecret();
+  });
+
+  document.getElementById('submitBtn').addEventListener('click', async ()=>{
+    const btn=document.getElementById('submitBtn'); const err=document.getElementById('formErr');
+    err.classList.remove('show'); btn.disabled=true; btn.textContent='Creating…';
+    const username = userInput.value.trim();
+    const secret = secretInput.value;
+    try{
+      const { error } = await sb.from('sites').insert({
+        user_id: user.id,
+        email: user.email || null,
+        username: username,
+        api_secret: secret,
+        status: 'pending',
+        subdomain: username + '.seravi.eu'
+      });
+      if(error){
+        if((error.message||'').toLowerCase().includes('duplicate')){
+          err.textContent = 'That address was just taken, or you already set up a site. Try another name.';
+        } else {
+          err.textContent = 'Something went wrong: ' + error.message;
+        }
+        err.classList.add('show'); btn.disabled=false; btn.textContent='Create my site'; return;
+      }
+      document.getElementById('doneAddr').textContent = username + '.seravi.eu';
+      document.getElementById('formPanel').style.display='none';
+      document.getElementById('donePanel').style.display='block';
+    }catch(e){
+      err.textContent='Something went wrong. Please try again.'; err.classList.add('show');
+      btn.disabled=false; btn.textContent='Create my site';
+    }
+  });
+
+  (async ()=>{
+    const { data } = await sb.auth.getSession();
+    if(!data.session){ show('gate'); return; }
+    user = data.session.user;
+    try{
+      const { data: existing } = await sb.from('sites').select('username').eq('user_id', user.id).maybeSingle();
+      if(existing){ window.location.href='/dashboard.html'; return; }
+    }catch(e){}
+    show('app');
+  })();
+</script>
+</body>
+</html>
