@@ -171,7 +171,7 @@
   .foot-col a:hover{color:#fff}
   .foot-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.85rem;color:#8a9b96}
 
-  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease}
+  .reveal{opacity:1;transform:none;transition:opacity .7s ease, transform .7s ease}
   .reveal.in{opacity:1;transform:none}
 
   @media(max-width:880px){
@@ -446,21 +446,20 @@
       options: { redirectTo: window.location.origin + '/dashboard.html' }
     });
     if(error){
-      alert("Sign-in isn't quite ready yet: " + error.message +
-            "\n\n(If you're the owner: enable Google under Authentication → Providers in Supabase.)");
+      alert("Sign-in isn't quite ready yet: " + error.message);
     }
   }
 
   function hook(id, plan){
     const el = document.getElementById(id);
-    if(el) el.addEventListener('click', (e)=>{ e.preventDefault(); signInWithGoogle(plan); });
+    if(el) el.addEventListener('click', function(e){ e.preventDefault(); signInWithGoogle(plan); });
   }
   hook('signInLink', null);
   hook('startBtn', null);
   hook('startBtnHero', null);
   hook('startBtnFinal', null);
-  document.querySelectorAll('.plan-btn').forEach(btn=>{
-    btn.addEventListener('click',(e)=>{ e.preventDefault(); signInWithGoogle(btn.dataset.plan); });
+  document.querySelectorAll('.plan-btn').forEach(function(btn){
+    btn.addEventListener('click', function(e){ e.preventDefault(); signInWithGoogle(btn.dataset.plan); });
   });
 </script>
 </body>
