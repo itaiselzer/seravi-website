@@ -112,7 +112,7 @@
 <script>
   const SUPABASE_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co";
   const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1eW9kdW1jcGxicXd4bWtmZHlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTU3ODQsImV4cCI6MjA5NTUzMTc4NH0.gGIqbHu-MWW8QmJdIehR5qJB8W2sQMB3kXTMyi0rld8";
-  const FACTORY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/factory";
+  const FACTORY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/Factory";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
   const LINKS = {
@@ -138,10 +138,8 @@
         body:'{}'
       });
       const text = await r.text();
-      alert("FACTORY RESPONSE\nstatus: " + r.status + "\n\n" + text);
-    }catch(e){
-      alert("FACTORY CALL FAILED (could not reach it):\n" + e);
-    }
+      console.log("FACTORY", r.status, text);
+    }catch(e){ console.log("FACTORY CALL FAILED", e); }
   }
 
   function renderSite(site){
