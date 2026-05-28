@@ -122,7 +122,7 @@
 <script>
   const SUPABASE_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co";
   const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1eW9kdW1jcGxicXd4bWtmZHlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTU3ODQsImV4cCI6MjA5NTUzMTc4NH0.gGIqbHu-MWW8QmJdIehR5qJB8W2sQMB3kXTMyi0rld8";
-  const FACTORY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/factory";
+  const FACTORY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/Factory";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
   const RESERVED = ['www','api','app','admin','mail','ftp','dashboard','setup','login','seravi','support','help','status','blog','test'];
@@ -170,15 +170,22 @@
     secretInput.value=s; validateSecret();
   });
 
-  // Poll the user's own site until it responds, then reveal the link
+  async function triggerFactory(){
+    try{
+      await fetch(FACTORY_URL, {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + session.access_token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+    }catch(e){}
+  }
+
   async function pollUntilLive(fqdn){
     const url = "https://" + fqdn;
-    let tries = 0;
-    const maxTries = 40; // ~ up to a few minutes
+    let tries = 0; const maxTries = 40;
     const timer = setInterval(async ()=>{
       tries++;
       try{
-        // a no-cors ping; if it doesn't throw, the host is responding
         await fetch(url, { mode: 'no-cors' });
         clearInterval(timer);
         document.getElementById('prepRow').style.display='none';
@@ -218,24 +225,11 @@
         err.classList.add('show'); btn.disabled=false; btn.textContent='Create my site'; return;
       }
 
-      // show the "preparing" screen
       document.getElementById('doneAddr').textContent = fqdn;
       document.getElementById('formPanel').style.display='none';
       document.getElementById('donePanel').style.display='block';
 
-      // auto-trigger the factory with the user's session token
-      try{
-        await fetch(FACTORY_URL, {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer ' + session.access_token,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({})
-        });
-      }catch(e){ /* even if this fails, the pending row exists; dashboard will recover */ }
-
-      // begin polling for the site to come alive
+      await triggerFactory();
       pollUntilLive(fqdn);
 
     }catch(e){
@@ -250,7 +244,7 @@
     session = data.session;
     user = session.user;
     try{
-      const { data: existing } = await sb.from('sites').select('username,status,subdomain').eq('user_id', user.id).maybeSingle();
+      const { data: existing } = await sb.from('sites').select('username').eq('user_id', user.id).maybeSingle();
       if(existing){ window.location.href='/dashboard.html'; return; }
     }catch(e){}
     show('app');
