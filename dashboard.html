@@ -31,17 +31,21 @@
   .panel{background:var(--white);border:1px solid rgba(28,43,41,.07);border-radius:var(--radius);padding:32px;margin-bottom:22px;box-shadow:0 14px 40px -30px rgba(14,69,63,.4)}
   .panel h3{font-size:1.2rem;margin-bottom:6px}
   .panel .muted{color:var(--ink-soft);font-size:.96rem;margin-bottom:20px}
-  .status{display:inline-flex;align-items:center;gap:9px;background:var(--glow);color:var(--teal-deep);padding:8px 16px;border-radius:999px;font-size:.9rem;font-weight:500}
-  .status .pip{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(217,139,95,.2)}
+  .status{display:inline-flex;align-items:center;gap:9px;padding:8px 16px;border-radius:999px;font-size:.9rem;font-weight:500}
+  .status.prep{background:var(--bg-2);color:var(--ink-soft)}
+  .status.live{background:var(--glow);color:var(--teal-deep)}
+  .status .pip{width:9px;height:9px;border-radius:50%}
+  .status.prep .pip{background:var(--accent);box-shadow:0 0 0 4px rgba(217,139,95,.2)}
+  .status.live .pip{background:var(--teal);box-shadow:0 0 0 4px rgba(22,99,90,.2)}
+  .minispin{width:18px;height:18px;border:3px solid var(--glow);border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite;display:inline-block;vertical-align:middle}
   .row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(28,43,41,.06);font-size:.96rem}
   .row:last-child{border-bottom:none}
   .row .k{color:var(--ink-soft)}
-  .row .v{font-weight:500}
-  .plan-badge{background:var(--teal);color:#fff;font-size:.78rem;padding:4px 12px;border-radius:999px;letter-spacing:.04em}
+  .row .v{font-weight:500;word-break:break-all;text-align:right}
+  .row .v a{color:var(--teal);font-weight:600}
   .planrow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:8px}
   .planopt{border:1.5px solid rgba(28,43,41,.12);border-radius:14px;padding:20px 16px;text-align:center;cursor:pointer;transition:border-color .2s,transform .15s;background:var(--white)}
   .planopt:hover{border-color:var(--teal);transform:translateY(-2px)}
-  .planopt.pick{border-color:var(--teal);box-shadow:0 0 0 3px var(--glow)}
   .planopt .pn{font-size:.9rem;color:var(--ink-soft);margin-bottom:6px}
   .planopt .pp{font-family:'Fraunces',serif;font-size:1.6rem;color:var(--ink)}
   .planopt .pper{font-size:.8rem;color:var(--ink-soft);margin-bottom:14px}
@@ -76,42 +80,32 @@
     <h1 class="hello" id="hello">Welcome 👋</h1>
     <p class="sub" id="email"></p>
 
-    <div class="panel">
+    <!-- shown when the user has a site (pending or active) -->
+    <div class="panel" id="sitePanel" style="display:none">
       <h3>Your Nightscout site</h3>
-      <p class="muted">This is where your private Nightscout site will live, once your subscription is active.</p>
-      <div class="status"><span class="pip"></span><span id="nsStatus">Not set up yet — choose a plan below to get started.</span></div>
+      <p class="muted" id="siteMuted">Here's your private Nightscout site.</p>
+      <div id="sitePrep" class="status prep" style="display:none"><span class="minispin"></span>&nbsp;Preparing your site… this can take a few minutes.</div>
+      <div id="siteLive" class="status live" style="display:none"><span class="pip"></span><span id="siteLiveText">Live</span></div>
+      <div id="siteRows" style="margin-top:18px;display:none">
+        <div class="row"><span class="k">Your site</span><span class="v"><a id="siteUrl" href="#" target="_blank"></a></span></div>
+        <div class="row"><span class="k">API secret</span><span class="v" id="siteSecret">—</span></div>
+      </div>
     </div>
 
-    <div class="panel">
+    <!-- shown when the user has NO site yet: choose a plan -->
+    <div class="panel" id="planPanel" style="display:none">
       <h3>Choose your plan</h3>
       <p class="muted">Pick how you'd like to pay. You can cancel any time.</p>
       <div class="planrow">
-        <div class="planopt" id="opt-monthly" onclick="goCheckout('monthly')">
-          <div class="pn">Monthly</div>
-          <div class="pp">€5</div>
-          <div class="pper">per month</div>
-          <span class="go">Subscribe</span>
-        </div>
-        <div class="planopt featured" id="opt-yearly" onclick="goCheckout('yearly')">
-          <span class="tagbest">Best value</span>
-          <div class="pn">Yearly</div>
-          <div class="pp">€50</div>
-          <div class="pper">per year</div>
-          <span class="go">Subscribe</span>
-        </div>
-        <div class="planopt" id="opt-sixmonth" onclick="goCheckout('sixmonth')">
-          <div class="pn">6 Months</div>
-          <div class="pp">€27</div>
-          <div class="pper">every 6 months</div>
-          <span class="go">Subscribe</span>
-        </div>
+        <div class="planopt" onclick="goCheckout('monthly')"><div class="pn">Monthly</div><div class="pp">€5</div><div class="pper">per month</div><span class="go">Subscribe</span></div>
+        <div class="planopt featured" onclick="goCheckout('yearly')"><span class="tagbest">Best value</span><div class="pn">Yearly</div><div class="pp">€50</div><div class="pper">per year</div><span class="go">Subscribe</span></div>
+        <div class="planopt" onclick="goCheckout('sixmonth')"><div class="pn">6 Months</div><div class="pp">€27</div><div class="pper">every 6 months</div><span class="go">Subscribe</span></div>
       </div>
     </div>
 
     <div class="panel">
       <h3>Account</h3>
       <div class="row"><span class="k">Signed in as</span><span class="v" id="acctEmail">—</span></div>
-      <div class="row"><span class="k">Subscription</span><span class="v" id="subStatus">Not active yet</span></div>
     </div>
   </div>
 </main>
@@ -120,51 +114,98 @@
 <script>
   const SUPABASE_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co";
   const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1eW9kdW1jcGxicXd4bWtmZHlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTU3ODQsImV4cCI6MjA5NTUzMTc4NH0.gGIqbHu-MWW8QmJdIehR5qJB8W2sQMB3kXTMyi0rld8";
+  const FACTORY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/factory";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  // Stripe TEST payment links
   const LINKS = {
     monthly:  "https://buy.stripe.com/test_8x228qfO9dfh4ne11r0ZW01",
     sixmonth: "https://buy.stripe.com/test_3cIbJ08lH3EH8Du8tT0ZW02",
     yearly:   "https://buy.stripe.com/test_3cIaEW6dz6QTcTK11r0ZW03"
   };
-
-  let currentEmail = "";
+  let currentEmail = "", session = null, user = null;
 
   function show(id){ ['loading','gate','app'].forEach(x=>{ document.getElementById(x).style.display = (x===id ? (x==='app'?'block':'flex') : 'none'); }); }
-
   function goCheckout(plan){
-    let url = LINKS[plan];
-    if(!url){ return; }
-    // pass the user's email so the payment links back to their account
-    if(currentEmail){
-      url += (url.indexOf('?')>-1 ? '&' : '?') + 'prefilled_email=' + encodeURIComponent(currentEmail);
-    }
+    let url = LINKS[plan]; if(!url) return;
+    if(currentEmail){ url += (url.indexOf('?')>-1?'&':'?') + 'prefilled_email=' + encodeURIComponent(currentEmail); }
     window.location.href = url;
+  }
+
+  async function triggerFactory(){
+    try{
+      await fetch(FACTORY_URL, {
+        method:'POST',
+        headers:{ 'Authorization':'Bearer '+session.access_token, 'Content-Type':'application/json' },
+        body:'{}'
+      });
+    }catch(e){}
+  }
+
+  function renderSite(site){
+    document.getElementById('planPanel').style.display='none';
+    document.getElementById('sitePanel').style.display='block';
+    const url = 'https://' + (site.subdomain || (site.username + '.seravi.eu'));
+    if(site.status === 'active'){
+      document.getElementById('sitePrep').style.display='none';
+      document.getElementById('siteLive').style.display='inline-flex';
+      document.getElementById('siteLiveText').textContent='Live';
+      document.getElementById('siteMuted').textContent='Your private Nightscout site is ready.';
+      document.getElementById('siteRows').style.display='block';
+      const a=document.getElementById('siteUrl'); a.href=url; a.textContent=url;
+      document.getElementById('siteSecret').textContent = site.api_secret || '—';
+    } else {
+      document.getElementById('sitePrep').style.display='inline-flex';
+      document.getElementById('siteLive').style.display='none';
+      document.getElementById('siteMuted').textContent='We\u2019re building your site now.';
+    }
+  }
+
+  // poll the sites row until it flips to active, then re-render
+  function pollRow(){
+    let tries=0;
+    const t=setInterval(async ()=>{
+      tries++;
+      try{
+        const { data } = await sb.from('sites').select('*').eq('user_id', user.id).maybeSingle();
+        if(data && data.status==='active'){ clearInterval(t); renderSite(data); }
+      }catch(e){}
+      if(tries>=40) clearInterval(t);
+    }, 6000);
   }
 
   (async ()=>{
     const { data } = await sb.auth.getSession();
-    const session = data.session;
+    session = data.session;
     if(!session){ show('gate'); return; }
-    const user = session.user;
+    user = session.user;
     const m = user.user_metadata || {};
     const email = user.email || "—";
-    currentEmail = (email !== "—") ? email : "";
-    let name = m.full_name || m.name || m.given_name || (email !== "—" ? email.split('@')[0] : "there");
-    let first = name.split(' ')[0];
-
-    document.getElementById('hello').textContent = "Welcome, " + first + " 👋";
+    currentEmail = (email!=="—") ? email : "";
+    let name = m.full_name || m.name || m.given_name || (email!=="—" ? email.split('@')[0] : "there");
+    document.getElementById('hello').textContent = "Welcome, " + name.split(' ')[0] + " 👋";
     document.getElementById('email').textContent = email;
     document.getElementById('acctEmail').textContent = email;
-
-    // highlight the plan they picked on the landing page
-    let plan = "";
-    try{ plan = localStorage.getItem('seravi_plan') || ""; }catch(e){}
-    const map = { monthly:'opt-monthly', yearly:'opt-yearly', sixmonth:'opt-sixmonth' };
-    if(map[plan]){ const el = document.getElementById(map[plan]); if(el) el.classList.add('pick'); }
-
     document.getElementById('signOut').style.display = 'inline-block';
+
+    // do they have a site row?
+    let site = null;
+    try{
+      const { data: row } = await sb.from('sites').select('*').eq('user_id', user.id).maybeSingle();
+      site = row;
+    }catch(e){}
+
+    if(!site){
+      // no site yet → show plan chooser
+      document.getElementById('planPanel').style.display='block';
+    } else if(site.status === 'active'){
+      renderSite(site);
+    } else {
+      // pending → trigger the factory (safety net) and poll
+      renderSite(site);
+      await triggerFactory();
+      pollRow();
+    }
+
     show('app');
   })();
 
