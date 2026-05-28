@@ -125,9 +125,10 @@
   let currentEmail = "", session = null, user = null;
 
   function show(id){ ['loading','gate','app'].forEach(x=>{ document.getElementById(x).style.display = (x===id ? (x==='app'?'block':'flex') : 'none'); }); }
-  function goCheckout(plan){
+ function goCheckout(plan){
     let url = LINKS[plan]; if(!url) return;
     if(currentEmail){ url += (url.indexOf('?')>-1?'&':'?') + 'prefilled_email=' + encodeURIComponent(currentEmail); }
+    if(user && user.id){ url += '&client_reference_id=' + encodeURIComponent(user.id); }
     window.location.href = url;
   }
 
