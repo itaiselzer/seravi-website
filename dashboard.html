@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#f6f4ee;--bg-2:#efece3;--ink:#1c2b29;--ink-soft:#4a5b58;--teal:#16635a;--teal-deep:#0e453f;--glow:#cfe7df;--white:#fffdf8;--accent:#d98b5f;--bad:#b4452f;--warn:#9a6a1e;--warn-bg:#fdf3e0;--radius:18px}
+  :root{--bg:#f6f4ee;--bg-2:#efece3;--ink:#1c2b29;--ink-soft:#4a5b58;--teal:#16635a;--teal-deep:#0e453f;--glow:#cfe7df;--white:#fffdf8;--accent:#d98b5f;--bad:#b4452f;--warn:#9a6a1e;--warn-bg:#fdf3e0;--alert-bg:#fbe6e0;--radius:18px}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
   h1,h2,h3{font-family:'Fraunces',serif;font-weight:500;letter-spacing:-.01em;line-height:1.1}
@@ -41,9 +41,11 @@
   .status{display:inline-flex;align-items:center;gap:9px;padding:8px 16px;border-radius:999px;font-size:.9rem;font-weight:500}
   .status.prep{background:var(--bg-2);color:var(--ink-soft)}
   .status.live{background:var(--glow);color:var(--teal-deep)}
+  .status.down{background:var(--alert-bg);color:var(--bad)}
   .status .pip{width:9px;height:9px;border-radius:50%}
   .status.prep .pip{background:var(--accent);box-shadow:0 0 0 4px rgba(217,139,95,.2)}
   .status.live .pip{background:var(--teal);box-shadow:0 0 0 4px rgba(22,99,90,.2)}
+  .status.down .pip{background:var(--bad);box-shadow:0 0 0 4px rgba(180,69,47,.2)}
   .minispin{width:18px;height:18px;border:3px solid var(--glow);border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite;display:inline-block;vertical-align:middle}
   .row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(28,43,41,.06);font-size:.96rem}
   .row:last-child{border-bottom:none}
@@ -60,6 +62,10 @@
   .planopt.featured{border-color:var(--accent)}
   .tagbest{background:var(--accent);color:#fff;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px;display:inline-block;margin-bottom:8px}
   .planpill{display:inline-block;background:var(--teal);color:#fff;font-size:.82rem;font-weight:500;padding:4px 13px;border-radius:999px}
+  .planpill.bad{background:var(--bad)}
+  .planpill.muted{background:var(--ink-soft)}
+  .down-msg{background:var(--alert-bg);border:1px solid rgba(180,69,47,.25);border-radius:12px;padding:16px 18px;color:var(--bad);font-size:.95rem;margin-top:18px}
+  .down-msg strong{color:#7a2a1a}
   .secret-toggle{margin-top:20px;text-align:center}
   .secret-box{margin-top:18px;display:none;max-width:440px;margin-left:auto;margin-right:auto}
   .warn{background:var(--warn-bg);border:1px solid rgba(154,106,30,.25);border-radius:12px;padding:16px 18px;color:var(--warn);font-size:.9rem;margin-bottom:18px}
@@ -76,6 +82,7 @@
   .secret-msg{font-size:.9rem;margin-top:14px;display:none;text-align:center}
   .secret-msg.ok{color:var(--teal);display:block}
   .secret-msg.bad{color:var(--bad);display:block}
+  .billing-actions{margin-top:18px}
   @media(max-width:680px){.planrow{grid-template-columns:1fr}}
 </style>
 </head>
@@ -113,9 +120,15 @@
       <p class="muted" id="siteMuted">Here's your private Nightscout site.</p>
       <div id="sitePrep" class="status prep" style="display:none"><span class="minispin"></span>&nbsp;Preparing your site… this can take a few minutes.</div>
       <div id="siteLive" class="status live" style="display:none"><span class="pip"></span><span id="siteLiveText">Live</span></div>
+      <div id="siteDown" class="status down" style="display:none"><span class="pip"></span>Site suspended</div>
+
       <div id="siteRows" style="margin-top:18px;display:none">
         <div class="row"><span class="k">Your site</span><span class="v"><a id="siteUrl" href="#" target="_blank"></a></span></div>
         <div class="row"><span class="k">API secret</span><span class="v" id="siteSecret">—</span></div>
+      </div>
+
+      <div id="downMsg" class="down-msg" style="display:none">
+        <strong>Your subscription is not active.</strong> Your Nightscout site has been suspended and is currently unreachable. Your data is safe — once you reactivate your subscription below, the site will come back online within a minute or two.
       </div>
 
       <div class="secret-toggle" id="secretToggle" style="display:none">
@@ -160,7 +173,11 @@
       <p class="muted">Your current subscription.</p>
       <div class="row"><span class="k">Plan</span><span class="v"><span class="planpill" id="billPlan">—</span></span></div>
       <div class="row"><span class="k">Price</span><span class="v" id="billPrice">—</span></div>
-      <div class="row"><span class="k">Status</span><span class="v" id="billStatus">Active</span></div>
+      <div class="row"><span class="k">Status</span><span class="v"><span class="planpill" id="billStatus">—</span></span></div>
+      <div class="billing-actions" id="billingActions" style="display:none">
+        <button class="btn ghost small" id="planSettingsBtn">Plan settings</button>
+        <button class="btn small" id="reactivateBtn" style="display:none">Reactivate subscription</button>
+      </div>
     </div>
   </div>
 </main>
@@ -171,6 +188,7 @@
   const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1eW9kdW1jcGxicXd4bWtmZHlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTU3ODQsImV4cCI6MjA5NTUzMTc4NH0.gGIqbHu-MWW8QmJdIehR5qJB8W2sQMB3kXTMyi0rld8";
   const FACTORY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/Factory";
   const CHANGE_SECRET_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/change-secret";
+  const BILLING_PORTAL_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/billing-portal";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
   const LINKS = {
@@ -180,6 +198,7 @@
   };
   const PLAN_LABELS = { monthly: "Monthly", sixmonth: "6 Months", yearly: "Yearly", unknown: "Active plan" };
   const PLAN_PRICES = { monthly: "€5 / month", sixmonth: "€27 / 6 months", yearly: "€50 / year", unknown: "—" };
+  const STATUS_LABELS = { active: "Active", past_due: "Past due", canceled: "Canceled" };
 
   let currentEmail = "", session = null, user = null;
 
@@ -203,12 +222,29 @@
     }catch(e){ console.log("FACTORY CALL FAILED", e); }
   }
 
-  function renderSite(site){
+  function renderSite(site, billingStatus){
     document.getElementById('planPanel').style.display='none';
     document.getElementById('sitePanel').style.display='block';
     const url = 'https://' + (site.subdomain || (site.username + '.seravi.eu'));
+    const isSuspended = billingStatus && billingStatus !== 'active';
+
+    // hide all status pips first
+    document.getElementById('sitePrep').style.display='none';
+    document.getElementById('siteLive').style.display='none';
+    document.getElementById('siteDown').style.display='none';
+    document.getElementById('downMsg').style.display='none';
+    document.getElementById('siteRows').style.display='none';
+    document.getElementById('secretToggle').style.display='none';
+
+    if(isSuspended){
+      // suspended state — show site as down, hide URL/secret, hide change-secret control
+      document.getElementById('siteDown').style.display='inline-flex';
+      document.getElementById('siteMuted').textContent = 'Your site is currently suspended.';
+      document.getElementById('downMsg').style.display='block';
+      return;
+    }
+
     if(site.status === 'active'){
-      document.getElementById('sitePrep').style.display='none';
       document.getElementById('siteLive').style.display='inline-flex';
       document.getElementById('siteLiveText').textContent='Live';
       document.getElementById('siteMuted').textContent='Your private Nightscout site is ready.';
@@ -218,7 +254,6 @@
       if(site.coolify_uuid){ document.getElementById('secretToggle').style.display='block'; }
     } else {
       document.getElementById('sitePrep').style.display='inline-flex';
-      document.getElementById('siteLive').style.display='none';
       document.getElementById('siteMuted').textContent='We\u2019re building your site now.';
     }
   }
@@ -226,10 +261,18 @@
   function renderBilling(payment){
     if(!payment) return;
     const plan = payment.plan || 'unknown';
+    const status = payment.status || 'active';
     document.getElementById('billingPanel').style.display='block';
     document.getElementById('billPlan').textContent = PLAN_LABELS[plan] || PLAN_LABELS.unknown;
     document.getElementById('billPrice').textContent = PLAN_PRICES[plan] || '—';
-    document.getElementById('billStatus').textContent = payment.paid ? 'Active' : 'Inactive';
+
+    const statusEl = document.getElementById('billStatus');
+    statusEl.textContent = STATUS_LABELS[status] || status;
+    statusEl.className = 'planpill ' + (status === 'active' ? '' : 'bad');
+
+    document.getElementById('billingActions').style.display='block';
+    // show Reactivate only when suspended
+    document.getElementById('reactivateBtn').style.display = (status === 'active') ? 'none' : 'inline-flex';
   }
 
   function pollRow(){
@@ -238,7 +281,7 @@
       tries++;
       try{
         const { data } = await sb.from('sites').select('*').eq('user_id', user.id).maybeSingle();
-        if(data && data.status==='active'){ clearInterval(t); renderSite(data); }
+        if(data && data.status==='active'){ clearInterval(t); renderSite(data, currentBillingStatus); }
       }catch(e){}
       if(tries>=40) clearInterval(t);
     }, 6000);
@@ -308,6 +351,31 @@
     });
   }
 
+  async function openBillingPortal(){
+    const btn = document.getElementById('planSettingsBtn');
+    const orig = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Opening…';
+    try{
+      const r = await fetch(BILLING_PORTAL_URL, {
+        method:'POST',
+        headers:{ 'Authorization':'Bearer '+session.access_token, 'Content-Type':'application/json' },
+        body:'{}'
+      });
+      const data = await r.json();
+      if(data.url){
+        window.location.href = data.url;
+      } else {
+        alert("Couldn't open billing portal: " + (data.error || 'unknown error'));
+        btn.disabled = false; btn.textContent = orig;
+      }
+    }catch(e){
+      alert("Something went wrong opening billing.");
+      btn.disabled = false; btn.textContent = orig;
+    }
+  }
+
+  let currentBillingStatus = 'active';
+
   (async ()=>{
     const { data } = await sb.auth.getSession();
     session = data.session;
@@ -324,9 +392,11 @@
 
     setupSecretUI();
 
+    let payment = null;
     try{
       const { data: pay } = await sb.from('payments').select('*').eq('user_id', user.id).maybeSingle();
-      if(pay) renderBilling(pay);
+      payment = pay;
+      if(pay){ currentBillingStatus = pay.status || 'active'; renderBilling(pay); }
     }catch(e){}
 
     let site = null;
@@ -336,22 +406,31 @@
     }catch(e){}
 
     if(!site){
-      document.getElementById('planPanel').style.display='block';
+      // never paid or no site row yet
+      if(!payment){
+        document.getElementById('planPanel').style.display='block';
+      } else {
+        // edge case: payment row exists but no site yet
+        document.getElementById('planPanel').style.display='block';
+      }
     } else if(site.status === 'active'){
-      renderSite(site);
+      renderSite(site, currentBillingStatus);
     } else {
-      renderSite(site);
-      await triggerFactory();
-      pollRow();
+      renderSite(site, currentBillingStatus);
+      if(currentBillingStatus === 'active'){
+        await triggerFactory();
+        pollRow();
+      }
     }
 
     show('app');
   })();
 
-  // logo and back arrow both go to main page WITHOUT logging out
   document.getElementById('logoLink').addEventListener('click', ()=>{ window.location.href='/'; });
   document.getElementById('backLink').addEventListener('click', ()=>{ window.location.href='/'; });
   document.getElementById('signOut').addEventListener('click', async ()=>{ await sb.auth.signOut(); window.location.href='/'; });
+  document.getElementById('planSettingsBtn').addEventListener('click', openBillingPortal);
+  document.getElementById('reactivateBtn').addEventListener('click', ()=>{ document.getElementById('planPanel').scrollIntoView({ behavior:'smooth' }); document.getElementById('planPanel').style.display='block'; });
 </script>
 </body>
 </html>
