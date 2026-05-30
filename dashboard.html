@@ -406,13 +406,13 @@
     }catch(e){}
 
     if(!site){
-      // never paid or no site row yet
-      if(!payment){
-        document.getElementById('planPanel').style.display='block';
-      } else {
-        // edge case: payment row exists but no site yet
-        document.getElementById('planPanel').style.display='block';
+      // paid but never finished onboarding — send them to setup
+      if(payment && (payment.status === 'active' || !payment.status)){
+        window.location.href = '/setup.html';
+        return;
       }
+      // never paid — show plan picker
+      document.getElementById('planPanel').style.display='block';
     } else if(site.status === 'active'){
       renderSite(site, currentBillingStatus);
     } else {
