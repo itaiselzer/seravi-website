@@ -3,7 +3,130 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Primary SEO -->
 <title>Seravi — Effortless Nightscout hosting</title>
+<meta name="description" content="Seravi is managed Nightscout hosting for people with diabetes. Sign in with Google or Apple and get a private, EU-hosted Nightscout site in minutes. From €5/month, cancel anytime.">
+<meta name="author" content="Seravi">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://seravi.eu/">
+<meta name="theme-color" content="#16635a">
+
+<!-- Favicons -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<!-- Open Graph (link previews in WhatsApp, Discord, iMessage, Facebook, LinkedIn) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://seravi.eu/">
+<meta property="og:title" content="Seravi — Effortless Nightscout hosting">
+<meta property="og:description" content="Managed Nightscout hosting for people with diabetes. Private, EU-hosted, ready in minutes. From €5/month.">
+<meta property="og:image" content="https://seravi.eu/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Seravi — Effortless Nightscout hosting">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Seravi">
+
+<!-- Twitter Card (link previews on X/Twitter) -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://seravi.eu/">
+<meta name="twitter:title" content="Seravi — Effortless Nightscout hosting">
+<meta name="twitter:description" content="Managed Nightscout hosting for people with diabetes. Private, EU-hosted, ready in minutes.">
+<meta name="twitter:image" content="https://seravi.eu/og-image.png">
+
+<!-- Structured data: Organization -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Seravi",
+  "url": "https://seravi.eu",
+  "logo": "https://seravi.eu/favicon.svg",
+  "email": "support@seravi.eu",
+  "description": "Managed hosting for the open-source Nightscout diabetes data platform.",
+  "areaServed": "EU"
+}
+</script>
+
+<!-- Structured data: Product / Service offering -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Seravi — Managed Nightscout hosting",
+  "description": "Private, managed hosting for the open-source Nightscout diabetes data application. EU-hosted, automatic updates, automatic backups, real human support.",
+  "brand": { "@type": "Brand", "name": "Seravi" },
+  "image": "https://seravi.eu/og-image.png",
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": "EUR",
+    "lowPrice": "5",
+    "highPrice": "50",
+    "offerCount": 3,
+    "url": "https://seravi.eu/#pricing"
+  }
+}
+</script>
+
+<!-- Structured data: FAQ (appears as rich results in Google) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Seravi?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Seravi is a managed hosting service for the open-source Nightscout software. We set up and run your private Nightscout site so you do not have to configure servers or manage hosting yourself."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is Nightscout?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nightscout is an open-source cloud application that lets people with diabetes view and share their continuous glucose monitor data in real time. It is developed by the Nightscout community and is not affiliated with Seravi."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where is my data hosted?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your data is hosted in the European Union, in German data centres, and is backed up regularly. Your Seravi site is private and only accessible to you and the people you share it with."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Seravi a medical device?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Seravi provides hosting infrastructure only. It is not a medical device and should not be used for diagnostic or treatment decisions. Always consult your healthcare provider."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does Seravi cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Seravi costs €5 per month, €27 every 6 months, or €50 per year. You can cancel at any time from your dashboard."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I cancel anytime?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. You can cancel your subscription at any time from the billing portal in your dashboard. Your site remains active until the end of your current billing period."
+      }
+    }
+  ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -304,7 +427,6 @@
   function hook(id, plan){ const el=document.getElementById(id); if(el) el.addEventListener('click', function(e){ e.preventDefault(); openAuth(plan); }); }
   hook('signInLink', null); hook('startBtn', null); hook('startBtnHero', null); hook('startBtnFinal', null);
   document.querySelectorAll('.plan-btn').forEach(function(btn){ btn.addEventListener('click', function(e){ e.preventDefault(); openAuth(btn.dataset.plan); }); });
-  // Reflect existing session: if already logged in, show greeting + Dashboard instead of Sign in / Start
   (async ()=>{
     try{
       const { data } = await sb.auth.getSession();
