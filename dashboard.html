@@ -36,6 +36,8 @@
   .hello{margin-bottom:8px;font-size:2rem}
   .sub{color:var(--ink-soft);margin-bottom:6px}
   .panel{background:var(--white);border:1px solid rgba(28,43,41,.07);border-radius:var(--radius);padding:32px;margin-bottom:22px;box-shadow:0 14px 40px -30px rgba(14,69,63,.4)}
+  .panel-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .panel-head h3{margin-bottom:0}
   .panel h3{font-size:1.2rem;margin-bottom:6px}
   .panel .muted{color:var(--ink-soft);font-size:.96rem;margin-bottom:20px}
   .status{display:inline-flex;align-items:center;gap:9px;padding:8px 16px;border-radius:999px;font-size:.9rem;font-weight:500}
@@ -66,8 +68,7 @@
   .planpill.muted{background:var(--ink-soft)}
   .down-msg{background:var(--alert-bg);border:1px solid rgba(180,69,47,.25);border-radius:12px;padding:16px 18px;color:var(--bad);font-size:.95rem;margin-top:18px}
   .down-msg strong{color:#7a2a1a}
-  .site-actions{margin-top:20px;display:none;flex-wrap:wrap;gap:10px;justify-content:center}
-  .secret-box{margin-top:18px;display:none;max-width:440px;margin-left:auto;margin-right:auto}
+  .secret-box{margin-top:22px;display:none;max-width:440px;margin-left:auto;margin-right:auto}
   .warn{background:var(--warn-bg);border:1px solid rgba(154,106,30,.25);border-radius:12px;padding:16px 18px;color:var(--warn);font-size:.9rem;margin-bottom:18px}
   .warn strong{color:#7c5413}
   .inputrow{display:flex;align-items:stretch;border:1.5px solid rgba(28,43,41,.18);border-radius:12px;overflow:hidden;background:var(--white)}
@@ -83,6 +84,19 @@
   .secret-msg.ok{color:var(--teal);display:block}
   .secret-msg.bad{color:var(--bad);display:block}
   .billing-actions{margin-top:18px}
+  .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(20,30,28,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px}
+  .modal-overlay.show{display:flex}
+  .modal-card{background:var(--white);border-radius:22px;padding:36px 32px;max-width:480px;width:100%;box-shadow:0 40px 90px -30px rgba(14,69,63,.6);position:relative}
+  .modal-card h3{font-size:1.4rem;margin-bottom:6px}
+  .modal-intro{color:var(--ink-soft);font-size:.95rem;margin-bottom:22px}
+  .modal-close{position:absolute;top:14px;right:18px;background:none;border:none;font-size:1.6rem;color:var(--ink-soft);cursor:pointer;line-height:1;padding:4px 10px;border-radius:8px;transition:background .15s}
+  .modal-close:hover{background:var(--bg-2);color:var(--ink)}
+  .adv-action{display:flex;align-items:center;justify-content:space-between;width:100%;background:var(--bg);border:1.5px solid rgba(28,43,41,.08);border-radius:12px;padding:16px 18px;margin-bottom:10px;cursor:pointer;font-family:inherit;color:var(--ink);text-decoration:none;text-align:left;transition:all .2s;gap:14px}
+  .adv-action:hover{border-color:var(--teal);background:var(--white);transform:translateY(-1px)}
+  .adv-action-title{font-size:1rem;font-weight:500;margin-bottom:3px}
+  .adv-action-sub{font-size:.85rem;color:var(--ink-soft);line-height:1.4}
+  .adv-action-arrow{font-size:1.2rem;color:var(--teal);flex-shrink:0;transition:transform .2s}
+  .adv-action:hover .adv-action-arrow{transform:translateX(3px)}
   @media(max-width:680px){.planrow{grid-template-columns:1fr}}
 </style>
 </head>
@@ -116,7 +130,10 @@
     </div>
 
     <div class="panel" id="sitePanel" style="display:none">
-      <h3>Your Nightscout site</h3>
+      <div class="panel-head">
+        <h3>Your Nightscout site</h3>
+        <button class="btn ghost small" id="advancedBtn" style="display:none">Advanced settings</button>
+      </div>
       <p class="muted" id="siteMuted">Here's your private Nightscout site.</p>
       <div id="sitePrep" class="status prep" style="display:none"><span class="minispin"></span>&nbsp;Preparing your site… this can take a few minutes.</div>
       <div id="siteLive" class="status live" style="display:none"><span class="pip"></span><span id="siteLiveText">Live</span></div>
@@ -129,11 +146,6 @@
 
       <div id="downMsg" class="down-msg" style="display:none">
         <strong>Your subscription is not active.</strong> Your Nightscout site has been suspended and is currently unreachable. Your data is safe — once you reactivate your subscription below, the site will come back online within a minute or two.
-      </div>
-
-      <div class="site-actions" id="siteActions">
-        <a href="/migrate.html" class="btn ghost small">Migrate from another Nightscout</a>
-        <button class="btn ghost small" id="changeSecretBtn">Change API secret</button>
       </div>
 
       <div class="secret-box" id="secretBox">
@@ -183,6 +195,31 @@
   </div>
 </main>
 
+<!-- Advanced settings modal -->
+<div class="modal-overlay" id="advancedModal">
+  <div class="modal-card">
+    <button class="modal-close" id="advancedClose" aria-label="Close">×</button>
+    <h3>Advanced settings</h3>
+    <p class="modal-intro">Tools for managing your Nightscout site.</p>
+
+    <button class="adv-action" id="openChangeSecret">
+      <div>
+        <div class="adv-action-title">Change API secret</div>
+        <div class="adv-action-sub">Generate a new API secret. Restarts your site.</div>
+      </div>
+      <span class="adv-action-arrow">→</span>
+    </button>
+
+    <a class="adv-action" href="/migrate.html">
+      <div>
+        <div class="adv-action-title">Migrate from another Nightscout</div>
+        <div class="adv-action-sub">Bring history from an existing Nightscout site.</div>
+      </div>
+      <span class="adv-action-arrow">→</span>
+    </a>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co";
@@ -229,13 +266,12 @@
     const url = 'https://' + (site.subdomain || (site.username + '.seravi.eu'));
     const isSuspended = billingStatus && billingStatus !== 'active';
 
-    // hide all status pips first
     document.getElementById('sitePrep').style.display='none';
     document.getElementById('siteLive').style.display='none';
     document.getElementById('siteDown').style.display='none';
     document.getElementById('downMsg').style.display='none';
     document.getElementById('siteRows').style.display='none';
-    document.getElementById('siteActions').style.display='none';
+    document.getElementById('advancedBtn').style.display='none';
 
     if(isSuspended){
       document.getElementById('siteDown').style.display='inline-flex';
@@ -251,7 +287,7 @@
       document.getElementById('siteRows').style.display='block';
       const a=document.getElementById('siteUrl'); a.href=url; a.textContent=url;
       document.getElementById('siteSecret').textContent = site.api_secret || '—';
-      document.getElementById('siteActions').style.display='flex';
+      document.getElementById('advancedBtn').style.display='inline-flex';
     } else {
       document.getElementById('sitePrep').style.display='inline-flex';
       document.getElementById('siteMuted').textContent='We\u2019re building your site now.';
@@ -288,7 +324,6 @@
 
   let secretOK = false;
   function setupSecretUI(){
-    const toggle = document.getElementById('changeSecretBtn');
     const box = document.getElementById('secretBox');
     const input = document.getElementById('newSecret');
     const check = document.getElementById('secretCheck');
@@ -297,10 +332,8 @@
     const genBtn = document.getElementById('genSecretBtn');
     const msg = document.getElementById('secretMsg');
 
-    toggle.addEventListener('click', ()=>{ box.style.display='block'; document.getElementById('siteActions').style.display='none'; });
     cancelBtn.addEventListener('click', ()=>{
       box.style.display='none';
-      document.getElementById('siteActions').style.display='flex';
       input.value=''; check.textContent=''; msg.style.display='none'; secretOK=false; saveBtn.disabled=true;
     });
 
@@ -350,6 +383,24 @@
     });
   }
 
+  function setupAdvancedModal(){
+    const modal = document.getElementById('advancedModal');
+    const openBtn = document.getElementById('advancedBtn');
+    const closeBtn = document.getElementById('advancedClose');
+    const changeSecretItem = document.getElementById('openChangeSecret');
+
+    openBtn.addEventListener('click', ()=>{ modal.classList.add('show'); });
+    closeBtn.addEventListener('click', ()=>{ modal.classList.remove('show'); });
+    modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.remove('show'); });
+
+    changeSecretItem.addEventListener('click', ()=>{
+      modal.classList.remove('show');
+      const box = document.getElementById('secretBox');
+      box.style.display='block';
+      setTimeout(()=>{ box.scrollIntoView({ behavior:'smooth', block:'center' }); }, 50);
+    });
+  }
+
   async function openBillingPortal(){
     const btn = document.getElementById('planSettingsBtn');
     const orig = btn.textContent;
@@ -390,6 +441,7 @@
     document.getElementById('signOut').style.display = 'inline-block';
 
     setupSecretUI();
+    setupAdvancedModal();
 
     let payment = null;
     try{
