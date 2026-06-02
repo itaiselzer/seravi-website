@@ -128,7 +128,7 @@
       </div>
 
       <div class="warn">
-        <strong>Heads up:</strong> migration can take anywhere from 1 to 30 minutes depending on how much data you have. Please keep this tab open until you see the "Migration complete" screen.
+        <strong>Heads up:</strong> migration can take anywhere from 5 to 60 minutes depending on how much data you have. Please keep this tab open until you see the "Migration complete" screen.
       </div>
 
       <div class="actions">
@@ -207,8 +207,11 @@
   const PROXY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/migration-proxy";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  const BATCH_SIZE = 100;
-  const BATCH_DELAY_MS = 500;
+  const SLICE_MS = 7 * 24 * 60 * 60 * 1000;
+  const MAX_LOOKBACK_MS = 10 * 365 * 24 * 60 * 60 * 1000;
+  const STOP_AFTER_EMPTY = 4;
+  const BATCH_DELAY_MS = 400;
+  const QUERY_COUNT = 10000;
 
   let session, user, mySite;
   const totals = { profile: 0, entries: 0, treatments: 0, devicestatus: 0 };
@@ -337,13 +340,21 @@
 
   async function migrateTimeSeriesCollection(name, dateField, oldUrl, oldSecret, newUrl, newSecret){
     let migrated = 0;
-    let cursor = null;
-    let emptyRetries = 0;
+    const isNumericDate = (dateField === 'date');
+    const earliestAllowed = Date.now() - MAX_LOOKBACK_MS;
+    let endMs = Date.now();
+    let consecutiveEmpty = 0;
 
-    while(true){
-      let qs = `count=${BATCH_SIZE}`;
-      if(cursor !== null){
-        qs += `&find[${dateField}][$lt]=${encodeURIComponent(cursor)}`;
+    while(endMs > earliestAllowed){
+      const startMs = endMs - SLICE_MS;
+
+      let qs;
+      if(isNumericDate){
+        qs = `count=${QUERY_COUNT}&find[${dateField}][$gte]=${startMs}&find[${dateField}][$lt]=${endMs}`;
+      }else{
+        const startISO = new Date(startMs).toISOString();
+        const endISO = new Date(endMs).toISOString();
+        qs = `count=${QUERY_COUNT}&find[${dateField}][$gte]=${encodeURIComponent(startISO)}&find[${dateField}][$lt]=${encodeURIComponent(endISO)}`;
       }
 
       const fetchResult = await proxyRequest('GET', `${oldUrl}/api/v1/${name}.json?${qs}`, oldSecret);
@@ -351,28 +362,25 @@
         throw new Error(`Failed reading ${name} from your old Nightscout (status ${fetchResult.status}).`);
       }
       const batch = fetchResult.data;
+      const sliceLabel = new Date(startMs).toISOString().slice(0, 10);
 
       if(!Array.isArray(batch) || batch.length === 0){
-        emptyRetries++;
-        if(emptyRetries >= 2) break;
-        continue;
+        consecutiveEmpty++;
+        if(migrated > 0){
+          updateProgress(name, migrated, `searching… (week of ${sliceLabel} was empty)`);
+        }
+        if(consecutiveEmpty >= STOP_AFTER_EMPTY) break;
+      }else{
+        consecutiveEmpty = 0;
+        const postResult = await proxyRequest('POST', `${newUrl}/api/v1/${name}`, newSecret, batch);
+        if(!postResult.ok){
+          throw new Error(`Could not upload ${name} to your Seravi site (status ${postResult.status}).`);
+        }
+        migrated += batch.length;
+        updateProgress(name, migrated, `week of ${sliceLabel}: ${batch.length} records`);
       }
-      emptyRetries = 0;
 
-      const postResult = await proxyRequest('POST', `${newUrl}/api/v1/${name}`, newSecret, batch);
-      if(!postResult.ok){
-        throw new Error(`Could not upload ${name} to your Seravi site (status ${postResult.status}).`);
-      }
-
-      migrated += batch.length;
-      updateProgress(name, migrated, `last batch: ${batch.length} records`);
-
-      const values = batch.map(r => r[dateField]).filter(v => v !== undefined && v !== null);
-      if(values.length === 0) break;
-      const newCursor = Math.min(...values.map(v => typeof v === 'string' ? new Date(v).getTime() : v));
-      if(cursor !== null && newCursor >= cursor) break;
-      cursor = newCursor;
-
+      endMs = startMs;
       await new Promise(r => setTimeout(r, BATCH_DELAY_MS));
     }
 
