@@ -111,15 +111,14 @@
     <h1 class="hello">Migrate your existing Nightscout</h1>
     <p class="lead">Bring your history from your old Nightscout site to your new Seravi site. We'll copy your entries, treatments, profile, and device status — your old site is not modified.</p>
 
-    <!-- FORM STATE -->
     <div class="panel" id="formState">
       <h3>Tell us where to migrate from</h3>
-      <p class="muted" style="color:var(--ink-soft);font-size:.95rem;margin-bottom:22px">Your old Nightscout's URL and API secret. Both are used in your browser only and never sent to or stored by Seravi.</p>
+      <p class="muted" style="color:var(--ink-soft);font-size:.95rem;margin-bottom:22px">Your old Nightscout's URL and API secret. They're sent through Seravi's secure migration service.</p>
 
       <div class="field">
         <label for="oldUrl">Old Nightscout URL</label>
         <input id="oldUrl" type="url" placeholder="https://my-nightscout.example.com" autocomplete="off">
-        <div class="hint">The address you currently use to view your Nightscout (e.g. on Heroku, Fly.io, Railway, ns10.be, or self-hosted). Don't include /api/v1.</div>
+        <div class="hint">The address you currently use to view your Nightscout (NightscoutPro, ns10.be, Heroku, Fly.io, Railway, self-hosted, etc.). Don't include /api/v1.</div>
       </div>
 
       <div class="field">
@@ -137,13 +136,11 @@
       </div>
     </div>
 
-    <!-- VALIDATING STATE -->
     <div class="panel" id="validatingState" style="display:none">
       <h3><span class="spinner" style="width:20px;height:20px;border-width:3px;display:inline-block;vertical-align:middle;margin-right:10px"></span>Checking your old Nightscout…</h3>
       <p style="color:var(--ink-soft);font-size:.95rem;margin-top:10px">Testing the connection and verifying the API secret.</p>
     </div>
 
-    <!-- MIGRATING STATE -->
     <div class="panel" id="migrateState" style="display:none">
       <h3>Migration in progress</h3>
       <div class="warn" style="margin-top:14px">
@@ -175,7 +172,6 @@
       </div>
     </div>
 
-    <!-- SUCCESS STATE -->
     <div class="panel" id="successState" style="display:none">
       <h3><span class="pip"></span>Migration complete</h3>
       <p style="color:var(--ink-soft);font-size:.95rem;margin:14px 0 22px">Your data has been copied to your Seravi site. You can now open it and start using it as your main Nightscout.</p>
@@ -192,7 +188,6 @@
       </div>
     </div>
 
-    <!-- ERROR STATE -->
     <div class="panel" id="errorState" style="display:none">
       <h3 style="color:var(--bad)">Migration couldn't continue</h3>
       <div class="alert" id="errorMsg" style="margin-top:14px"></div>
@@ -209,6 +204,7 @@
 <script>
   const SUPABASE_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co";
   const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1eW9kdW1jcGxicXd4bWtmZHlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTU3ODQsImV4cCI6MjA5NTUzMTc4NH0.gGIqbHu-MWW8QmJdIehR5qJB8W2sQMB3kXTMyi0rld8";
+  const PROXY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/migration-proxy";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
   const BATCH_SIZE = 1000;
@@ -238,51 +234,49 @@
     setPanel('errorState');
   }
 
-  async function sha1(s){
-    const buf = new TextEncoder().encode(s);
-    const hash = await crypto.subtle.digest('SHA-1', buf);
-    return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
-  }
-
   function normalizeUrl(u){
     return u.trim().replace(/\/+$/, '');
   }
 
-  async function validateOldNS(url, secret){
-    const hash = await sha1(secret);
+  async function proxyRequest(method, targetUrl, secret, body){
     let res;
     try{
-      res = await fetch(`${url}/api/v1/entries.json?count=1`, {
-        headers: { 'api-secret': hash }
+      res = await fetch(PROXY_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + session.access_token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ method, targetUrl, secret, body })
       });
     }catch(e){
-      throw new Error('Could not reach your old Nightscout. Check that the URL is correct and the site is online. Some older Nightscout versions block this kind of cross-site request — if so, email support@seravi.eu and we will do the migration manually.');
+      throw new Error('Could not reach the migration service. Check your internet connection.');
     }
-    if(res.status === 401){
-      throw new Error('That API secret was rejected by your old Nightscout. Double-check it matches what you set in your old uploader.');
-    }
+
     if(!res.ok){
-      throw new Error(`Your old Nightscout returned status ${res.status}. Please verify the URL is right.`);
+      let errMsg = `Migration service returned ${res.status}`;
+      try{
+        const err = await res.json();
+        if(err.error) errMsg = err.error;
+      }catch{}
+      throw new Error(errMsg);
     }
-    return true;
+
+    return await res.json();
   }
 
-  async function postBatch(siteUrl, secret, collection, records){
-    if(!records || records.length === 0) return 0;
-    const hash = await sha1(secret);
-    const res = await fetch(`${siteUrl}/api/v1/${collection}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-secret': hash
-      },
-      body: JSON.stringify(records)
-    });
-    if(!res.ok){
-      const text = await res.text().catch(()=>'');
-      throw new Error(`Could not upload to your Seravi site (${res.status}): ${text.slice(0,200)}`);
+  async function validateOldNS(url, secret){
+    const result = await proxyRequest('GET', `${url}/api/v1/entries.json?count=1`, secret);
+    if(!result.ok){
+      if(result.status === 401){
+        throw new Error('That API secret was rejected by your old Nightscout. Double-check it matches what you set in your old uploader.');
+      }
+      if(result.status === 404){
+        throw new Error('Could not find your Nightscout at that URL. Check the URL is correct.');
+      }
+      throw new Error(`Your old Nightscout returned an error (status ${result.status}). Please verify the URL and secret are correct.`);
     }
-    return records.length;
+    return true;
   }
 
   function updateProgress(name, count, status){
@@ -312,22 +306,26 @@
 
   async function migrateProfile(oldUrl, oldSecret, newUrl, newSecret){
     document.getElementById('profileBar').classList.add('indet');
-    const hash = await sha1(oldSecret);
-    const res = await fetch(`${oldUrl}/api/v1/profile.json`, { headers: { 'api-secret': hash } });
-    if(!res.ok){ skipProgress('profile', 'could not fetch'); return 0; }
-    const profile = await res.json();
+    const fetchResult = await proxyRequest('GET', `${oldUrl}/api/v1/profile.json`, oldSecret);
+    if(!fetchResult.ok){
+      skipProgress('profile', 'could not fetch');
+      return 0;
+    }
+    const profile = fetchResult.data;
     if(!profile || (Array.isArray(profile) && profile.length === 0)){
       skipProgress('profile');
       return 0;
     }
     const items = Array.isArray(profile) ? profile : [profile];
-    await postBatch(newUrl, newSecret, 'profile', items);
+    const postResult = await proxyRequest('POST', `${newUrl}/api/v1/profile`, newSecret, items);
+    if(!postResult.ok){
+      throw new Error(`Could not upload profile to your Seravi site (status ${postResult.status}).`);
+    }
     finishProgress('profile', items.length);
     return items.length;
   }
 
   async function migrateTimeSeriesCollection(name, dateField, oldUrl, oldSecret, newUrl, newSecret){
-    const hash = await sha1(oldSecret);
     let migrated = 0;
     let cursor = null;
 
@@ -337,18 +335,18 @@
         qs += `&find[${dateField}][$lt]=${encodeURIComponent(cursor)}`;
       }
 
-      let batch;
-      try{
-        const res = await fetch(`${oldUrl}/api/v1/${name}.json?${qs}`, { headers: { 'api-secret': hash } });
-        if(!res.ok) throw new Error(`fetch failed ${res.status}`);
-        batch = await res.json();
-      }catch(e){
-        throw new Error(`Failed reading ${name} from your old Nightscout: ${e.message}`);
+      const fetchResult = await proxyRequest('GET', `${oldUrl}/api/v1/${name}.json?${qs}`, oldSecret);
+      if(!fetchResult.ok){
+        throw new Error(`Failed reading ${name} from your old Nightscout (status ${fetchResult.status}).`);
       }
-
+      const batch = fetchResult.data;
       if(!Array.isArray(batch) || batch.length === 0) break;
 
-      await postBatch(newUrl, newSecret, name, batch);
+      const postResult = await proxyRequest('POST', `${newUrl}/api/v1/${name}`, newSecret, batch);
+      if(!postResult.ok){
+        throw new Error(`Could not upload ${name} to your Seravi site (status ${postResult.status}).`);
+      }
+
       migrated += batch.length;
       updateProgress(name, migrated, `last batch: ${batch.length} records`);
 
@@ -399,7 +397,7 @@
     const oldUrl = normalizeUrl(document.getElementById('oldUrl').value);
     const oldSecret = document.getElementById('oldSecret').value;
     if(!oldUrl || !oldSecret){ alert('Please enter both the URL and the API secret.'); return; }
-    if(!/^https?:\/\//.test(oldUrl)){ alert('The URL should start with http:// or https://'); return; }
+    if(!/^https:\/\//.test(oldUrl)){ alert('The URL should start with https://. Plain http:// is not supported for security reasons.'); return; }
     if(oldSecret.length < 12){ alert('That API secret looks too short. Nightscout secrets are usually at least 12 characters.'); return; }
 
     setPanel('validatingState');
