@@ -41,14 +41,8 @@
   .submit{margin-top:30px;width:100%;background:var(--teal);color:#fff;border:none;padding:15px;border-radius:999px;font-family:inherit;font-size:1.02rem;font-weight:500;cursor:pointer;transition:background .2s,transform .15s}
   .submit:hover:not(:disabled){background:var(--teal-deep);transform:translateY(-1px)}
   .submit:disabled{opacity:.5;cursor:not-allowed}
-  .done{text-align:center;padding:20px 0}
-  .done .big{width:64px;height:64px;border-radius:50%;background:var(--glow);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:1.8rem}
   .formerr{color:var(--bad);font-size:.9rem;margin-top:14px;display:none}
   .formerr.show{display:block}
-  .livebox{margin-top:22px;background:var(--bg-2);border-radius:12px;padding:18px;font-size:.95rem}
-  .livebox a{color:var(--teal);font-weight:600;word-break:break-all}
-  .preprow{display:flex;align-items:center;gap:12px;justify-content:center;color:var(--ink-soft);font-size:.95rem;margin-top:18px}
-  .minispin{width:20px;height:20px;border:3px solid var(--glow);border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite}
 </style>
 </head>
 <body>
@@ -96,25 +90,6 @@
       <button class="submit" id="submitBtn" disabled>Create my site</button>
       <div class="formerr" id="formErr"></div>
     </div>
-
-    <div class="panel done" id="donePanel" style="display:none">
-      <div class="big">✓</div>
-      <h2 style="font-size:1.5rem;margin-bottom:10px">You're all set!</h2>
-      <p style="color:var(--ink-soft);margin-bottom:6px">Your site is being built:</p>
-      <p style="margin-bottom:8px"><strong id="doneAddr"></strong></p>
-
-      <div id="prepRow" class="preprow">
-        <div class="minispin"></div>
-        <span>Preparing your site… this can take a few minutes.</span>
-      </div>
-
-      <div id="liveBox" class="livebox" style="display:none">
-        🎉 Your site is live! Open it here:<br>
-        <a id="liveLink" href="#" target="_blank"></a>
-      </div>
-
-      <a href="/dashboard.html" class="submit" style="display:inline-block;max-width:240px;text-decoration:none;text-align:center;margin-top:22px">Go to my dashboard</a>
-    </div>
   </div>
 </main>
 
@@ -125,7 +100,7 @@
   const FACTORY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/Factory";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  const RESERVED = ['www','api','app','admin','mail','ftp','dashboard','setup','login','seravi','support','help','status','blog','test'];
+  const RESERVED = ['www','api','app','admin','mail','ftp','dashboard','setup','login','seravi','support','help','status','blog','test','welcome','migrate'];
   let user = null, session = null, userOK = false, secretOK = false, checkTimer = null;
 
   function show(id){ ['loading','gate','app'].forEach(x=>{ document.getElementById(x).style.display = (x===id ? (x==='app'?'block':'flex') : 'none'); }); }
@@ -180,27 +155,6 @@
     }catch(e){}
   }
 
-  async function pollUntilLive(fqdn){
-    const url = "https://" + fqdn;
-    let tries = 0; const maxTries = 40;
-    const timer = setInterval(async ()=>{
-      tries++;
-      try{
-        await fetch(url, { mode: 'no-cors' });
-        clearInterval(timer);
-        document.getElementById('prepRow').style.display='none';
-        const lb = document.getElementById('liveBox'); lb.style.display='block';
-        const a = document.getElementById('liveLink'); a.href=url; a.textContent=url;
-      }catch(e){
-        if(tries >= maxTries){
-          clearInterval(timer);
-          document.getElementById('prepRow').innerHTML =
-            'Your site is taking a little longer than usual. It will appear on your <a href="/dashboard.html" style="color:var(--teal);font-weight:600">dashboard</a> shortly.';
-        }
-      }
-    }, 6000);
-  }
-
   document.getElementById('submitBtn').addEventListener('click', async ()=>{
     const btn=document.getElementById('submitBtn'); const err=document.getElementById('formErr');
     err.classList.remove('show'); btn.disabled=true; btn.textContent='Creating…';
@@ -225,12 +179,8 @@
         err.classList.add('show'); btn.disabled=false; btn.textContent='Create my site'; return;
       }
 
-      document.getElementById('doneAddr').textContent = fqdn;
-      document.getElementById('formPanel').style.display='none';
-      document.getElementById('donePanel').style.display='block';
-
       await triggerFactory();
-      pollUntilLive(fqdn);
+      window.location.href = '/welcome.html';
 
     }catch(e){
       err.textContent='Something went wrong. Please try again.'; err.classList.add('show');
@@ -245,7 +195,7 @@
     user = session.user;
     try{
       const { data: existing } = await sb.from('sites').select('username').eq('user_id', user.id).maybeSingle();
-      if(existing){ window.location.href='/dashboard.html'; return; }
+      if(existing){ window.location.href='/welcome.html'; return; }
     }catch(e){}
     show('app');
   })();
