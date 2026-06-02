@@ -308,7 +308,7 @@
     document.getElementById('profileBar').classList.add('indet');
     const fetchResult = await proxyRequest('GET', `${oldUrl}/api/v1/profile.json`, oldSecret);
     if(!fetchResult.ok){
-      skipProgress('profile', 'could not fetch');
+      skipProgress('profile', 'could not fetch (you can set this up manually in Nightscout)');
       return 0;
     }
     const profile = fetchResult.data;
@@ -317,12 +317,22 @@
       return 0;
     }
     const items = Array.isArray(profile) ? profile : [profile];
-    const postResult = await proxyRequest('POST', `${newUrl}/api/v1/profile`, newSecret, items);
-    if(!postResult.ok){
-      throw new Error(`Could not upload profile to your Seravi site (status ${postResult.status}).`);
+    const cleanItems = items.map(item => {
+      const { _id, ...rest } = item;
+      return rest;
+    });
+    try{
+      const postResult = await proxyRequest('POST', `${newUrl}/api/v1/profile`, newSecret, cleanItems);
+      if(!postResult.ok){
+        skipProgress('profile', `upload returned ${postResult.status} — you can set this up manually in Nightscout`);
+        return 0;
+      }
+      finishProgress('profile', items.length);
+      return items.length;
+    }catch(e){
+      skipProgress('profile', 'upload failed — you can set this up manually in Nightscout');
+      return 0;
     }
-    finishProgress('profile', items.length);
-    return items.length;
   }
 
   async function migrateTimeSeriesCollection(name, dateField, oldUrl, oldSecret, newUrl, newSecret){
