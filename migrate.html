@@ -215,6 +215,7 @@
 
   let session, user, mySite;
   const totals = { profile: 0, entries: 0, treatments: 0, devicestatus: 0 };
+  const failedCounts = { entries: 0, treatments: 0, devicestatus: 0 };
 
   function show(id){
     ['loading','gate','noSite','pending'].forEach(x=>{
@@ -307,6 +308,13 @@
     document.getElementById(name + 'Status').textContent = reason || 'nothing to migrate';
   }
 
+  function stripIds(records){
+    return records.map(item => {
+      const { _id, ...rest } = item;
+      return rest;
+    });
+  }
+
   async function migrateProfile(oldUrl, oldSecret, newUrl, newSecret){
     document.getElementById('profileBar').classList.add('indet');
     const fetchResult = await proxyRequest('GET', `${oldUrl}/api/v1/profile.json`, oldSecret);
@@ -320,10 +328,7 @@
       return 0;
     }
     const items = Array.isArray(profile) ? profile : [profile];
-    const cleanItems = items.map(item => {
-      const { _id, ...rest } = item;
-      return rest;
-    });
+    const cleanItems = stripIds(items);
     try{
       const postResult = await proxyRequest('POST', `${newUrl}/api/v1/profile`, newSecret, cleanItems);
       if(!postResult.ok){
@@ -340,6 +345,7 @@
 
   async function migrateTimeSeriesCollection(name, dateField, oldUrl, oldSecret, newUrl, newSecret){
     let migrated = 0;
+    let failed = 0;
     const isNumericDate = (dateField === 'date');
     const earliestAllowed = Date.now() - MAX_LOOKBACK_MS;
     let endMs = Date.now();
@@ -372,19 +378,28 @@
         if(consecutiveEmpty >= STOP_AFTER_EMPTY) break;
       }else{
         consecutiveEmpty = 0;
-        const postResult = await proxyRequest('POST', `${newUrl}/api/v1/${name}`, newSecret, batch);
-        if(!postResult.ok){
-          throw new Error(`Could not upload ${name} to your Seravi site (status ${postResult.status}).`);
+        const cleanBatch = stripIds(batch);
+        try{
+          const postResult = await proxyRequest('POST', `${newUrl}/api/v1/${name}`, newSecret, cleanBatch);
+          if(!postResult.ok){
+            failed += batch.length;
+            updateProgress(name, migrated, `week of ${sliceLabel}: ${batch.length} skipped (upload ${postResult.status})`);
+          }else{
+            migrated += batch.length;
+            updateProgress(name, migrated, `week of ${sliceLabel}: ${batch.length} records`);
+          }
+        }catch(e){
+          failed += batch.length;
+          updateProgress(name, migrated, `week of ${sliceLabel}: ${batch.length} skipped`);
         }
-        migrated += batch.length;
-        updateProgress(name, migrated, `week of ${sliceLabel}: ${batch.length} records`);
       }
 
       endMs = startMs;
       await new Promise(r => setTimeout(r, BATCH_DELAY_MS));
     }
 
-    if(migrated === 0){
+    failedCounts[name] = failed;
+    if(migrated === 0 && failed === 0){
       skipProgress(name);
     }else{
       finishProgress(name, migrated);
@@ -405,9 +420,9 @@
 
       const summaryHtml = `
         <div class="summary-row"><span>Profile</span><span class="v">${totals.profile.toLocaleString()}</span></div>
-        <div class="summary-row"><span>Glucose entries</span><span class="v">${totals.entries.toLocaleString()}</span></div>
-        <div class="summary-row"><span>Treatments</span><span class="v">${totals.treatments.toLocaleString()}</span></div>
-        <div class="summary-row"><span>Device status</span><span class="v">${totals.devicestatus.toLocaleString()}</span></div>
+        <div class="summary-row"><span>Glucose entries</span><span class="v">${totals.entries.toLocaleString()}${failedCounts.entries ? ' <span style="color:var(--bad);font-weight:400">('+failedCounts.entries.toLocaleString()+' could not be uploaded)</span>' : ''}</span></div>
+        <div class="summary-row"><span>Treatments</span><span class="v">${totals.treatments.toLocaleString()}${failedCounts.treatments ? ' <span style="color:var(--bad);font-weight:400">('+failedCounts.treatments.toLocaleString()+' could not be uploaded)</span>' : ''}</span></div>
+        <div class="summary-row"><span>Device status</span><span class="v">${totals.devicestatus.toLocaleString()}${failedCounts.devicestatus ? ' <span style="color:var(--bad);font-weight:400">('+failedCounts.devicestatus.toLocaleString()+' could not be uploaded)</span>' : ''}</span></div>
       `;
       document.getElementById('successSummary').innerHTML = summaryHtml;
       document.getElementById('openSiteLink').href = newUrl;
