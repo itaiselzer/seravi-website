@@ -328,9 +328,10 @@
   async function migrateTimeSeriesCollection(name, dateField, oldUrl, oldSecret, newUrl, newSecret){
     let migrated = 0;
     let cursor = null;
+    let emptyRetries = 0;
 
     while(true){
-      let qs = `count=${BATCH_SIZE}`;
+      let qs = `count=${BATCH_SIZE}&sort=-${dateField}`;
       if(cursor !== null){
         qs += `&find[${dateField}][$lt]=${encodeURIComponent(cursor)}`;
       }
@@ -340,7 +341,13 @@
         throw new Error(`Failed reading ${name} from your old Nightscout (status ${fetchResult.status}).`);
       }
       const batch = fetchResult.data;
-      if(!Array.isArray(batch) || batch.length === 0) break;
+
+      if(!Array.isArray(batch) || batch.length === 0){
+        emptyRetries++;
+        if(emptyRetries >= 2) break;
+        continue;
+      }
+      emptyRetries = 0;
 
       const postResult = await proxyRequest('POST', `${newUrl}/api/v1/${name}`, newSecret, batch);
       if(!postResult.ok){
@@ -356,7 +363,6 @@
       if(cursor !== null && newCursor >= cursor) break;
       cursor = newCursor;
 
-      if(batch.length < BATCH_SIZE) break;
       await new Promise(r => setTimeout(r, BATCH_DELAY_MS));
     }
 
