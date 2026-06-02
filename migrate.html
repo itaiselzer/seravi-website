@@ -220,11 +220,14 @@
   const PROXY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/migration-proxy";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  const SLICE_MS = 7 * 24 * 60 * 60 * 1000;
-  const ALL_LOOKBACK_MS = 10 * 365 * 24 * 60 * 60 * 1000;
-  const STOP_AFTER_EMPTY = 4;
-  const BATCH_DELAY_MS = 400;
-  const QUERY_COUNT = 10000;
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const WEEK_MS = 7 * DAY_MS;
+  const ALL_LOOKBACK_MS = 10 * 365 * DAY_MS;
+  const STOP_AFTER_EMPTY_DAYS = 14;
+  const STOP_AFTER_EMPTY_WEEKS = 4;
+  const BATCH_DELAY_MS = 250;
+  const QUERY_COUNT_DAY = 500;
+  const QUERY_COUNT_WEEK = 10000;
 
   let session, user, mySite;
   let lookbackMs = ALL_LOOKBACK_MS;
@@ -357,7 +360,7 @@
     }
   }
 
-  async function migrateTimeSeriesCollection(name, dateField, oldUrl, oldSecret, newUrl, newSecret){
+  async function migrateTimeSeriesCollection(name, dateField, sliceMs, queryCount, stopAfterEmpty, oldUrl, oldSecret, newUrl, newSecret){
     let migrated = 0;
     let failed = 0;
     const isNumericDate = (dateField === 'date');
@@ -366,15 +369,15 @@
     let consecutiveEmpty = 0;
 
     while(endMs > earliestAllowed){
-      const startMs = Math.max(endMs - SLICE_MS, earliestAllowed);
+      const startMs = Math.max(endMs - sliceMs, earliestAllowed);
 
       let qs;
       if(isNumericDate){
-        qs = `count=${QUERY_COUNT}&find[${dateField}][$gte]=${startMs}&find[${dateField}][$lt]=${endMs}`;
+        qs = `count=${queryCount}&find[${dateField}][$gte]=${startMs}&find[${dateField}][$lt]=${endMs}`;
       }else{
         const startISO = new Date(startMs).toISOString();
         const endISO = new Date(endMs).toISOString();
-        qs = `count=${QUERY_COUNT}&find[${dateField}][$gte]=${encodeURIComponent(startISO)}&find[${dateField}][$lt]=${encodeURIComponent(endISO)}`;
+        qs = `count=${queryCount}&find[${dateField}][$gte]=${encodeURIComponent(startISO)}&find[${dateField}][$lt]=${encodeURIComponent(endISO)}`;
       }
 
       const fetchResult = await proxyRequest('GET', `${oldUrl}/api/v1/${name}.json?${qs}`, oldSecret);
@@ -387,9 +390,9 @@
       if(!Array.isArray(batch) || batch.length === 0){
         consecutiveEmpty++;
         if(migrated > 0){
-          updateProgress(name, migrated, `searching… (week of ${sliceLabel} was empty)`);
+          updateProgress(name, migrated, `searching… (${sliceLabel} was empty)`);
         }
-        if(consecutiveEmpty >= STOP_AFTER_EMPTY) break;
+        if(consecutiveEmpty >= stopAfterEmpty) break;
       }else{
         consecutiveEmpty = 0;
         const cleanBatch = stripIds(batch);
@@ -397,14 +400,14 @@
           const postResult = await proxyRequest('POST', `${newUrl}/api/v1/${name}`, newSecret, cleanBatch);
           if(!postResult.ok){
             failed += batch.length;
-            updateProgress(name, migrated, `week of ${sliceLabel}: ${batch.length} skipped (upload ${postResult.status})`);
+            updateProgress(name, migrated, `${sliceLabel}: ${batch.length} skipped (upload ${postResult.status})`);
           }else{
             migrated += batch.length;
-            updateProgress(name, migrated, `week of ${sliceLabel}: ${batch.length} records`);
+            updateProgress(name, migrated, `${sliceLabel}: ${batch.length} records`);
           }
         }catch(e){
           failed += batch.length;
-          updateProgress(name, migrated, `week of ${sliceLabel}: ${batch.length} skipped`);
+          updateProgress(name, migrated, `${sliceLabel}: ${batch.length} skipped`);
         }
       }
 
@@ -429,9 +432,9 @@
 
     try{
       totals.profile = await migrateProfile(oldUrl, oldSecret, newUrl, newSecret);
-      totals.entries = await migrateTimeSeriesCollection('entries', 'date', oldUrl, oldSecret, newUrl, newSecret);
-      totals.treatments = await migrateTimeSeriesCollection('treatments', 'created_at', oldUrl, oldSecret, newUrl, newSecret);
-      totals.devicestatus = await migrateTimeSeriesCollection('devicestatus', 'created_at', oldUrl, oldSecret, newUrl, newSecret);
+      totals.entries = await migrateTimeSeriesCollection('entries', 'date', DAY_MS, QUERY_COUNT_DAY, STOP_AFTER_EMPTY_DAYS, oldUrl, oldSecret, newUrl, newSecret);
+      totals.treatments = await migrateTimeSeriesCollection('treatments', 'created_at', WEEK_MS, QUERY_COUNT_WEEK, STOP_AFTER_EMPTY_WEEKS, oldUrl, oldSecret, newUrl, newSecret);
+      totals.devicestatus = await migrateTimeSeriesCollection('devicestatus', 'created_at', DAY_MS, QUERY_COUNT_DAY, STOP_AFTER_EMPTY_DAYS, oldUrl, oldSecret, newUrl, newSecret);
 
       const summaryHtml = `
         <div class="summary-row"><span>Profile</span><span class="v">${totals.profile.toLocaleString()}</span></div>
@@ -460,7 +463,7 @@
       lookbackMs = ALL_LOOKBACK_MS;
     }else{
       const days = parseInt(rangeChoice, 10);
-      lookbackMs = days * 24 * 60 * 60 * 1000;
+      lookbackMs = days * DAY_MS;
     }
 
     setPanel('validatingState');
