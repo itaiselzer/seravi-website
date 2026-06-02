@@ -66,7 +66,7 @@
   .planpill.muted{background:var(--ink-soft)}
   .down-msg{background:var(--alert-bg);border:1px solid rgba(180,69,47,.25);border-radius:12px;padding:16px 18px;color:var(--bad);font-size:.95rem;margin-top:18px}
   .down-msg strong{color:#7a2a1a}
-  .secret-toggle{margin-top:20px;text-align:center}
+  .site-actions{margin-top:20px;display:none;flex-wrap:wrap;gap:10px;justify-content:center}
   .secret-box{margin-top:18px;display:none;max-width:440px;margin-left:auto;margin-right:auto}
   .warn{background:var(--warn-bg);border:1px solid rgba(154,106,30,.25);border-radius:12px;padding:16px 18px;color:var(--warn);font-size:.9rem;margin-bottom:18px}
   .warn strong{color:#7c5413}
@@ -131,7 +131,8 @@
         <strong>Your subscription is not active.</strong> Your Nightscout site has been suspended and is currently unreachable. Your data is safe — once you reactivate your subscription below, the site will come back online within a minute or two.
       </div>
 
-      <div class="secret-toggle" id="secretToggle" style="display:none">
+      <div class="site-actions" id="siteActions">
+        <a href="/migrate.html" class="btn ghost small">Migrate from another Nightscout</a>
         <button class="btn ghost small" id="changeSecretBtn">Change API secret</button>
       </div>
 
@@ -234,10 +235,9 @@
     document.getElementById('siteDown').style.display='none';
     document.getElementById('downMsg').style.display='none';
     document.getElementById('siteRows').style.display='none';
-    document.getElementById('secretToggle').style.display='none';
+    document.getElementById('siteActions').style.display='none';
 
     if(isSuspended){
-      // suspended state — show site as down, hide URL/secret, hide change-secret control
       document.getElementById('siteDown').style.display='inline-flex';
       document.getElementById('siteMuted').textContent = 'Your site is currently suspended.';
       document.getElementById('downMsg').style.display='block';
@@ -251,7 +251,7 @@
       document.getElementById('siteRows').style.display='block';
       const a=document.getElementById('siteUrl'); a.href=url; a.textContent=url;
       document.getElementById('siteSecret').textContent = site.api_secret || '—';
-      if(site.coolify_uuid){ document.getElementById('secretToggle').style.display='block'; }
+      document.getElementById('siteActions').style.display='flex';
     } else {
       document.getElementById('sitePrep').style.display='inline-flex';
       document.getElementById('siteMuted').textContent='We\u2019re building your site now.';
@@ -271,7 +271,6 @@
     statusEl.className = 'planpill ' + (status === 'active' ? '' : 'bad');
 
     document.getElementById('billingActions').style.display='block';
-    // show Reactivate only when suspended
     document.getElementById('reactivateBtn').style.display = (status === 'active') ? 'none' : 'inline-flex';
   }
 
@@ -298,10 +297,10 @@
     const genBtn = document.getElementById('genSecretBtn');
     const msg = document.getElementById('secretMsg');
 
-    toggle.addEventListener('click', ()=>{ box.style.display='block'; document.getElementById('secretToggle').style.display='none'; });
+    toggle.addEventListener('click', ()=>{ box.style.display='block'; document.getElementById('siteActions').style.display='none'; });
     cancelBtn.addEventListener('click', ()=>{
       box.style.display='none';
-      document.getElementById('secretToggle').style.display='block';
+      document.getElementById('siteActions').style.display='flex';
       input.value=''; check.textContent=''; msg.style.display='none'; secretOK=false; saveBtn.disabled=true;
     });
 
@@ -406,12 +405,10 @@
     }catch(e){}
 
     if(!site){
-      // paid but never finished onboarding — send them to setup
       if(payment && (payment.status === 'active' || !payment.status)){
         window.location.href = '/setup.html';
         return;
       }
-      // never paid — show plan picker
       document.getElementById('planPanel').style.display='block';
     } else if(site.status === 'active'){
       renderSite(site, currentBillingStatus);
