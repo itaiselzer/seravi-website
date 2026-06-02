@@ -207,8 +207,8 @@
   const PROXY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/migration-proxy";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  const BATCH_SIZE = 1000;
-  const BATCH_DELAY_MS = 100;
+  const BATCH_SIZE = 100;
+  const BATCH_DELAY_MS = 500;
 
   let session, user, mySite;
   const totals = { profile: 0, entries: 0, treatments: 0, devicestatus: 0 };
@@ -341,7 +341,7 @@
     let emptyRetries = 0;
 
     while(true){
-      let qs = `count=${BATCH_SIZE}&sort=-${dateField}`;
+      let qs = `count=${BATCH_SIZE}`;
       if(cursor !== null){
         qs += `&find[${dateField}][$lt]=${encodeURIComponent(cursor)}`;
       }
