@@ -3,77 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Migrate your Nightscout — Seravi</title>
-<meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Migrate to Seravi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#f6f4ee;--bg-2:#efece3;--ink:#1c2b29;--ink-soft:#4a5b58;--teal:#16635a;--teal-deep:#0e453f;--glow:#cfe7df;--white:#fffdf8;--accent:#d98b5f;--bad:#b4452f;--warn:#9a6a1e;--warn-bg:#fdf3e0;--alert-bg:#fbe6e0;--radius:18px}
+  :root{--bg:#f6f4ee;--bg-2:#efece3;--ink:#1c2b29;--ink-soft:#4a5b58;--teal:#16635a;--teal-deep:#0e453f;--glow:#cfe7df;--white:#fffdf8;--accent:#d98b5f;--bad:#b4452f;--radius:18px}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
   h1,h2,h3{font-family:'Fraunces',serif;font-weight:500;letter-spacing:-.01em;line-height:1.1}
   a{color:inherit;text-decoration:none}
-  .wrap{max-width:720px;margin:0 auto;padding:0 28px}
+  .wrap{max-width:680px;margin:0 auto;padding:0 28px}
   nav{backdrop-filter:blur(10px);background:rgba(246,244,238,.8);border-bottom:1px solid rgba(28,43,41,.06)}
-  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;max-width:680px;margin:0 auto;padding:0 28px}
   .logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:1.4rem;font-weight:600;cursor:pointer}
-  .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--glow)}
+  .logo .logo-img{width:32px;height:32px;flex-shrink:0;display:block}
   .signout{font-size:.92rem;color:var(--ink-soft);cursor:pointer;background:none;border:1.5px solid rgba(28,43,41,.15);padding:9px 18px;border-radius:999px;font-family:inherit}
   .signout:hover{border-color:var(--teal);color:var(--teal)}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--teal);color:var(--white);padding:13px 24px;border-radius:999px;font-size:.96rem;font-weight:500;border:none;cursor:pointer;transition:transform .18s,background .2s;box-shadow:0 6px 22px -8px rgba(22,99,90,.6);font-family:inherit}
-  .btn:hover{transform:translateY(-2px);background:var(--teal-deep)}
-  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-  .btn.ghost{background:transparent;color:var(--teal);box-shadow:none;border:1.5px solid rgba(22,99,90,.25)}
-  .btn.ghost:hover{background:rgba(22,99,90,.06);transform:none}
-  .btn.small{padding:9px 18px;font-size:.9rem;box-shadow:none}
   .backlink{display:inline-flex;align-items:center;gap:7px;color:var(--ink-soft);font-size:.92rem;cursor:pointer;margin-bottom:24px;transition:color .2s}
   .backlink:hover{color:var(--teal)}
   .backlink svg{width:16px;height:16px}
-  #loading,#gate,#noSite,#pending{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px;padding:0 28px}
+  #loading,#gate{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px}
   .spinner{width:42px;height:42px;border:4px solid var(--glow);border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-  main{padding:40px 0 80px;display:none}
-  main.visible{display:block}
-  .hello{font-size:2rem;margin-bottom:8px}
-  .lead{color:var(--ink-soft);margin-bottom:32px;font-size:1.05rem}
-  .panel{background:var(--white);border:1px solid rgba(28,43,41,.07);border-radius:var(--radius);padding:32px;margin-bottom:22px;box-shadow:0 14px 40px -30px rgba(14,69,63,.4)}
-  .panel h3{font-size:1.2rem;margin-bottom:10px}
-  .field{margin-bottom:18px}
-  .field label{display:block;font-size:.92rem;font-weight:500;margin-bottom:7px}
-  .field input,.field select{width:100%;padding:13px 14px;border:1.5px solid rgba(28,43,41,.18);border-radius:12px;font-family:inherit;font-size:1rem;background:var(--white);color:var(--ink);outline:none}
-  .field input:focus,.field select:focus{border-color:var(--teal)}
-  .field select{cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a5b58' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:18px;padding-right:42px}
-  .field .hint{font-size:.84rem;color:var(--ink-soft);margin-top:6px}
-  .warn{background:var(--warn-bg);border:1px solid rgba(154,106,30,.25);border-radius:12px;padding:14px 18px;color:var(--warn);font-size:.92rem;margin-bottom:18px}
+  #app{display:none;padding:50px 0 80px}
+  h1.title{font-size:2rem;margin-bottom:8px}
+  .lead{color:var(--ink-soft);margin-bottom:32px;max-width:50ch}
+  .panel{background:var(--white);border:1px solid rgba(28,43,41,.07);border-radius:var(--radius);padding:32px;box-shadow:0 14px 40px -30px rgba(14,69,63,.4);margin-bottom:22px}
+  label{display:block;font-size:.9rem;font-weight:500;margin:18px 0 7px}
+  label:first-of-type{margin-top:0}
+  .hint{font-size:.82rem;color:var(--ink-soft);margin-top:6px}
+  input[type=text], input[type=password], select{width:100%;border:1.5px solid rgba(28,43,41,.18);border-radius:12px;padding:13px 14px;font-family:inherit;font-size:1rem;background:var(--white);color:var(--ink);outline:none;transition:border-color .2s}
+  input[type=text]:focus, input[type=password]:focus, select:focus{border-color:var(--teal)}
+  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a5b58' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:18px;padding-right:42px}
+  .submit{margin-top:26px;width:100%;background:var(--teal);color:#fff;border:none;padding:15px;border-radius:999px;font-family:inherit;font-size:1.02rem;font-weight:500;cursor:pointer;transition:background .2s,transform .15s}
+  .submit:hover:not(:disabled){background:var(--teal-deep);transform:translateY(-1px)}
+  .submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+  .warn{background:#fdf3e0;border:1px solid rgba(154,106,30,.25);border-radius:12px;padding:16px 18px;color:#9a6a1e;font-size:.9rem;margin-bottom:20px}
   .warn strong{color:#7c5413}
-  .alert{background:var(--alert-bg);border:1px solid rgba(180,69,47,.25);border-radius:12px;padding:14px 18px;color:var(--bad);font-size:.92rem;margin-bottom:18px}
-  .alert strong{color:#7a2a1a}
-  .info{background:var(--glow);border:1px solid rgba(22,99,90,.2);border-radius:12px;padding:14px 18px;color:var(--teal-deep);font-size:.92rem;margin-bottom:18px}
-  .actions{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
-  .collection{padding:18px 0;border-bottom:1px solid rgba(28,43,41,.06)}
-  .collection:last-child{border-bottom:none}
-  .crow{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-  .cname{font-weight:500}
-  .ccount{font-size:.9rem;color:var(--ink-soft)}
-  .ccount.ok{color:var(--teal)}
-  .progress-bar{height:8px;background:var(--bg-2);border-radius:4px;overflow:hidden}
-  .progress-fill{height:100%;background:var(--teal);transition:width .3s;width:0%}
-  .progress-fill.indet{background:linear-gradient(90deg,var(--bg-2) 0%,var(--teal) 50%,var(--bg-2) 100%);background-size:200% 100%;animation:indet 1.5s linear infinite;width:100%!important}
-  @keyframes indet{0%{background-position:200% 0}100%{background-position:-200% 0}}
-  .cstatus{font-size:.84rem;color:var(--ink-soft);margin-top:6px}
-  .summary-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.95rem;border-bottom:1px solid rgba(28,43,41,.06)}
-  .summary-row:last-child{border-bottom:none}
-  .summary-row .v{font-weight:500;color:var(--teal-deep)}
-  .pip{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px rgba(22,99,90,.2);margin-right:9px;vertical-align:middle}
+  .progress-panel{display:none}
+  .progress-panel.show{display:block}
+  .progress-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(28,43,41,.06);font-size:.95rem}
+  .progress-row:last-child{border-bottom:none}
+  .progress-row .k{color:var(--ink-soft)}
+  .progress-row .v{font-weight:500;text-align:right}
+  .progress-row .v .stat{display:inline-flex;align-items:center;gap:8px}
+  .pip{width:9px;height:9px;border-radius:50%;background:var(--ink-soft)}
+  .pip.run{background:var(--accent);box-shadow:0 0 0 4px rgba(217,139,95,.2);animation:pulse 1.5s ease-in-out infinite}
+  .pip.ok{background:var(--teal);box-shadow:0 0 0 4px rgba(22,99,90,.2)}
+  .pip.skip{background:var(--ink-soft);box-shadow:0 0 0 4px rgba(74,91,88,.12)}
+  .pip.bad{background:var(--bad);box-shadow:0 0 0 4px rgba(180,69,47,.2)}
+  @keyframes pulse{50%{opacity:.6}}
+  .bar{height:8px;background:var(--bg-2);border-radius:999px;overflow:hidden;margin-top:18px}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--glow));border-radius:999px;width:0%;transition:width .4s}
+  .summary{background:var(--glow);border-radius:12px;padding:18px;margin-top:22px;display:none;color:var(--teal-deep);font-size:.95rem;text-align:center}
+  .summary.show{display:block}
+  .summary strong{color:var(--teal-deep)}
+  .log{margin-top:18px;font-family:ui-monospace,monospace;font-size:.8rem;color:var(--ink-soft);background:var(--bg-2);border-radius:10px;padding:14px;max-height:160px;overflow-y:auto;display:none}
+  .log.show{display:block}
+  .formerr{color:var(--bad);font-size:.9rem;margin-top:14px;display:none}
+  .formerr.show{display:block}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="wrap nav-inner">
-    <div class="logo" id="logoLink"><span class="dot"></span>Seravi</div>
+  <div class="nav-inner">
+    <div class="logo" id="logoLink"><img src="/logo.png" alt="Seravi" class="logo-img">Seravi</div>
     <button class="signout" id="signOut" style="display:none">Sign out</button>
   </div>
 </nav>
@@ -85,21 +81,8 @@
 
 <div id="gate" class="wrap" style="display:none">
   <h2>Please sign in</h2>
-  <p style="color:var(--ink-soft);max-width:34ch">You need to be signed in to migrate your Nightscout.</p>
-  <a href="/" class="btn">Back to home</a>
-</div>
-
-<div id="noSite" class="wrap" style="display:none">
-  <h2>Finish setting up your Seravi site first</h2>
-  <p style="color:var(--ink-soft);max-width:40ch">Before migrating data, you need an active Seravi site to migrate into. Head to your dashboard to complete setup.</p>
-  <a href="/dashboard.html" class="btn">Go to dashboard</a>
-</div>
-
-<div id="pending" class="wrap" style="display:none">
-  <div class="spinner"></div>
-  <h2>Your site is still building</h2>
-  <p style="color:var(--ink-soft);max-width:40ch">Your Seravi Nightscout site is being provisioned. Come back here once it's live (usually 1–3 minutes).</p>
-  <a href="/dashboard.html" class="btn ghost">Back to dashboard</a>
+  <p style="color:var(--ink-soft);max-width:34ch">You need to be signed in to migrate.</p>
+  <a href="/" class="submit" style="display:inline-block;text-align:center;text-decoration:none;max-width:220px">Back to home</a>
 </div>
 
 <main id="app">
@@ -109,106 +92,60 @@
       <span>Back to dashboard</span>
     </div>
 
-    <h1 class="hello">Migrate your existing Nightscout</h1>
-    <p class="lead">Bring your history from your old Nightscout site to your new Seravi site. We'll copy your entries, treatments, profile, and device status — your old site is not modified.</p>
+    <h1 class="title">Migrate from another Nightscout</h1>
+    <p class="lead">We'll copy your history (entries, treatments, profile, device status) from your current Nightscout site into your new Seravi site. Your current site is left untouched.</p>
 
-    <div class="panel" id="formState">
-      <h3>Tell us where to migrate from</h3>
-      <p class="muted" style="color:var(--ink-soft);font-size:.95rem;margin-bottom:22px">Your old Nightscout's URL and API secret. They're sent through Seravi's secure migration service.</p>
-
-      <div class="field">
-        <label for="oldUrl">Old Nightscout URL</label>
-        <input id="oldUrl" type="url" placeholder="https://my-nightscout.example.com" autocomplete="off">
-        <div class="hint">The address you currently use to view your Nightscout (NightscoutPro, ns10.be, Heroku, Fly.io, Railway, self-hosted, etc.). Don't include /api/v1.</div>
-      </div>
-
-      <div class="field">
-        <label for="oldSecret">Old API secret</label>
-        <input id="oldSecret" type="password" placeholder="Your existing API_SECRET" autocomplete="off">
-        <div class="hint">The API_SECRET you set on your old Nightscout. Same one you put in your uploader app.</div>
-      </div>
-
-      <div class="field">
-        <label for="rangeChoice">How much data to migrate</label>
-        <select id="rangeChoice">
-          <option value="all">All my data</option>
-          <option value="730">Last 2 years</option>
-          <option value="365">Last 1 year</option>
-          <option value="180">Last 6 months</option>
-          <option value="90">Last 3 months</option>
-        </select>
-        <div class="hint">Smaller ranges migrate faster. Pick "All my data" to bring over your complete history.</div>
-      </div>
-
+    <div class="panel" id="formPanel">
       <div class="warn">
-        <strong>Heads up:</strong> migration time depends on how much data you have — a few minutes for 3 months, up to 30+ minutes for many years. Please keep this tab open until you see the "Migration complete" screen.
+        <strong>Keep this tab open</strong> during the migration. Closing it will pause the process — you can come back and resume later.
       </div>
 
-      <div class="actions">
-        <button class="btn" id="startBtn">Start migration →</button>
-      </div>
+      <label for="srcUrl">Current Nightscout URL</label>
+      <input id="srcUrl" type="text" placeholder="https://yourname.nightscoutpro.com" autocomplete="off" spellcheck="false">
+      <p class="hint">The full URL of your existing Nightscout site, including https://</p>
+
+      <label for="srcSecret">API secret for the URL above</label>
+      <input id="srcSecret" type="password" placeholder="Your existing site's API secret" autocomplete="off" spellcheck="false">
+      <p class="hint">This is the secret you use to upload data to that site. We don't store it.</p>
+
+      <label for="rangeSel">How much data should we migrate?</label>
+      <select id="rangeSel">
+        <option value="0">All my data</option>
+        <option value="730">Last 2 years</option>
+        <option value="365">Last 1 year</option>
+        <option value="180">Last 6 months</option>
+        <option value="90">Last 3 months</option>
+      </select>
+      <p class="hint">Migrating less data is faster. You can always migrate more later.</p>
+
+      <button class="submit" id="startBtn">Start migration</button>
+      <div class="formerr" id="formErr"></div>
     </div>
 
-    <div class="panel" id="validatingState" style="display:none">
-      <h3><span class="spinner" style="width:20px;height:20px;border-width:3px;display:inline-block;vertical-align:middle;margin-right:10px"></span>Checking your old Nightscout…</h3>
-      <p style="color:var(--ink-soft);font-size:.95rem;margin-top:10px">Testing the connection and verifying the API secret.</p>
-    </div>
+    <div class="panel progress-panel" id="progressPanel">
+      <h3 style="font-size:1.15rem;margin-bottom:18px">Migration in progress</h3>
 
-    <div class="panel" id="migrateState" style="display:none">
-      <h3>Migration in progress</h3>
-      <div class="warn" style="margin-top:14px">
-        <strong>Please keep this tab open</strong> — closing it before completion will interrupt the migration.
+      <div class="progress-row">
+        <span class="k">Profile</span>
+        <span class="v"><span class="stat"><span class="pip" id="pipProfile"></span><span id="statProfile">Waiting…</span></span></span>
+      </div>
+      <div class="progress-row">
+        <span class="k">Entries (glucose readings)</span>
+        <span class="v"><span class="stat"><span class="pip" id="pipEntries"></span><span id="statEntries">Waiting…</span></span></span>
+      </div>
+      <div class="progress-row">
+        <span class="k">Treatments</span>
+        <span class="v"><span class="stat"><span class="pip" id="pipTreatments"></span><span id="statTreatments">Waiting…</span></span></span>
+      </div>
+      <div class="progress-row">
+        <span class="k">Device status</span>
+        <span class="v"><span class="stat"><span class="pip" id="pipDevicestatus"></span><span id="statDevicestatus">Waiting…</span></span></span>
       </div>
 
-      <div class="collection">
-        <div class="crow"><span class="cname">Profile</span><span class="ccount" id="profileCount">waiting…</span></div>
-        <div class="progress-bar"><div class="progress-fill" id="profileBar"></div></div>
-        <div class="cstatus" id="profileStatus"></div>
-      </div>
+      <div class="bar"><div class="bar-fill" id="barFill"></div></div>
 
-      <div class="collection">
-        <div class="crow"><span class="cname">Glucose entries</span><span class="ccount" id="entriesCount">waiting…</span></div>
-        <div class="progress-bar"><div class="progress-fill" id="entriesBar"></div></div>
-        <div class="cstatus" id="entriesStatus"></div>
-      </div>
-
-      <div class="collection">
-        <div class="crow"><span class="cname">Treatments</span><span class="ccount" id="treatmentsCount">waiting…</span></div>
-        <div class="progress-bar"><div class="progress-fill" id="treatmentsBar"></div></div>
-        <div class="cstatus" id="treatmentsStatus"></div>
-      </div>
-
-      <div class="collection">
-        <div class="crow"><span class="cname">Device status</span><span class="ccount" id="devicestatusCount">waiting…</span></div>
-        <div class="progress-bar"><div class="progress-fill" id="devicestatusBar"></div></div>
-        <div class="cstatus" id="devicestatusStatus"></div>
-      </div>
-    </div>
-
-    <div class="panel" id="successState" style="display:none">
-      <h3><span class="pip"></span>Migration complete</h3>
-      <p style="color:var(--ink-soft);font-size:.95rem;margin:14px 0 22px">Your data has been copied to your Seravi site. You can now open it and start using it as your main Nightscout.</p>
-
-      <div id="successSummary"></div>
-
-      <div class="actions" style="margin-top:24px">
-        <a id="openSiteLink" class="btn" target="_blank">Open my Nightscout →</a>
-        <a href="/dashboard.html" class="btn ghost">Back to dashboard</a>
-      </div>
-
-      <div class="info" style="margin-top:24px">
-        <strong>Next step:</strong> update your CGM uploader app (xDrip, Loop, Dexcom bridge, etc.) to point to your new Seravi URL and your new API secret. Until you do, new readings will keep going to your old site.
-      </div>
-    </div>
-
-    <div class="panel" id="errorState" style="display:none">
-      <h3 style="color:var(--bad)">Migration couldn't continue</h3>
-      <div class="alert" id="errorMsg" style="margin-top:14px"></div>
-      <p style="color:var(--ink-soft);font-size:.95rem;margin-bottom:18px">If this keeps happening, email <a href="mailto:support@seravi.eu" style="color:var(--teal);text-decoration:underline">support@seravi.eu</a> with your old Nightscout URL and we'll do it manually for you.</p>
-      <div class="actions">
-        <button class="btn ghost" id="retryBtn">Try again</button>
-        <a href="/dashboard.html" class="btn ghost small">Back to dashboard</a>
-      </div>
+      <div class="summary" id="summary"></div>
+      <div class="log" id="log"></div>
     </div>
   </div>
 </main>
@@ -222,284 +159,328 @@
 
   const DAY_MS = 24 * 60 * 60 * 1000;
   const WEEK_MS = 7 * DAY_MS;
-  const ALL_LOOKBACK_MS = 10 * 365 * DAY_MS;
-  const STOP_AFTER_EMPTY_DAYS = 14;
-  const STOP_AFTER_EMPTY_WEEKS = 4;
-  const BATCH_DELAY_MS = 250;
-  const QUERY_COUNT_DAY = 500;
-  const QUERY_COUNT_WEEK = 10000;
+  const ALL_LOOKBACK_MS = 10 * 365 * DAY_MS; // 10 years safety stop
+  const SLICE_DELAY_MS = 250;
 
-  let session, user, mySite;
-  let lookbackMs = ALL_LOOKBACK_MS;
-  const totals = { profile: 0, entries: 0, treatments: 0, devicestatus: 0 };
-  const failedCounts = { entries: 0, treatments: 0, devicestatus: 0 };
+  let session = null, user = null, mySite = null;
 
-  function show(id){
-    ['loading','gate','noSite','pending'].forEach(x=>{
-      const el = document.getElementById(x);
-      if(el) el.style.display = (x===id) ? 'flex' : 'none';
+  function logLine(s){
+    const el = document.getElementById('log');
+    el.classList.add('show');
+    const t = new Date().toLocaleTimeString();
+    el.textContent += '[' + t + '] ' + s + '\n';
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function setStatus(key, label, state){
+    document.getElementById('stat'+key).textContent = label;
+    const pip = document.getElementById('pip'+key);
+    pip.className = 'pip' + (state ? ' '+state : '');
+  }
+
+  function show(id){ ['loading','gate','app'].forEach(x=>{ document.getElementById(x).style.display = (x===id ? (x==='app'?'block':'flex') : 'none'); }); }
+  function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+  function stripIds(arr){
+    if(!Array.isArray(arr)) return arr;
+    return arr.map(o => {
+      if(!o || typeof o !== 'object') return o;
+      const c = Object.assign({}, o);
+      delete c._id;
+      return c;
     });
-    const main = document.getElementById('app');
-    main.classList.toggle('visible', id==='app');
   }
 
-  function setPanel(name){
-    ['formState','validatingState','migrateState','successState','errorState'].forEach(x=>{
-      document.getElementById(x).style.display = (x===name) ? 'block' : 'none';
+  async function proxyGet(srcUrl, srcSecret, path){
+    const r = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: { 'Authorization':'Bearer '+session.access_token, 'Content-Type':'application/json' },
+      body: JSON.stringify({ method:'GET', srcUrl, srcSecret, path })
     });
-    window.scrollTo(0,0);
-  }
-
-  function showError(msg){
-    document.getElementById('errorMsg').innerHTML = msg;
-    setPanel('errorState');
-  }
-
-  function normalizeUrl(u){
-    return u.trim().replace(/\/+$/, '');
-  }
-
-  async function proxyRequest(method, targetUrl, secret, body){
-    let res;
-    try{
-      res = await fetch(PROXY_URL, {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + session.access_token,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ method, targetUrl, secret, body })
-      });
-    }catch(e){
-      throw new Error('Could not reach the migration service. Check your internet connection.');
+    const text = await r.text();
+    if(!r.ok){
+      let err = text;
+      try{ const j = JSON.parse(text); err = j.error || j.message || text; }catch(e){}
+      throw new Error('Source fetch failed ('+r.status+'): ' + err);
     }
-
-    if(!res.ok){
-      let errMsg = `Migration service returned ${res.status}`;
-      try{
-        const err = await res.json();
-        if(err.error) errMsg = err.error;
-      }catch{}
-      throw new Error(errMsg);
-    }
-
-    return await res.json();
+    return text ? JSON.parse(text) : null;
   }
 
-  async function validateOldNS(url, secret){
-    const result = await proxyRequest('GET', `${url}/api/v1/entries.json?count=1`, secret);
-    if(!result.ok){
-      if(result.status === 401){
-        throw new Error('That API secret was rejected by your old Nightscout. Double-check it matches what you set in your old uploader.');
-      }
-      if(result.status === 404){
-        throw new Error('Could not find your Nightscout at that URL. Check the URL is correct.');
-      }
-      throw new Error(`Your old Nightscout returned an error (status ${result.status}). Please verify the URL and secret are correct.`);
+  async function postToMine(path, body){
+    const url = 'https://' + mySite.subdomain + path;
+    const r = await fetch(url, {
+      method:'POST',
+      headers:{ 'API-SECRET': mySite.api_secret_sha1, 'Content-Type':'application/json' },
+      body: JSON.stringify(body)
+    });
+    if(!r.ok){
+      const t = await r.text();
+      throw new Error('Upload to your Seravi site failed ('+r.status+'): ' + t.slice(0,200));
     }
     return true;
   }
 
-  function updateProgress(name, count, status){
-    document.getElementById(name + 'Count').textContent = count.toLocaleString() + ' migrated';
-    document.getElementById(name + 'Count').classList.add('ok');
-    const bar = document.getElementById(name + 'Bar');
-    bar.classList.add('indet');
-    if(status){ document.getElementById(name + 'Status').textContent = status; }
+  async function sha1Hex(s){
+    const enc = new TextEncoder().encode(s);
+    const buf = await crypto.subtle.digest('SHA-1', enc);
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
   }
 
-  function finishProgress(name, count){
-    document.getElementById(name + 'Count').textContent = count.toLocaleString() + ' done';
-    document.getElementById(name + 'Count').classList.add('ok');
-    const bar = document.getElementById(name + 'Bar');
-    bar.classList.remove('indet');
-    bar.style.width = '100%';
-    document.getElementById(name + 'Status').textContent = '✓ complete';
-  }
-
-  function skipProgress(name, reason){
-    document.getElementById(name + 'Count').textContent = '—';
-    const bar = document.getElementById(name + 'Bar');
-    bar.classList.remove('indet');
-    bar.style.width = '100%';
-    document.getElementById(name + 'Status').textContent = reason || 'nothing to migrate';
-  }
-
-  function stripIds(records){
-    return records.map(item => {
-      const { _id, ...rest } = item;
-      return rest;
-    });
-  }
-
-  async function migrateProfile(oldUrl, oldSecret, newUrl, newSecret){
-    document.getElementById('profileBar').classList.add('indet');
-    const fetchResult = await proxyRequest('GET', `${oldUrl}/api/v1/profile.json`, oldSecret);
-    if(!fetchResult.ok){
-      skipProgress('profile', 'could not fetch (you can set this up manually in Nightscout)');
-      return 0;
-    }
-    const profile = fetchResult.data;
-    if(!profile || (Array.isArray(profile) && profile.length === 0)){
-      skipProgress('profile');
-      return 0;
-    }
-    const items = Array.isArray(profile) ? profile : [profile];
-    const cleanItems = stripIds(items);
+  async function migrateProfile(srcUrl, srcSecret, skipProgress){
     try{
-      const postResult = await proxyRequest('POST', `${newUrl}/api/v1/profile`, newSecret, cleanItems);
-      if(!postResult.ok){
-        skipProgress('profile', `upload returned ${postResult.status} — you can set this up manually in Nightscout`);
+      setStatus('Profile','Fetching…','run');
+      const profile = await proxyGet(srcUrl, srcSecret, '/api/v1/profile.json?count=10');
+      if(!Array.isArray(profile) || profile.length===0){
+        setStatus('Profile','None found (skipped)','skip');
+        logLine('Profile: none found, skipping.');
+        skipProgress.profile = true;
         return 0;
       }
-      finishProgress('profile', items.length);
-      return items.length;
-    }catch(e){
-      skipProgress('profile', 'upload failed — you can set this up manually in Nightscout');
+      const latest = profile[0];
+      const clean = Object.assign({}, latest);
+      delete clean._id;
+      setStatus('Profile','Uploading…','run');
+      try{
+        await postToMine('/api/v1/profile.json', clean);
+        setStatus('Profile','Done — 1 profile','ok');
+        logLine('Profile: migrated.');
+        return 1;
+      } catch(e){
+        setStatus('Profile','Skipped (existing profile in use)','skip');
+        logLine('Profile upload failed (non-fatal): ' + e.message);
+        skipProgress.profile = true;
+        return 0;
+      }
+    } catch(e){
+      setStatus('Profile','Skipped','skip');
+      logLine('Profile fetch failed (non-fatal): ' + e.message);
+      skipProgress.profile = true;
       return 0;
     }
   }
 
-  async function migrateTimeSeriesCollection(name, dateField, sliceMs, queryCount, stopAfterEmpty, oldUrl, oldSecret, newUrl, newSecret){
-    let migrated = 0;
-    let failed = 0;
-    const isNumericDate = (dateField === 'date');
-    const earliestAllowed = Date.now() - lookbackMs;
-    let endMs = Date.now();
-    let consecutiveEmpty = 0;
+  async function migrateInDaySlices(label, key, srcUrl, srcSecret, basePath, lookbackMs){
+    // walk backwards day-by-day; stop after consecutive empty days or after lookback
+    setStatus(key, 'Starting…', 'run');
+    const PER_REQUEST = 500;
+    const MAX_EMPTY_STREAK = 14;
+    const now = Date.now();
+    const lookbackStart = lookbackMs ? (now - lookbackMs) : (now - ALL_LOOKBACK_MS);
+    let cursorEnd = now;
+    let totalFetched = 0, totalUploaded = 0, totalFailed = 0;
+    let emptyStreak = 0;
+    let dayIndex = 0;
 
-    while(endMs > earliestAllowed){
-      const startMs = Math.max(endMs - sliceMs, earliestAllowed);
+    while(cursorEnd > lookbackStart){
+      dayIndex++;
+      const sliceStart = Math.max(cursorEnd - DAY_MS, lookbackStart);
+      const path = basePath
+        + '?count=' + PER_REQUEST
+        + '&find[date][$gte]=' + sliceStart
+        + '&find[date][$lt]=' + cursorEnd;
 
-      let qs;
-      if(isNumericDate){
-        qs = `count=${queryCount}&find[${dateField}][$gte]=${startMs}&find[${dateField}][$lt]=${endMs}`;
-      }else{
-        const startISO = new Date(startMs).toISOString();
-        const endISO = new Date(endMs).toISOString();
-        qs = `count=${queryCount}&find[${dateField}][$gte]=${encodeURIComponent(startISO)}&find[${dateField}][$lt]=${encodeURIComponent(endISO)}`;
+      setStatus(key, 'Fetching day ' + dayIndex + '…', 'run');
+      let batch = [];
+      try{
+        batch = await proxyGet(srcUrl, srcSecret, path);
+        if(!Array.isArray(batch)) batch = [];
+      } catch(e){
+        logLine(label + ': fetch day ' + dayIndex + ' failed (non-fatal): ' + e.message);
+        batch = [];
       }
 
-      const fetchResult = await proxyRequest('GET', `${oldUrl}/api/v1/${name}.json?${qs}`, oldSecret);
-      if(!fetchResult.ok){
-        throw new Error(`Failed reading ${name} from your old Nightscout (status ${fetchResult.status}).`);
-      }
-      const batch = fetchResult.data;
-      const sliceLabel = new Date(startMs).toISOString().slice(0, 10);
-
-      if(!Array.isArray(batch) || batch.length === 0){
-        consecutiveEmpty++;
-        if(migrated > 0){
-          updateProgress(name, migrated, `searching… (${sliceLabel} was empty)`);
+      if(batch.length === 0){
+        emptyStreak++;
+        if(emptyStreak >= MAX_EMPTY_STREAK){
+          logLine(label + ': ' + MAX_EMPTY_STREAK + ' consecutive empty days — stopping.');
+          break;
         }
-        if(consecutiveEmpty >= stopAfterEmpty) break;
-      }else{
-        consecutiveEmpty = 0;
-        const cleanBatch = stripIds(batch);
+      } else {
+        emptyStreak = 0;
+        totalFetched += batch.length;
+        const clean = stripIds(batch);
+        setStatus(key, 'Uploading ' + totalFetched.toLocaleString() + '…', 'run');
         try{
-          const postResult = await proxyRequest('POST', `${newUrl}/api/v1/${name}`, newSecret, cleanBatch);
-          if(!postResult.ok){
-            failed += batch.length;
-            updateProgress(name, migrated, `${sliceLabel}: ${batch.length} skipped (upload ${postResult.status})`);
-          }else{
-            migrated += batch.length;
-            updateProgress(name, migrated, `${sliceLabel}: ${batch.length} records`);
-          }
-        }catch(e){
-          failed += batch.length;
-          updateProgress(name, migrated, `${sliceLabel}: ${batch.length} skipped`);
+          await postToMine(basePath, clean);
+          totalUploaded += batch.length;
+        } catch(e){
+          totalFailed += batch.length;
+          logLine(label + ': day ' + dayIndex + ' upload failed (non-fatal): ' + e.message);
         }
       }
 
-      endMs = startMs;
-      if(startMs <= earliestAllowed) break;
-      await new Promise(r => setTimeout(r, BATCH_DELAY_MS));
+      cursorEnd = sliceStart;
+      await sleep(SLICE_DELAY_MS);
     }
 
-    failedCounts[name] = failed;
-    if(migrated === 0 && failed === 0){
-      skipProgress(name);
-    }else{
-      finishProgress(name, migrated);
+    if(totalUploaded === 0 && totalFetched === 0){
+      setStatus(key, 'None found', 'skip');
+      logLine(label + ': none found.');
+    } else {
+      const failMsg = totalFailed > 0 ? ' (' + totalFailed + ' failed)' : '';
+      setStatus(key, totalUploaded.toLocaleString() + ' uploaded' + failMsg, totalFailed === 0 ? 'ok' : 'skip');
+      logLine(label + ': uploaded ' + totalUploaded + ' / fetched ' + totalFetched + (totalFailed?(' / failed ' + totalFailed):''));
     }
-    return migrated;
+    return totalUploaded;
   }
 
-  async function runMigration(oldUrl, oldSecret){
-    setPanel('migrateState');
-    const newUrl = 'https://' + (mySite.subdomain || (mySite.username + '.seravi.eu'));
-    const newSecret = mySite.api_secret;
+  async function migrateInWeekSlices(label, key, srcUrl, srcSecret, basePath, lookbackMs){
+    setStatus(key, 'Starting…', 'run');
+    const PER_REQUEST = 10000;
+    const MAX_EMPTY_STREAK = 4;
+    const now = Date.now();
+    const lookbackStart = lookbackMs ? (now - lookbackMs) : (now - ALL_LOOKBACK_MS);
+    let cursorEnd = now;
+    let totalFetched = 0, totalUploaded = 0, totalFailed = 0;
+    let emptyStreak = 0;
+    let weekIndex = 0;
+
+    while(cursorEnd > lookbackStart){
+      weekIndex++;
+      const sliceStart = Math.max(cursorEnd - WEEK_MS, lookbackStart);
+      const path = basePath
+        + '?count=' + PER_REQUEST
+        + '&find[created_at][$gte]=' + new Date(sliceStart).toISOString()
+        + '&find[created_at][$lt]=' + new Date(cursorEnd).toISOString();
+
+      setStatus(key, 'Fetching week ' + weekIndex + '…', 'run');
+      let batch = [];
+      try{
+        batch = await proxyGet(srcUrl, srcSecret, path);
+        if(!Array.isArray(batch)) batch = [];
+      } catch(e){
+        logLine(label + ': fetch week ' + weekIndex + ' failed (non-fatal): ' + e.message);
+        batch = [];
+      }
+
+      if(batch.length === 0){
+        emptyStreak++;
+        if(emptyStreak >= MAX_EMPTY_STREAK){
+          logLine(label + ': ' + MAX_EMPTY_STREAK + ' consecutive empty weeks — stopping.');
+          break;
+        }
+      } else {
+        emptyStreak = 0;
+        totalFetched += batch.length;
+        const clean = stripIds(batch);
+        setStatus(key, 'Uploading ' + totalFetched.toLocaleString() + '…', 'run');
+        try{
+          await postToMine(basePath, clean);
+          totalUploaded += batch.length;
+        } catch(e){
+          totalFailed += batch.length;
+          logLine(label + ': week ' + weekIndex + ' upload failed (non-fatal): ' + e.message);
+        }
+      }
+
+      cursorEnd = sliceStart;
+      await sleep(SLICE_DELAY_MS);
+    }
+
+    if(totalUploaded === 0 && totalFetched === 0){
+      setStatus(key, 'None found', 'skip');
+      logLine(label + ': none found.');
+    } else {
+      const failMsg = totalFailed > 0 ? ' (' + totalFailed + ' failed)' : '';
+      setStatus(key, totalUploaded.toLocaleString() + ' uploaded' + failMsg, totalFailed === 0 ? 'ok' : 'skip');
+      logLine(label + ': uploaded ' + totalUploaded + ' / fetched ' + totalFetched + (totalFailed?(' / failed ' + totalFailed):''));
+    }
+    return totalUploaded;
+  }
+
+  function setProgressBar(pct){
+    document.getElementById('barFill').style.width = pct + '%';
+  }
+
+  async function runMigration(srcUrl, srcSecret, lookbackDays){
+    document.getElementById('formPanel').style.display='none';
+    document.getElementById('progressPanel').classList.add('show');
+
+    const lookbackMs = (lookbackDays && lookbackDays > 0) ? lookbackDays * DAY_MS : null;
+    const skipProgress = {};
+    const totals = { profile:0, entries:0, treatments:0, devicestatus:0 };
+
+    // STEP 1 — Profile (small, often present)
+    setProgressBar(5);
+    totals.profile = await migrateProfile(srcUrl, srcSecret, skipProgress);
+
+    // STEP 2 — Entries (day slices, lots of data)
+    setProgressBar(20);
+    totals.entries = await migrateInDaySlices('Entries', 'Entries', srcUrl, srcSecret, '/api/v1/entries.json', lookbackMs);
+
+    // STEP 3 — Treatments (week slices, fewer records)
+    setProgressBar(70);
+    totals.treatments = await migrateInWeekSlices('Treatments', 'Treatments', srcUrl, srcSecret, '/api/v1/treatments.json', lookbackMs);
+
+    // STEP 4 — Device status (day slices, can be heavy)
+    setProgressBar(90);
+    totals.devicestatus = await migrateInDaySlices('Device status', 'Devicestatus', srcUrl, srcSecret, '/api/v1/devicestatus.json', lookbackMs);
+
+    setProgressBar(100);
+
+    const sum = document.getElementById('summary');
+    sum.classList.add('show');
+    sum.innerHTML =
+      '<strong>✓ Migration finished.</strong><br>' +
+      'Entries: ' + totals.entries.toLocaleString() + ' &middot; ' +
+      'Treatments: ' + totals.treatments.toLocaleString() + ' &middot; ' +
+      'Device status: ' + totals.devicestatus.toLocaleString() + ' &middot; ' +
+      'Profile: ' + (totals.profile ? 'yes' : 'skipped') + '<br>' +
+      '<a href="https://' + mySite.subdomain + '" target="_blank" style="color:var(--teal-deep);font-weight:600">Open your Seravi site →</a>';
+  }
+
+  document.getElementById('startBtn').addEventListener('click', async ()=>{
+    const btn = document.getElementById('startBtn');
+    const err = document.getElementById('formErr');
+    err.classList.remove('show');
+    const srcUrl = document.getElementById('srcUrl').value.trim().replace(/\/+$/,'');
+    const srcSecret = document.getElementById('srcSecret').value;
+    const lookbackDays = parseInt(document.getElementById('rangeSel').value, 10) || 0;
+
+    if(!srcUrl.startsWith('http')){ err.textContent = 'Please include https:// in the URL.'; err.classList.add('show'); return; }
+    if(!srcSecret || srcSecret.length < 8){ err.textContent = 'Please enter the API secret for your current site.'; err.classList.add('show'); return; }
+    if(!mySite){ err.textContent = "Your Seravi site isn't ready yet. Please try again in a minute."; err.classList.add('show'); return; }
+
+    btn.disabled = true; btn.textContent = 'Starting…';
 
     try{
-      totals.profile = await migrateProfile(oldUrl, oldSecret, newUrl, newSecret);
-      totals.entries = await migrateTimeSeriesCollection('entries', 'date', DAY_MS, QUERY_COUNT_DAY, STOP_AFTER_EMPTY_DAYS, oldUrl, oldSecret, newUrl, newSecret);
-      totals.treatments = await migrateTimeSeriesCollection('treatments', 'created_at', WEEK_MS, QUERY_COUNT_WEEK, STOP_AFTER_EMPTY_WEEKS, oldUrl, oldSecret, newUrl, newSecret);
-      totals.devicestatus = await migrateTimeSeriesCollection('devicestatus', 'created_at', DAY_MS, QUERY_COUNT_DAY, STOP_AFTER_EMPTY_DAYS, oldUrl, oldSecret, newUrl, newSecret);
-
-      const summaryHtml = `
-        <div class="summary-row"><span>Profile</span><span class="v">${totals.profile.toLocaleString()}</span></div>
-        <div class="summary-row"><span>Glucose entries</span><span class="v">${totals.entries.toLocaleString()}${failedCounts.entries ? ' <span style="color:var(--bad);font-weight:400">('+failedCounts.entries.toLocaleString()+' could not be uploaded)</span>' : ''}</span></div>
-        <div class="summary-row"><span>Treatments</span><span class="v">${totals.treatments.toLocaleString()}${failedCounts.treatments ? ' <span style="color:var(--bad);font-weight:400">('+failedCounts.treatments.toLocaleString()+' could not be uploaded)</span>' : ''}</span></div>
-        <div class="summary-row"><span>Device status</span><span class="v">${totals.devicestatus.toLocaleString()}${failedCounts.devicestatus ? ' <span style="color:var(--bad);font-weight:400">('+failedCounts.devicestatus.toLocaleString()+' could not be uploaded)</span>' : ''}</span></div>
-      `;
-      document.getElementById('successSummary').innerHTML = summaryHtml;
-      document.getElementById('openSiteLink').href = newUrl;
-      setPanel('successState');
-    }catch(e){
-      showError(e.message);
+      mySite.api_secret_sha1 = await sha1Hex(mySite.api_secret);
+      await runMigration(srcUrl, srcSecret, lookbackDays);
+    } catch(e){
+      err.textContent = 'Migration error: ' + (e.message || e);
+      err.classList.add('show');
+      btn.disabled = false; btn.textContent = 'Start migration';
     }
-  }
-
-  async function onStart(){
-    const oldUrl = normalizeUrl(document.getElementById('oldUrl').value);
-    const oldSecret = document.getElementById('oldSecret').value;
-    const rangeChoice = document.getElementById('rangeChoice').value;
-
-    if(!oldUrl || !oldSecret){ alert('Please enter both the URL and the API secret.'); return; }
-    if(!/^https:\/\//.test(oldUrl)){ alert('The URL should start with https://. Plain http:// is not supported for security reasons.'); return; }
-    if(oldSecret.length < 12){ alert('That API secret looks too short. Nightscout secrets are usually at least 12 characters.'); return; }
-
-    if(rangeChoice === 'all'){
-      lookbackMs = ALL_LOOKBACK_MS;
-    }else{
-      const days = parseInt(rangeChoice, 10);
-      lookbackMs = days * DAY_MS;
-    }
-
-    setPanel('validatingState');
-    try{
-      await validateOldNS(oldUrl, oldSecret);
-    }catch(e){
-      showError(e.message);
-      return;
-    }
-    await runMigration(oldUrl, oldSecret);
-  }
-
-  document.getElementById('startBtn').addEventListener('click', onStart);
-  document.getElementById('retryBtn').addEventListener('click', ()=>{ setPanel('formState'); });
-  document.getElementById('logoLink').addEventListener('click', ()=>{ window.location.href = '/'; });
-  document.getElementById('backLink').addEventListener('click', ()=>{ window.location.href = '/dashboard.html'; });
-  document.getElementById('signOut').addEventListener('click', async ()=>{ await sb.auth.signOut(); window.location.href='/'; });
+  });
 
   (async ()=>{
     const { data } = await sb.auth.getSession();
+    if(!data.session){ show('gate'); return; }
     session = data.session;
-    if(!session){ show('gate'); return; }
     user = session.user;
-    document.getElementById('signOut').style.display = 'inline-block';
+    document.getElementById('signOut').style.display='inline-block';
 
     try{
       const { data: row } = await sb.from('sites').select('*').eq('user_id', user.id).maybeSingle();
-      mySite = row;
-    }catch(e){ mySite = null; }
-
-    if(!mySite){ show('noSite'); return; }
-    if(mySite.status !== 'active'){ show('pending'); return; }
+      if(!row || row.status !== 'active'){
+        document.getElementById('formErr').textContent =
+          "Your Seravi site isn't active yet. Please wait until it's live (check your dashboard) before migrating.";
+        document.getElementById('formErr').classList.add('show');
+        document.getElementById('startBtn').disabled = true;
+      } else {
+        mySite = row;
+      }
+    } catch(e){
+      document.getElementById('formErr').textContent = 'Could not load your site info: ' + e.message;
+      document.getElementById('formErr').classList.add('show');
+    }
 
     show('app');
-    setPanel('formState');
   })();
+
+  document.getElementById('logoLink').addEventListener('click', ()=>{ window.location.href='/'; });
+  document.getElementById('backLink').addEventListener('click', ()=>{ window.location.href='/dashboard.html'; });
+  document.getElementById('signOut').addEventListener('click', async ()=>{ await sb.auth.signOut(); window.location.href='/'; });
 </script>
 </body>
 </html>
