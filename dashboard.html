@@ -99,19 +99,6 @@
   .adv-action-sub{font-size:.85rem;color:var(--ink-soft);line-height:1.4}
   .adv-action-arrow{font-size:1.2rem;color:var(--teal);flex-shrink:0;transition:transform .2s}
   .adv-action:hover .adv-action-arrow{transform:translateX(3px)}
-  .switch{position:relative;display:inline-block;width:46px;height:26px;vertical-align:middle}
-  .switch input{opacity:0;width:0;height:0;position:absolute}
-  .slider-track{position:absolute;cursor:pointer;inset:0;background:#c5c9c8;border-radius:34px;transition:background .25s}
-  .slider-track:before{position:absolute;content:"";height:20px;width:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:transform .25s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  .switch input:checked + .slider-track{background:var(--teal)}
-  .switch input:checked + .slider-track:before{transform:translateX(20px)}
-  .switch input:disabled + .slider-track{opacity:.5;cursor:wait}
-  .row-stack{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
-  .row-stack .sub{font-size:.83rem;color:var(--ink-soft);font-weight:400;line-height:1.4;max-width:42ch}
-  .row.privacy{align-items:flex-start;padding:18px 0}
-  .privacy-msg{font-size:.85rem;margin-top:8px;display:none}
-  .privacy-msg.ok{color:var(--teal);display:block}
-  .privacy-msg.bad{color:var(--bad);display:block}
   @media(max-width:680px){.planrow{grid-template-columns:1fr}}
 </style>
 </head>
@@ -157,19 +144,6 @@
       <div id="siteRows" style="margin-top:18px;display:none">
         <div class="row"><span class="k">Your site</span><span class="v"><a id="siteUrl" href="#" target="_blank"></a></span></div>
         <div class="row"><span class="k">API secret</span><span class="v" id="siteSecret">—</span></div>
-        <div class="row privacy">
-          <div class="row-stack">
-            <span class="k" style="color:var(--ink);font-weight:500">Make site private</span>
-            <span class="sub" id="privacyHint">When on, your API secret is required to view your data.</span>
-          </div>
-          <span class="v">
-            <label class="switch">
-              <input type="checkbox" id="privacyToggle" checked>
-              <span class="slider-track"></span>
-            </label>
-          </span>
-        </div>
-        <div class="privacy-msg" id="privacyMsg"></div>
       </div>
 
       <div id="downMsg" class="down-msg" style="display:none">
@@ -254,7 +228,6 @@
   const FACTORY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/Factory";
   const CHANGE_SECRET_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/change-secret";
   const BILLING_PORTAL_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/billing-portal";
-  const TOGGLE_PRIVACY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/toggle-privacy";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
   const LINKS = {
@@ -316,11 +289,6 @@
       const a=document.getElementById('siteUrl'); a.href=url; a.textContent=url;
       document.getElementById('siteSecret').textContent = site.api_secret || '—';
       document.getElementById('advancedBtn').style.display='inline-flex';
-      // Privacy toggle state — default to true (private) if column missing
-      const isPriv = site.is_private !== false;
-      const toggle = document.getElementById('privacyToggle');
-      toggle.checked = isPriv;
-      updatePrivacyHint(isPriv);
     } else {
       document.getElementById('sitePrep').style.display='inline-flex';
       document.getElementById('siteMuted').textContent='We\u2019re building your site now.';
@@ -437,55 +405,6 @@
     });
   }
 
-  function updatePrivacyHint(isPrivate){
-    const hint = document.getElementById('privacyHint');
-    hint.textContent = isPrivate
-      ? 'When on, your API secret is required to view your data.'
-      : 'Your site is publicly readable. Anyone with the URL can see your glucose data. Uploads from your CGM still require the API secret.';
-  }
-
-  function setupPrivacyToggle(){
-    const toggle = document.getElementById('privacyToggle');
-    const msg = document.getElementById('privacyMsg');
-
-    toggle.addEventListener('change', async (e)=>{
-      const newValue = e.target.checked;
-      const confirmText = newValue
-        ? "Make your site PRIVATE? Viewers will need your API secret to access the site. Your site will restart (1\u20133 minutes downtime)."
-        : "Make your site PUBLIC?\n\nAnyone with the URL will be able to view your glucose data and treatments.\n\nThis is irreversible until you toggle it back. Your site will restart (1\u20133 minutes downtime).\n\nAre you sure?";
-      if(!confirm(confirmText)){
-        e.target.checked = !newValue;
-        return;
-      }
-
-      toggle.disabled = true;
-      msg.className = 'privacy-msg';
-      msg.textContent = '';
-
-      try{
-        const r = await fetch(TOGGLE_PRIVACY_URL, {
-          method: 'POST',
-          headers: { 'Authorization':'Bearer '+session.access_token, 'Content-Type':'application/json' },
-          body: JSON.stringify({ is_private: newValue })
-        });
-        const data = await r.json();
-        if(r.ok && data.ok){
-          updatePrivacyHint(newValue);
-          msg.className = 'privacy-msg ok';
-          msg.textContent = '\u2713 Updated. Your site is restarting (1\u20133 min).';
-        } else {
-          throw new Error(data.error || 'unknown error');
-        }
-      } catch(err){
-        msg.className = 'privacy-msg bad';
-        msg.textContent = 'Could not update: ' + err.message;
-        e.target.checked = !newValue;
-      } finally {
-        toggle.disabled = false;
-      }
-    });
-  }
-
   function setupAdvancedModal(){
     const modal = document.getElementById('advancedModal');
     const openBtn = document.getElementById('advancedBtn');
@@ -545,7 +464,6 @@
 
     setupSecretUI();
     setupAdvancedModal();
-    setupPrivacyToggle();
 
     let payment = null;
     try{
