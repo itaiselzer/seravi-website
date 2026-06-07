@@ -170,11 +170,11 @@
 
     <div class="panel" id="planPanel" style="display:none">
       <h3>Choose your plan</h3>
-      <p class="muted">Pick how you'd like to pay. You can cancel any time.</p>
+      <p class="muted">Start with 30 days free. Cancel any time during the trial — no charge.</p>
       <div class="planrow">
-        <div class="planopt" onclick="goCheckout('monthly')"><div class="pn">Monthly</div><div class="pp">€5</div><div class="pper">per month</div><span class="go">Subscribe</span></div>
-        <div class="planopt featured" onclick="goCheckout('yearly')"><span class="tagbest">Best value</span><div class="pn">Yearly</div><div class="pp">€50</div><div class="pper">per year</div><span class="go">Subscribe</span></div>
-        <div class="planopt" onclick="goCheckout('sixmonth')"><div class="pn">6 Months</div><div class="pp">€27</div><div class="pper">every 6 months</div><span class="go">Subscribe</span></div>
+        <div class="planopt" onclick="goCheckout('monthly')"><div class="pn">Monthly</div><div class="pp">€5</div><div class="pper">per month, after trial</div><span class="go">Start free trial</span></div>
+        <div class="planopt featured" onclick="goCheckout('yearly')"><span class="tagbest">Best value</span><div class="pn">Yearly</div><div class="pp">€50</div><div class="pper">per year, after trial</div><span class="go">Start free trial</span></div>
+        <div class="planopt" onclick="goCheckout('sixmonth')"><div class="pn">6 Months</div><div class="pp">€27</div><div class="pper">every 6 months, after trial</div><span class="go">Start free trial</span></div>
       </div>
     </div>
 
@@ -231,9 +231,9 @@
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
   const LINKS = {
-    monthly:  "https://buy.stripe.com/bJe9AT9IYfMxcnm78b97G02",
-    sixmonth: "https://buy.stripe.com/14AcN58EUbwh876gIL97G00",
-    yearly:   "https://buy.stripe.com/9B68wPf3ifMx2MMfEH97G01"
+    monthly:  "https://buy.stripe.com/bJe14n5sI8k58761NR97G03",
+    sixmonth: "https://buy.stripe.com/28E00j2gwfMxevueAD97G05",
+    yearly:   "https://buy.stripe.com/3cIbJ19IYcAlgDC64797G04"
   };
   const PLAN_LABELS = { monthly: "Monthly", sixmonth: "6 Months", yearly: "Yearly", unknown: "Active plan" };
   const PLAN_PRICES = { monthly: "€5 / month", sixmonth: "€27 / 6 months", yearly: "€50 / year", unknown: "—" };
