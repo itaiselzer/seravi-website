@@ -311,6 +311,27 @@
     document.getElementById('reactivateBtn').style.display = (status === 'active') ? 'none' : 'inline-flex';
   }
 
+  // Fire Google Ads conversion exactly once per paying user, on first dashboard visit
+  function maybeFireConversion(plan){
+    if(!user || !user.id) return;
+    const key = 'seravi_conv_' + user.id;
+    try{
+      if(localStorage.getItem(key) === '1') return;
+    }catch(e){ return; }
+    if(typeof gtag !== 'function') return;
+    // Map plan to value in EUR
+    const valueMap = { monthly: 5, sixmonth: 27, yearly: 50 };
+    const value = valueMap[plan] || 5;
+    gtag('event', 'conversion', {
+      'send_to': 'AW-646987078/d4tcCMGQ3LocEMb6wLQC',
+      'value': value,
+      'currency': 'EUR',
+      'transaction_id': user.id
+    });
+    try{ localStorage.setItem(key, '1'); }catch(e){}
+    console.log('Conversion fired for', user.id, 'value', value);
+  }
+
   function pollRow(){
     let tries=0;
     const t=setInterval(async ()=>{
@@ -450,6 +471,11 @@
       payment = pay;
       if(pay){ currentBillingStatus = pay.status || 'active'; renderBilling(pay); }
     }catch(e){}
+
+    // Fire Google Ads conversion if user is actively paying (only fires once per user)
+    if(payment && (payment.status === 'active' || !payment.status)){
+      maybeFireConversion(payment.plan);
+    }
 
     let site = null;
     try{
