@@ -3,57 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Welcome — Seravi</title>
-<meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Welcome to Seravi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#f6f4ee;--bg-2:#efece3;--ink:#1c2b29;--ink-soft:#4a5b58;--teal:#16635a;--teal-deep:#0e453f;--glow:#cfe7df;--white:#fffdf8;--accent:#d98b5f;--radius:18px}
+  :root{--bg:#f6f4ee;--bg-2:#efece3;--ink:#1c2b29;--ink-soft:#4a5b58;--teal:#16635a;--teal-deep:#0e453f;--glow:#cfe7df;--white:#fffdf8;--accent:#d98b5f;--bad:#b4452f;--radius:18px}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
   h1,h2,h3{font-family:'Fraunces',serif;font-weight:500;letter-spacing:-.01em;line-height:1.1}
   a{color:inherit;text-decoration:none}
   .wrap{max-width:720px;margin:0 auto;padding:0 28px}
   nav{backdrop-filter:blur(10px);background:rgba(246,244,238,.8);border-bottom:1px solid rgba(28,43,41,.06)}
-  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;max-width:720px;margin:0 auto;padding:0 28px}
   .logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:1.4rem;font-weight:600;cursor:pointer}
-  .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--glow)}
+  .logo .logo-img{width:32px;height:32px;flex-shrink:0;display:block}
   .signout{font-size:.92rem;color:var(--ink-soft);cursor:pointer;background:none;border:1.5px solid rgba(28,43,41,.15);padding:9px 18px;border-radius:999px;font-family:inherit}
   .signout:hover{border-color:var(--teal);color:var(--teal)}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--teal);color:var(--white);padding:13px 24px;border-radius:999px;font-size:.96rem;font-weight:500;border:none;cursor:pointer;transition:transform .18s,background .2s;box-shadow:0 6px 22px -8px rgba(22,99,90,.6);font-family:inherit}
-  .btn:hover{transform:translateY(-2px);background:var(--teal-deep)}
-  .btn.ghost{background:transparent;color:var(--teal);box-shadow:none;border:1.5px solid rgba(22,99,90,.25)}
-  .btn.ghost:hover{background:rgba(22,99,90,.06);transform:none}
-  #loading,#gate,#noSite,#pending{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px;padding:0 28px}
+  #loading,#gate{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px}
   .spinner{width:42px;height:42px;border:4px solid var(--glow);border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-  #pending h2{font-size:1.6rem;margin-top:8px}
-  #pending p{color:var(--ink-soft);max-width:40ch}
-  main{padding:60px 0 80px;display:none}
-  main.visible{display:block}
-  .hello{font-size:2.4rem;margin-bottom:10px;text-align:center}
-  .hello em{font-style:italic;color:var(--teal)}
-  .lead{color:var(--ink-soft);margin-bottom:40px;font-size:1.1rem;text-align:center;max-width:42ch;margin-left:auto;margin-right:auto}
-  .option-card{display:block;background:var(--white);border:1.5px solid rgba(28,43,41,.08);border-radius:var(--radius);padding:32px 36px;margin-bottom:18px;transition:all .22s ease;cursor:pointer;position:relative;box-shadow:0 14px 40px -32px rgba(14,69,63,.3)}
-  .option-card:hover{border-color:var(--teal);transform:translateY(-3px);box-shadow:0 18px 50px -28px rgba(14,69,63,.5)}
-  .option-card .ico{width:48px;height:48px;border-radius:14px;background:var(--glow);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
-  .option-card .ico svg{width:24px;height:24px;stroke:var(--teal-deep);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  .option-card h3{font-size:1.4rem;margin-bottom:8px}
-  .option-card p{color:var(--ink-soft);font-size:.98rem;padding-right:30px}
-  .option-card .arrow{position:absolute;top:36px;right:36px;width:36px;height:36px;border-radius:50%;background:var(--bg-2);display:flex;align-items:center;justify-content:center;color:var(--teal);font-size:1.2rem;font-weight:500;transition:all .22s}
-  .option-card:hover .arrow{background:var(--teal);color:var(--white);transform:translateX(4px)}
-  .skip-link{text-align:center;color:var(--ink-soft);font-size:.92rem;margin-top:32px}
-  .skip-link a{color:var(--teal);text-decoration:underline}
-  .skip-link a:hover{color:var(--teal-deep)}
+  #app{display:none;padding:60px 0 80px}
+  .step-label{font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:500;margin-bottom:10px;text-align:center}
+  h1.title{font-size:2.2rem;margin-bottom:10px;text-align:center}
+  .lead{color:var(--ink-soft);margin-bottom:36px;text-align:center;font-size:1.05rem}
+  .pending-card{background:var(--white);border:1px solid rgba(28,43,41,.07);border-radius:var(--radius);padding:40px 32px;box-shadow:0 14px 40px -30px rgba(14,69,63,.4);text-align:center;margin-bottom:40px}
+  .pending-card .minispin{width:32px;height:32px;border:4px solid var(--glow);border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 18px}
+  .pending-card h3{font-size:1.3rem;margin-bottom:8px}
+  .pending-card p{color:var(--ink-soft);font-size:.96rem;max-width:42ch;margin:0 auto}
+  .live-row{background:var(--glow);color:var(--teal-deep);padding:14px 20px;border-radius:12px;margin-bottom:28px;text-align:center;font-weight:500;display:none}
+  .live-row.show{display:block}
+  .choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:8px}
+  .choice{background:var(--white);border:1.5px solid rgba(28,43,41,.1);border-radius:18px;padding:32px 26px;text-align:left;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--ink)}
+  .choice:hover{border-color:var(--teal);transform:translateY(-3px);box-shadow:0 18px 40px -22px rgba(14,69,63,.4)}
+  .choice.disabled{opacity:.45;pointer-events:none;cursor:not-allowed}
+  .choice-ico{width:44px;height:44px;border-radius:12px;background:var(--glow);display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+  .choice-ico svg{width:22px;height:22px;stroke:var(--teal-deep);fill:none;stroke-width:2}
+  .choice h3{font-size:1.2rem;margin-bottom:2px}
+  .choice p{color:var(--ink-soft);font-size:.93rem;line-height:1.45}
+  .choice .arrow{margin-top:8px;color:var(--teal);font-weight:600;font-size:.92rem;display:flex;align-items:center;gap:6px}
+  .skip{text-align:center;margin-top:30px;font-size:.92rem;color:var(--ink-soft)}
+  .skip a{color:var(--teal);font-weight:500}
+  .skip a:hover{text-decoration:underline}
+  @media(max-width:640px){.choice-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="wrap nav-inner">
-    <div class="logo" id="logoLink"><span class="dot"></span>Seravi</div>
+  <div class="nav-inner">
+    <div class="logo" id="logoLink"><img src="/logo.png" alt="Seravi" class="logo-img">Seravi</div>
     <button class="signout" id="signOut" style="display:none">Sign out</button>
   </div>
 </nav>
@@ -65,46 +64,43 @@
 
 <div id="gate" class="wrap" style="display:none">
   <h2>Please sign in</h2>
-  <p style="color:var(--ink-soft);max-width:34ch">You need to be signed in to access this page.</p>
-  <a href="/" class="btn">Back to home</a>
-</div>
-
-<div id="noSite" class="wrap" style="display:none">
-  <h2>No Seravi site yet</h2>
-  <p style="color:var(--ink-soft);max-width:40ch">It looks like you haven't completed your site setup. Let's get you started.</p>
-  <a href="/setup.html" class="btn">Continue setup</a>
-</div>
-
-<div id="pending" class="wrap" style="display:none">
-  <div class="spinner"></div>
-  <h2>Your Seravi site is being prepared</h2>
-  <p>This usually takes 1–3 minutes. We'll bring you to your next step automatically as soon as it's ready.</p>
+  <p style="color:var(--ink-soft);max-width:34ch">You need to be signed in to view this page.</p>
+  <a href="/" class="submit" style="background:var(--teal);color:#fff;padding:13px 22px;border-radius:999px;text-decoration:none">Back to home</a>
 </div>
 
 <main id="app">
   <div class="wrap">
-    <h1 class="hello" id="hello">Welcome to <em>Seravi</em>!</h1>
-    <p class="lead">Your Nightscout site is live and ready. What would you like to do first?</p>
+    <div class="step-label">Welcome</div>
+    <h1 class="title" id="welcomeTitle">You're all set 🎉</h1>
+    <p class="lead" id="welcomeSub">Your Seravi site is being prepared. While we work on it, choose what's next.</p>
 
-    <a href="/dashboard.html" class="option-card">
-      <div class="ico">
-        <svg viewBox="0 0 24 24"><path d="M12 2L9 9l-7 1 5 5-1.5 7L12 18l6.5 4L17 15l5-5-7-1z"/></svg>
-      </div>
-      <h3>Start fresh</h3>
-      <p>Use your new Nightscout as-is. Connect your CGM uploader and your glucose readings start flowing right away.</p>
-      <div class="arrow">→</div>
-    </a>
+    <div id="pendingCard" class="pending-card">
+      <div class="minispin"></div>
+      <h3>Building your site…</h3>
+      <p id="pendingText">This takes about 1–2 minutes. You can pick what you'd like to do next while we set it up.</p>
+    </div>
 
-    <a href="/migrate.html" class="option-card">
-      <div class="ico">
-        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-      </div>
-      <h3>Migrate from another Nightscout</h3>
-      <p>Bring your history from an existing Nightscout site — NightscoutPro, ns10.be, Heroku, Fly.io, self-hosted, anywhere. Your glucose entries, treatments, and profile come along with you.</p>
-      <div class="arrow">→</div>
-    </a>
+    <div id="liveRow" class="live-row">
+      ✓ Your site is live at <strong id="liveUrl"></strong>
+    </div>
 
-    <p class="skip-link">Not sure yet? <a href="/dashboard.html">Skip to dashboard</a> — you can migrate anytime from there.</p>
+    <div class="choice-grid">
+      <a href="/dashboard.html" class="choice" id="choiceFresh">
+        <div class="choice-ico"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg></div>
+        <h3>Start fresh</h3>
+        <p>Go to your dashboard and start using your new Nightscout site right away.</p>
+        <span class="arrow">Take me there →</span>
+      </a>
+
+      <a href="/migrate.html" class="choice" id="choiceMigrate">
+        <div class="choice-ico"><svg viewBox="0 0 24 24"><path d="M3 12h13M13 5l7 7-7 7"/></svg></div>
+        <h3>Migrate my data</h3>
+        <p>Bring your history from an existing Nightscout site so you don't start from scratch.</p>
+        <span class="arrow">Migrate now →</span>
+      </a>
+    </div>
+
+    <p class="skip">You can do this later from the <a href="/dashboard.html">dashboard</a> too.</p>
   </div>
 </main>
 
@@ -113,64 +109,64 @@
   const SUPABASE_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co";
   const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1eW9kdW1jcGxicXd4bWtmZHlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTU3ODQsImV4cCI6MjA5NTUzMTc4NH0.gGIqbHu-MWW8QmJdIehR5qJB8W2sQMB3kXTMyi0rld8";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  let session = null, user = null, pollTimer = null;
 
-  let session, user, mySite;
-  let pollTimer = null;
+  function show(id){ ['loading','gate','app'].forEach(x=>{ document.getElementById(x).style.display = (x===id ? (x==='app'?'block':'flex') : 'none'); }); }
 
-  function show(id){
-    ['loading','gate','noSite','pending'].forEach(x=>{
-      const el = document.getElementById(x);
-      if(el) el.style.display = (x===id) ? 'flex' : 'none';
-    });
-    const main = document.getElementById('app');
-    main.classList.toggle('visible', id==='app');
+  function markLive(site){
+    document.getElementById('pendingCard').style.display = 'none';
+    const lr = document.getElementById('liveRow');
+    document.getElementById('liveUrl').textContent = site.subdomain || (site.username + '.seravi.eu');
+    lr.classList.add('show');
   }
 
-  async function loadSite(){
-    try{
-      const { data: row } = await sb.from('sites').select('*').eq('user_id', user.id).maybeSingle();
-      mySite = row;
-    }catch(e){ mySite = null; }
-
-    if(!mySite){
-      show('noSite');
-      return;
-    }
-
-    if(mySite.status !== 'active'){
-      show('pending');
-      if(!pollTimer){
-        pollTimer = setInterval(loadSite, 5000);
-      }
-      return;
-    }
-
-    if(pollTimer){
-      clearInterval(pollTimer);
-      pollTimer = null;
-    }
-
-    const m = user.user_metadata || {};
-    const name = m.full_name || m.name || m.given_name || (user.email ? user.email.split('@')[0] : null);
-    if(name){
-      const first = name.split(' ')[0];
-      document.getElementById('hello').innerHTML = `Welcome to <em>Seravi</em>, ${first}!`;
-    }
-
-    show('app');
+  function startPolling(){
+    pollTimer = setInterval(async ()=>{
+      try{
+        const { data: row } = await sb.from('sites').select('*').eq('user_id', user.id).maybeSingle();
+        if(row && row.status === 'active'){
+          clearInterval(pollTimer);
+          markLive(row);
+        }
+      }catch(e){}
+    }, 5000);
   }
-
-  document.getElementById('logoLink').addEventListener('click', ()=>{ window.location.href = '/'; });
-  document.getElementById('signOut').addEventListener('click', async ()=>{ await sb.auth.signOut(); window.location.href='/'; });
 
   (async ()=>{
     const { data } = await sb.auth.getSession();
     session = data.session;
     if(!session){ show('gate'); return; }
     user = session.user;
+    const m = user.user_metadata || {};
+    let name = m.full_name || m.name || m.given_name || (user.email ? user.email.split('@')[0] : '');
+    if(name){
+      document.getElementById('welcomeTitle').textContent = "You're all set, " + name.split(' ')[0] + " 🎉";
+    }
     document.getElementById('signOut').style.display = 'inline-block';
-    await loadSite();
+
+    // Check current site state once on load
+    try{
+      const { data: row } = await sb.from('sites').select('*').eq('user_id', user.id).maybeSingle();
+      if(row){
+        if(row.status === 'active'){
+          markLive(row);
+        } else {
+          startPolling();
+        }
+      } else {
+        // No site row — they probably haven't completed setup
+        window.location.href = '/setup.html';
+        return;
+      }
+    }catch(e){
+      startPolling();
+    }
+
+    show('app');
   })();
+
+  document.getElementById('logoLink').addEventListener('click', ()=>{ window.location.href='/'; });
+  document.getElementById('signOut').addEventListener('click', async ()=>{ await sb.auth.signOut(); window.location.href='/'; });
 </script>
 </body>
 </html>
