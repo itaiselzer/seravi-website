@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Privacy Policy — Seravi</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -47,7 +49,6 @@
 </style>
 </head>
 <body>
-
 <nav>
   <div class="wrap nav-inner">
     <a href="/" class="logo"><span class="dot"></span>Seravi</a>
@@ -58,14 +59,11 @@
     </div>
   </div>
 </nav>
-
 <main>
   <div class="wrap">
     <h1>Privacy Policy</h1>
-    <p class="meta">Last updated: 30 May 2026</p>
-
+    <p class="meta">Last updated: 7 June 2026</p>
     <p class="lead">This policy explains what data Seravi collects when you use our service, why we collect it, how we protect it, and the rights you have over it. We try to be plain-spoken because privacy shouldn't require a law degree to understand.</p>
-
     <div class="toc">
       <h3>Contents</h3>
       <ol>
@@ -84,21 +82,17 @@
         <li><a href="#contact">How to contact us</a></li>
       </ol>
     </div>
-
     <h2 id="who">1. Who we are</h2>
     <p>"Seravi" is a hosting service for the open-source Nightscout software, accessible at <a href="https://seravi.eu">seravi.eu</a>. The service is operated by [LEGAL ENTITY NAME], a company registered in [LEGAL ENTITY COUNTRY] ("we," "us," "our").</p>
     <p>For the purposes of the EU General Data Protection Regulation (GDPR), [LEGAL ENTITY NAME] is the <strong>data controller</strong> for personal data processed in connection with your Seravi account and service.</p>
     <p>If you have any questions about this policy or your data, contact us at <a href="mailto:support@seravi.eu">support@seravi.eu</a>.</p>
-
     <h2 id="data">2. What data we collect</h2>
-
     <h3>Information you provide directly</h3>
     <ul>
       <li><strong>Account data</strong> — when you sign in with Google or Apple, we receive your email address and your name (as provided by Google/Apple).</li>
       <li><strong>Site configuration</strong> — the username you choose for your Nightscout subdomain and the API secret you set for your site.</li>
       <li><strong>Payment data</strong> — handled directly by Stripe. We do not store your credit card number, expiry, or CVV; we receive only a customer reference and subscription status from Stripe.</li>
     </ul>
-
     <h3>Health data uploaded to your Nightscout site</h3>
     <ul>
       <li><strong>Glucose readings</strong> uploaded from your continuous glucose monitor (CGM) via an uploader application you control.</li>
@@ -106,59 +100,55 @@
       <li><strong>Device status</strong> from your CGM, pump, or phone uploader.</li>
     </ul>
     <p>This data is uploaded by you (or applications you authorize) directly to your private Nightscout instance. We host this data on your behalf; see section 5 for the legal basis.</p>
-
     <h3>Information collected automatically</h3>
     <ul>
       <li><strong>Technical data</strong> — IP address, browser type, operating system, pages visited, and timestamps. Used for security, debugging, and abuse prevention.</li>
       <li><strong>Server logs</strong> — anonymized request logs retained for up to 30 days.</li>
+      <li><strong>Advertising measurement data</strong> — when you arrive at seravi.eu from a Google Ads campaign, Google sets cookies in your browser that allow us to measure whether your visit resulted in a sign-up. See section 10 for details and how to opt out.</li>
     </ul>
-
     <h2 id="why">3. How we use your data</h2>
     <ul>
       <li>To provide the Seravi service — create and run your Nightscout site, authenticate you, host your data.</li>
       <li>To process payments and manage your subscription.</li>
       <li>To communicate with you about your account, service changes, and support requests.</li>
       <li>To investigate security incidents and prevent fraud or abuse.</li>
+      <li>To measure the effectiveness of our advertising — i.e. to know how many people who clicked on a Seravi ad on Google actually signed up. This is aggregate measurement only; we do not target individual users with personalized advertising.</li>
       <li>To comply with our legal obligations (e.g. tax records, responding to lawful requests).</li>
     </ul>
-    <p>We do not sell your personal data. We do not use your data for advertising. We do not analyze your glucose data for any purpose other than serving it back to you and authorized applications.</p>
-
+    <p>We do not sell your personal data. We do not use your glucose data or any health data for any purpose other than serving it back to you and authorized applications. We do not profile individual users for advertising purposes.</p>
     <h2 id="legal">4. Legal basis for processing</h2>
     <p>Under GDPR Article 6, we process your personal data on these legal bases:</p>
     <ul>
       <li><strong>Performance of a contract</strong> — to provide you the service you signed up for (account, hosting, payment processing).</li>
-      <li><strong>Legitimate interests</strong> — to keep our service secure, prevent fraud, debug technical issues, and improve our service. These interests are balanced against your rights.</li>
+      <li><strong>Legitimate interests</strong> — to keep our service secure, prevent fraud, debug technical issues, measure the effectiveness of our marketing, and improve our service. These interests are balanced against your rights.</li>
       <li><strong>Legal obligation</strong> — to retain financial records, respond to lawful requests, and comply with applicable law.</li>
       <li><strong>Consent</strong> — for the processing of health data, as described below.</li>
     </ul>
-
     <h2 id="health">5. Health data (special category)</h2>
     <div class="callout">
       <strong>Glucose readings, treatments, and related diabetes-management data are "special category" personal data</strong> under GDPR Article 9. They receive additional legal protection.
     </div>
     <p>We process this data on the basis of your <strong>explicit consent</strong> (GDPR Article 9(2)(a)), given by your decision to upload such data to your Nightscout instance hosted by us. You can withdraw this consent at any time by stopping uploads, exporting your data, and deleting your account (see section 9).</p>
-    <p>Our processing of this data is strictly limited to hosting and serving it — we do not analyze it, mine it, share it, or use it for any purpose other than making it available to you and to applications you authorize through your Nightscout API.</p>
+    <p>Our processing of this data is strictly limited to hosting and serving it — we do not analyze it, mine it, share it, or use it for any purpose other than making it available to you and to applications you authorize through your Nightscout API. Health data is never shared with Google, advertising networks, or any third party for advertising purposes.</p>
     <p>You retain control of this data at all times. You can delete it from your Nightscout instance directly, or by deleting your account.</p>
-
     <h2 id="share">6. Who we share data with</h2>
     <p>We share personal data only with the following categories of recipients (our "sub-processors"), and only to the extent necessary to provide the service:</p>
     <ul>
       <li><strong>Hetzner Online GmbH</strong> (Germany) — server hosting infrastructure. Stores all account, configuration, and health data.</li>
       <li><strong>Supabase Inc.</strong> (United States) — authentication and account database. Stores email, name, and subscription metadata.</li>
       <li><strong>Stripe</strong> — payment processing. Receives your email, payment details, and subscription information. Stripe is the data controller for your payment card data; see <a href="https://stripe.com/privacy" target="_blank" rel="noopener">Stripe's privacy policy</a>.</li>
-      <li><strong>Google LLC / Apple Inc.</strong> — when you choose to sign in with Google or Apple, you authenticate with them and they share your email and name with us. See their respective privacy policies.</li>
+      <li><strong>Google LLC</strong> — (a) when you choose to sign in with Google, you authenticate with them and they share your email and name with us; (b) we use Google Ads to advertise Seravi, and Google receives data about visits to seravi.eu from Google ad clicks for the sole purpose of measuring whether our ads resulted in sign-ups. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's privacy policy</a>.</li>
+      <li><strong>Apple Inc.</strong> — when you choose to sign in with Apple, you authenticate with them and they share your email and name with us. See <a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener">Apple's privacy policy</a>.</li>
       <li><strong>Email delivery providers</strong> — used to send transactional emails (account confirmations, password resets, billing notices). We receive delivery metadata.</li>
     </ul>
     <p>We will also share data when required by law, court order, or lawful request by a public authority, and where reasonably necessary to protect our rights, property, or safety, or that of our users or others.</p>
-
     <h2 id="transfers">7. International transfers</h2>
-    <p>Some of our sub-processors are located outside the European Economic Area (EEA), notably Supabase and Stripe in the United States. Where data is transferred outside the EEA, we rely on:</p>
+    <p>Some of our sub-processors are located outside the European Economic Area (EEA), notably Supabase, Stripe, and Google in the United States. Where data is transferred outside the EEA, we rely on:</p>
     <ul>
       <li><strong>Standard Contractual Clauses</strong> approved by the European Commission, where applicable; and</li>
       <li>The sub-processor's own GDPR compliance program and supplementary measures.</li>
     </ul>
     <p>You can request more information about these safeguards by contacting us.</p>
-
     <h2 id="retention">8. How long we keep data</h2>
     <ul>
       <li><strong>Account data</strong> — while your account is active, plus up to 90 days after closure to allow recovery or handle disputes.</li>
@@ -166,9 +156,9 @@
       <li><strong>Payment records</strong> — retained for up to 7 years to comply with tax and accounting obligations.</li>
       <li><strong>Server logs</strong> — up to 30 days.</li>
       <li><strong>Email logs</strong> — up to 90 days.</li>
+      <li><strong>Google Ads conversion data</strong> — retained by Google per their retention policies (typically 30–90 days for click and conversion measurement).</li>
     </ul>
     <p>You can request earlier deletion of your personal data at any time (see section 9), subject only to data we are legally required to retain.</p>
-
     <h2 id="rights">9. Your rights</h2>
     <p>Under GDPR, you have the following rights regarding your personal data:</p>
     <ul>
@@ -177,33 +167,30 @@
       <li><strong>Erasure</strong> ("right to be forgotten") — request deletion of your personal data, subject to limited exceptions.</li>
       <li><strong>Portability</strong> — receive your data in a structured, machine-readable format and transmit it to another controller.</li>
       <li><strong>Restriction</strong> — request that we limit how we process your data in certain circumstances.</li>
-      <li><strong>Objection</strong> — object to processing based on legitimate interests.</li>
+      <li><strong>Objection</strong> — object to processing based on legitimate interests, including advertising measurement.</li>
       <li><strong>Withdraw consent</strong> — for processing based on consent (e.g. health data), you may withdraw your consent at any time. Withdrawal does not affect the lawfulness of processing prior to withdrawal.</li>
       <li><strong>Complain to a supervisory authority</strong> — if you believe we have mishandled your data, you have the right to lodge a complaint with the data protection authority in your country of residence.</li>
     </ul>
     <p>To exercise any of these rights, email <a href="mailto:support@seravi.eu">support@seravi.eu</a>. We will respond within 30 days. There is no charge for reasonable requests.</p>
-
     <h2 id="cookies">10. Cookies and similar technologies</h2>
-    <p>Seravi uses a minimal set of cookies and similar storage:</p>
+    <p>Seravi uses the following cookies and similar storage:</p>
     <ul>
-      <li><strong>Authentication storage</strong> — to keep you signed in. Set by Supabase. Strictly necessary for the service to work.</li>
-      <li><strong>Stripe checkout cookies</strong> — set by Stripe during the checkout process for fraud prevention and session continuity.</li>
+      <li><strong>Authentication storage</strong> (essential) — to keep you signed in. Set by Supabase. Strictly necessary for the service to work and cannot be disabled.</li>
+      <li><strong>Stripe checkout cookies</strong> (essential) — set by Stripe during the checkout process for fraud prevention and session continuity.</li>
+      <li><strong>Google Ads conversion tracking</strong> (measurement) — when you arrive at seravi.eu from a Google Ads campaign, Google sets cookies in your browser to record that visit and whether it resulted in a sign-up. This allows us to measure the effectiveness of our advertising. The data shared with Google includes your IP address, the page visited, and the timestamp. It does <strong>not</strong> include any health data, payment data, your name, or your email. You can read Google's privacy policy at <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</li>
     </ul>
-    <p>We do not use tracking cookies, advertising cookies, or analytics that build profiles of individual users.</p>
-
+    <p>We do not use cookies that build personalized advertising profiles, sell data to advertising brokers, or track you across unrelated websites.</p>
+    <p><strong>To opt out of Google Ads measurement cookies:</strong> you can install Google's official opt-out browser extension at <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">tools.google.com/dlpage/gaoptout</a>, manage personalized advertising at <a href="https://adssettings.google.com" target="_blank" rel="noopener">adssettings.google.com</a>, or clear and block cookies for seravi.eu in your browser settings. Opting out does not affect your ability to use Seravi.</p>
     <h2 id="children">11. Children's data</h2>
     <p>Many people with Type 1 diabetes are children, and their parents or guardians often manage their care. <strong>The Seravi account itself must be held by an adult (18+) or by a parent/guardian on behalf of a minor.</strong> If you are a parent or guardian managing your child's diabetes data through Seravi, you are responsible for compliance with applicable law regarding the processing of your child's data, including obtaining any required consent.</p>
     <p>If we become aware that a Seravi account is held directly by a child under the age of digital consent applicable to their country, we will deactivate the account and contact the guardians.</p>
-
     <h2 id="changes">12. Changes to this policy</h2>
     <p>We may update this policy from time to time. When we do, we will update the "Last updated" date at the top of this page. For material changes, we will additionally notify you by email to the address associated with your account at least 30 days before the change takes effect. Your continued use of Seravi after the effective date constitutes acceptance of the updated policy.</p>
-
     <h2 id="contact">13. How to contact us</h2>
     <p>For any questions about this privacy policy, to exercise your rights, or to raise a concern:</p>
     <p>Email: <a href="mailto:support@seravi.eu">support@seravi.eu</a><br>
     Operating entity: [LEGAL ENTITY NAME], [LEGAL ENTITY COUNTRY]</p>
     <p>You also have the right to complain to your local data protection authority. In the EU, you can find your authority at <a href="https://edpb.europa.eu/about-edpb/about-edpb/members_en" target="_blank" rel="noopener">edpb.europa.eu/about-edpb/about-edpb/members_en</a>.</p>
-
     <footer>
       <div class="flinks">
         <a href="/">Home</a>
@@ -215,6 +202,5 @@
     </footer>
   </div>
 </main>
-
 </body>
 </html>
