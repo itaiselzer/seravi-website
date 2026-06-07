@@ -17,7 +17,7 @@
   nav{backdrop-filter:blur(10px);background:rgba(246,244,238,.8);border-bottom:1px solid rgba(28,43,41,.06)}
   .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
   .logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:1.4rem;font-weight:600;cursor:pointer}
-  .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--glow)}
+  .logo .logo-img{width:32px;height:32px;flex-shrink:0;display:block}
   .signout{font-size:.92rem;color:var(--ink-soft);cursor:pointer;background:none;border:1.5px solid rgba(28,43,41,.15);padding:9px 18px;border-radius:999px;font-family:inherit}
   .signout:hover{border-color:var(--teal);color:var(--teal)}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--teal);color:var(--white);padding:13px 24px;border-radius:999px;font-size:.96rem;font-weight:500;border:none;cursor:pointer;transition:transform .18s,background .2s;box-shadow:0 6px 22px -8px rgba(22,99,90,.6);font-family:inherit}
@@ -104,7 +104,7 @@
 
 <nav>
   <div class="wrap nav-inner">
-    <div class="logo" id="logoLink"><span class="dot"></span>Seravi</div>
+    <div class="logo" id="logoLink"><img src="/logo.png" alt="Seravi" class="logo-img">Seravi</div>
     <button class="signout" id="signOut" style="display:none">Sign out</button>
   </div>
 </nav>
