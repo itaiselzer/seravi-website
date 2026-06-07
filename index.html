@@ -43,7 +43,7 @@
   "@type": "Organization",
   "name": "Seravi",
   "url": "https://seravi.eu",
-  "logo": "https://seravi.eu/favicon.svg",
+  "logo": "https://seravi.eu/logo.png",
   "email": "support@seravi.eu",
   "description": "Managed hosting for the open-source Nightscout diabetes data platform.",
   "areaServed": "EU"
@@ -145,7 +145,7 @@
   nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:rgba(246,244,238,.78);border-bottom:1px solid rgba(28,43,41,.06)}
   .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
   .logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:1.45rem;font-weight:600;letter-spacing:-.02em}
-  .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--glow)}
+  .logo .logo-img{width:32px;height:32px;flex-shrink:0;display:block}
   .nav-links{display:flex;gap:32px;align-items:center}
   .nav-links a{font-size:.95rem;color:var(--ink-soft);transition:color .2s}
   .nav-links a:hover{color:var(--teal)}
@@ -246,7 +246,7 @@
 <body>
 <nav>
   <div class="wrap nav-inner">
-    <a href="#" class="logo"><span class="dot"></span>Seravi</a>
+    <a href="#" class="logo"><img src="/logo.png" alt="Seravi" class="logo-img">Seravi</a>
     <div class="nav-links">
       <a href="#how">How it works</a>
       <a href="#features">Features</a>
@@ -378,7 +378,7 @@
 <footer>
   <div class="wrap">
     <div class="foot-grid">
-      <div><a href="#" class="logo"><span class="dot"></span>Seravi</a><p style="margin-top:14px;max-width:26ch">Effortless, EU-hosted Nightscout for everyone living with diabetes.</p></div>
+      <div><a href="#" class="logo"><img src="/logo.png" alt="Seravi" class="logo-img">Seravi</a><p style="margin-top:14px;max-width:26ch">Effortless, EU-hosted Nightscout for everyone living with diabetes.</p></div>
       <div class="foot-col"><h4>Product</h4><a href="#how">How it works</a><a href="#features">Features</a><a href="#pricing">Pricing</a></div>
       <div class="foot-col"><h4>Company</h4><a href="#about">About</a><a href="mailto:support@seravi.eu">Contact</a><a href="mailto:support@seravi.eu">Support</a></div>
       <div class="foot-col"><h4>Legal</h4><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/medical-disclaimer.html">Medical Disclaimer</a></div>
@@ -393,7 +393,7 @@
 <div class="modal-overlay" id="authModal">
   <div class="modal-card">
     <button class="modal-close" id="authClose">×</button>
-    <div class="logo" style="justify-content:center;margin-bottom:14px"><span class="dot"></span>Seravi</div>
+    <div class="logo" style="justify-content:center;margin-bottom:14px"><img src="/logo.png" alt="Seravi" class="logo-img">Seravi</div>
     <h3 style="font-family:'Fraunces',serif;font-size:1.4rem;margin-bottom:8px">Let's set up your site</h3>
     <p style="color:var(--ink-soft);font-size:.95rem;margin-bottom:26px">Choose how you'd like to continue. No passwords to remember.</p>
     <button class="prov-btn prov-google" id="googleBtn">
