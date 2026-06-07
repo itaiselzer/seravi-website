@@ -14,10 +14,10 @@
 <meta name="theme-color" content="#16635a">
 
 <!-- Favicons -->
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
 
-<!-- Open Graph (link previews in WhatsApp, Discord, iMessage, Facebook, LinkedIn) -->
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://seravi.eu/">
 <meta property="og:title" content="Seravi — Effortless Nightscout hosting">
@@ -29,7 +29,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Seravi">
 
-<!-- Twitter Card (link previews on X/Twitter) -->
+<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://seravi.eu/">
 <meta name="twitter:title" content="Seravi — Effortless Nightscout hosting">
@@ -50,7 +50,7 @@
 }
 </script>
 
-<!-- Structured data: Product / Service offering -->
+<!-- Structured data: Product -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -70,60 +70,18 @@
 }
 </script>
 
-<!-- Structured data: FAQ (appears as rich results in Google) -->
+<!-- Structured data: FAQ -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is Seravi?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Seravi is a managed hosting service for the open-source Nightscout software. We set up and run your private Nightscout site so you do not have to configure servers or manage hosting yourself."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is Nightscout?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Nightscout is an open-source cloud application that lets people with diabetes view and share their continuous glucose monitor data in real time. It is developed by the Nightscout community and is not affiliated with Seravi."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Where is my data hosted?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Your data is hosted in the European Union, in German data centres, and is backed up regularly. Your Seravi site is private and only accessible to you and the people you share it with."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is Seravi a medical device?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. Seravi provides hosting infrastructure only. It is not a medical device and should not be used for diagnostic or treatment decisions. Always consult your healthcare provider."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How much does Seravi cost?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Seravi costs €5 per month, €27 every 6 months, or €50 per year. You can cancel at any time from your dashboard."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I cancel anytime?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. You can cancel your subscription at any time from the billing portal in your dashboard. Your site remains active until the end of your current billing period."
-      }
-    }
+    {"@type":"Question","name":"What is Seravi?","acceptedAnswer":{"@type":"Answer","text":"Seravi is a managed hosting service for the open-source Nightscout software. We set up and run your private Nightscout site so you do not have to configure servers or manage hosting yourself."}},
+    {"@type":"Question","name":"What is Nightscout?","acceptedAnswer":{"@type":"Answer","text":"Nightscout is an open-source cloud application that lets people with diabetes view and share their continuous glucose monitor data in real time. It is developed by the Nightscout community and is not affiliated with Seravi."}},
+    {"@type":"Question","name":"Where is my data hosted?","acceptedAnswer":{"@type":"Answer","text":"Your data is hosted in the European Union, in German data centres, and is backed up regularly. Your Seravi site is private and only accessible to you and the people you share it with."}},
+    {"@type":"Question","name":"Is Seravi a medical device?","acceptedAnswer":{"@type":"Answer","text":"No. Seravi provides hosting infrastructure only. It is not a medical device and should not be used for diagnostic or treatment decisions. Always consult your healthcare provider."}},
+    {"@type":"Question","name":"How much does Seravi cost?","acceptedAnswer":{"@type":"Answer","text":"Seravi costs €5 per month, €27 every 6 months, or €50 per year. You can cancel at any time from your dashboard."}},
+    {"@type":"Question","name":"Can I cancel anytime?","acceptedAnswer":{"@type":"Answer","text":"Yes. You can cancel your subscription at any time from the billing portal in your dashboard. Your site remains active until the end of your current billing period."}}
   ]
 }
 </script>
@@ -145,7 +103,7 @@
   nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:rgba(246,244,238,.78);border-bottom:1px solid rgba(28,43,41,.06)}
   .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
   .logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:1.45rem;font-weight:600;letter-spacing:-.02em}
-  .logo .logo-img{width:32px;height:32px;flex-shrink:0;display:block}
+  .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--glow)}
   .nav-links{display:flex;gap:32px;align-items:center}
   .nav-links a{font-size:.95rem;color:var(--ink-soft);transition:color .2s}
   .nav-links a:hover{color:var(--teal)}
@@ -246,7 +204,7 @@
 <body>
 <nav>
   <div class="wrap nav-inner">
-    <a href="#" class="logo"><img src="/logo.png" alt="Seravi" class="logo-img">Seravi</a>
+    <a href="#" class="logo"><span class="dot"></span>Seravi</a>
     <div class="nav-links">
       <a href="#how">How it works</a>
       <a href="#features">Features</a>
@@ -378,7 +336,7 @@
 <footer>
   <div class="wrap">
     <div class="foot-grid">
-      <div><a href="#" class="logo"><img src="/logo.png" alt="Seravi" class="logo-img">Seravi</a><p style="margin-top:14px;max-width:26ch">Effortless, EU-hosted Nightscout for everyone living with diabetes.</p></div>
+      <div><a href="#" class="logo"><span class="dot"></span>Seravi</a><p style="margin-top:14px;max-width:26ch">Effortless, EU-hosted Nightscout for everyone living with diabetes.</p></div>
       <div class="foot-col"><h4>Product</h4><a href="#how">How it works</a><a href="#features">Features</a><a href="#pricing">Pricing</a></div>
       <div class="foot-col"><h4>Company</h4><a href="#about">About</a><a href="mailto:support@seravi.eu">Contact</a><a href="mailto:support@seravi.eu">Support</a></div>
       <div class="foot-col"><h4>Legal</h4><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/medical-disclaimer.html">Medical Disclaimer</a></div>
@@ -389,11 +347,10 @@
     </div>
   </div>
 </footer>
-<!-- sign-in chooser modal -->
 <div class="modal-overlay" id="authModal">
   <div class="modal-card">
     <button class="modal-close" id="authClose">×</button>
-    <div class="logo" style="justify-content:center;margin-bottom:14px"><img src="/logo.png" alt="Seravi" class="logo-img">Seravi</div>
+    <div class="logo" style="justify-content:center;margin-bottom:14px"><span class="dot"></span>Seravi</div>
     <h3 style="font-family:'Fraunces',serif;font-size:1.4rem;margin-bottom:8px">Let's set up your site</h3>
     <p style="color:var(--ink-soft);font-size:.95rem;margin-bottom:26px">Choose how you'd like to continue. No passwords to remember.</p>
     <button class="prov-btn prov-google" id="googleBtn">
