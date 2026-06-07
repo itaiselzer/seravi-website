@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Migrate to Seravi</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -17,7 +19,7 @@
   nav{backdrop-filter:blur(10px);background:rgba(246,244,238,.8);border-bottom:1px solid rgba(28,43,41,.06)}
   .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;max-width:680px;margin:0 auto;padding:0 28px}
   .logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:1.4rem;font-weight:600;cursor:pointer}
-  .logo .logo-img{width:32px;height:32px;flex-shrink:0;display:block}
+  .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--glow)}
   .signout{font-size:.92rem;color:var(--ink-soft);cursor:pointer;background:none;border:1.5px solid rgba(28,43,41,.15);padding:9px 18px;border-radius:999px;font-family:inherit}
   .signout:hover{border-color:var(--teal);color:var(--teal)}
   .backlink{display:inline-flex;align-items:center;gap:7px;color:var(--ink-soft);font-size:.92rem;cursor:pointer;margin-bottom:24px;transition:color .2s}
@@ -69,7 +71,7 @@
 
 <nav>
   <div class="nav-inner">
-    <div class="logo" id="logoLink"><img src="/logo.png" alt="Seravi" class="logo-img">Seravi</div>
+    <div class="logo" id="logoLink"><span class="dot"></span>Seravi</div>
     <button class="signout" id="signOut" style="display:none">Sign out</button>
   </div>
 </nav>
@@ -159,7 +161,7 @@
 
   const DAY_MS = 24 * 60 * 60 * 1000;
   const WEEK_MS = 7 * DAY_MS;
-  const ALL_LOOKBACK_MS = 10 * 365 * DAY_MS; // 10 years safety stop
+  const ALL_LOOKBACK_MS = 10 * 365 * DAY_MS;
   const SLICE_DELAY_MS = 250;
 
   let session = null, user = null, mySite = null;
@@ -260,7 +262,6 @@
   }
 
   async function migrateInDaySlices(label, key, srcUrl, srcSecret, basePath, lookbackMs){
-    // walk backwards day-by-day; stop after consecutive empty days or after lookback
     setStatus(key, 'Starting…', 'run');
     const PER_REQUEST = 500;
     const MAX_EMPTY_STREAK = 14;
@@ -400,19 +401,15 @@
     const skipProgress = {};
     const totals = { profile:0, entries:0, treatments:0, devicestatus:0 };
 
-    // STEP 1 — Profile (small, often present)
     setProgressBar(5);
     totals.profile = await migrateProfile(srcUrl, srcSecret, skipProgress);
 
-    // STEP 2 — Entries (day slices, lots of data)
     setProgressBar(20);
     totals.entries = await migrateInDaySlices('Entries', 'Entries', srcUrl, srcSecret, '/api/v1/entries.json', lookbackMs);
 
-    // STEP 3 — Treatments (week slices, fewer records)
     setProgressBar(70);
     totals.treatments = await migrateInWeekSlices('Treatments', 'Treatments', srcUrl, srcSecret, '/api/v1/treatments.json', lookbackMs);
 
-    // STEP 4 — Device status (day slices, can be heavy)
     setProgressBar(90);
     totals.devicestatus = await migrateInDaySlices('Device status', 'Devicestatus', srcUrl, srcSecret, '/api/v1/devicestatus.json', lookbackMs);
 
