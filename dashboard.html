@@ -51,11 +51,29 @@
   .status.live .pip{background:var(--teal);box-shadow:0 0 0 4px rgba(22,99,90,.2)}
   .status.down .pip{background:var(--bad);box-shadow:0 0 0 4px rgba(180,69,47,.2)}
   .minispin{width:18px;height:18px;border:3px solid var(--glow);border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite;display:inline-block;vertical-align:middle}
-  .row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(28,43,41,.06);font-size:.96rem}
+  .row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(28,43,41,.06);font-size:.96rem;gap:14px;flex-wrap:wrap}
   .row:last-child{border-bottom:none}
   .row .k{color:var(--ink-soft)}
-  .row .v{font-weight:500;word-break:break-all;text-align:right}
+  .row .v{font-weight:500;word-break:break-all;text-align:right;display:flex;align-items:center;gap:8px;justify-content:flex-end;flex-wrap:wrap}
   .row .v a{color:var(--teal);font-weight:600}
+  .mini-btn{border:none;background:var(--glow);color:var(--teal-deep);width:30px;height:30px;border-radius:9px;cursor:pointer;font-size:.95rem;line-height:1;display:inline-flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0}
+  .mini-btn:hover{background:#bfe0d6}
+  .mini-btn:disabled{opacity:.4;cursor:not-allowed}
+  .mini-btn.cancel{background:var(--bg-2);color:var(--ink-soft)}
+  .mini-btn.cancel:hover{background:#e3ded1}
+  .edit-btn{border:none;background:none;color:var(--ink-soft);cursor:pointer;font-size:.9rem;padding:3px 6px;border-radius:7px;transition:color .15s,background .15s;flex-shrink:0}
+  .edit-btn:hover{color:var(--teal);background:var(--bg-2)}
+  .inline-input{border:1.5px solid rgba(28,43,41,.18);border-radius:9px;padding:7px 10px;font-family:inherit;font-size:.92rem;background:var(--white);color:var(--ink);outline:none;min-width:200px}
+  .inline-input:focus{border-color:var(--teal)}
+  .genbtn{border:none;background:var(--glow);color:var(--teal-deep);padding:7px 12px;border-radius:9px;font-family:inherit;font-size:.82rem;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0}
+  .genbtn:hover{background:#bfe0d6}
+  .unitpill{display:inline-block;border:1.5px solid rgba(28,43,41,.16);border-radius:999px;padding:5px 14px;font-size:.88rem;cursor:pointer;transition:all .15s;background:var(--white);color:var(--ink-soft)}
+  .unitpill:hover{border-color:var(--teal)}
+  .unitpill.sel{background:var(--teal);border-color:var(--teal);color:#fff}
+  .unitpill.pending{background:rgba(22,99,90,.1);border-color:var(--teal);color:var(--teal-deep)}
+  .row-msg{font-size:.88rem;margin-top:10px;display:none;text-align:right}
+  .row-msg.ok{color:var(--teal);display:block}
+  .row-msg.bad{color:var(--bad);display:block}
   .planrow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:8px}
   .planopt{border:1.5px solid rgba(28,43,41,.12);border-radius:14px;padding:20px 16px;text-align:center;cursor:pointer;transition:border-color .2s,transform .15s;background:var(--white)}
   .planopt:hover{border-color:var(--teal);transform:translateY(-2px)}
@@ -70,14 +88,8 @@
   .planpill.muted{background:var(--ink-soft)}
   .down-msg{background:var(--alert-bg);border:1px solid rgba(180,69,47,.25);border-radius:12px;padding:16px 18px;color:var(--bad);font-size:.95rem;margin-top:18px}
   .down-msg strong{color:#7a2a1a}
-  .secret-box{margin-top:22px;display:none;max-width:440px;margin-left:auto;margin-right:auto}
   .warn{background:var(--warn-bg);border:1px solid rgba(154,106,30,.25);border-radius:12px;padding:16px 18px;color:var(--warn);font-size:.9rem;margin-bottom:18px}
   .warn strong{color:#7c5413}
-  .inputrow{display:flex;align-items:stretch;border:1.5px solid rgba(28,43,41,.18);border-radius:12px;overflow:hidden;background:var(--white)}
-  .inputrow:focus-within{border-color:var(--teal)}
-  .inputrow input{flex:1;border:none;padding:13px 14px;font-family:inherit;font-size:1rem;background:transparent;color:var(--ink);outline:none}
-  .genbtn{border:none;background:var(--glow);color:var(--teal-deep);padding:0 16px;font-family:inherit;font-size:.85rem;font-weight:500;cursor:pointer;white-space:nowrap}
-  .genbtn:hover{background:#bfe0d6}
   .check{font-size:.84rem;margin-top:7px;min-height:1.1em;text-align:center}
   .check.ok{color:var(--teal)}
   .check.bad{color:var(--bad)}
@@ -115,7 +127,7 @@
   .buildopt.sel{border-color:var(--teal);background:rgba(22,99,90,.06)}
   .buildopt .bt{font-weight:500;font-size:.95rem}
   .buildopt .bs{font-size:.8rem;color:var(--ink-soft)}
-  @media(max-width:680px){.planrow{grid-template-columns:1fr}.buildpick{grid-template-columns:1fr}}
+  @media(max-width:680px){.planrow{grid-template-columns:1fr}.buildpick{grid-template-columns:1fr}.row .v{justify-content:flex-start;text-align:left}}
 </style>
 </head>
 <body>
@@ -156,10 +168,29 @@
 
       <div id="siteRows" style="margin-top:18px;display:none">
         <div class="row"><span class="k">Your site</span><span class="v"><a id="siteUrl" href="#" target="_blank"></a></span></div>
-        <div class="row"><span class="k">API secret</span><span class="v" id="siteSecret">—</span></div>
-        <div class="row"><span class="k">Display units</span><span class="v">mg/dL</span></div>
-        <div class="row" id="loopStatusRow" style="display:none"><span class="k">Loop remote control</span><span class="v"><span class="planpill" id="loopPill">Off</span></span></div>
+        <div class="row">
+          <span class="k">API secret</span>
+          <span class="v" id="secretView">
+            <span id="siteSecret">—</span>
+            <button class="edit-btn" id="secretEditBtn" title="Change API secret">✎</button>
+          </span>
+          <span class="v" id="secretEdit" style="display:none">
+            <input class="inline-input" id="newSecret" type="text" placeholder="At least 12 characters" autocomplete="off" spellcheck="false">
+            <button class="genbtn" id="genSecretBtn" type="button">Generate</button>
+            <button class="mini-btn" id="secretSaveBtn" title="Save" disabled>✓</button>
+            <button class="mini-btn cancel" id="secretCancelBtn" title="Cancel">✕</button>
+          </span>
+        </div>
+        <div class="row">
+          <span class="k">Display units</span>
+          <span class="v">
+            <span class="unitpill" id="unitMgdl" data-u="mg/dl">mg/dL</span>
+            <span class="unitpill" id="unitMmol" data-u="mmol">mmol/L</span>
+            <button class="mini-btn" id="unitSaveBtn" title="Save" style="display:none">✓</button>
+          </span>
+        </div>
       </div>
+      <div class="row-msg" id="rowMsg"></div>
 
       <button class="adv-toggle" id="advToggle" style="display:none">
         <span>Advanced settings</span>
@@ -170,13 +201,6 @@
           <div>
             <div class="adv-action-title">Loop remote control <span class="planpill muted" id="loopAdvPill" style="font-size:.7rem;padding:2px 9px;vertical-align:middle">Off</span></div>
             <div class="adv-action-sub">Send remote overrides from Nightscout to the Loop app on your iPhone.</div>
-          </div>
-          <span class="adv-action-arrow">→</span>
-        </button>
-        <button class="adv-action" id="openChangeSecret">
-          <div>
-            <div class="adv-action-title">Change API secret</div>
-            <div class="adv-action-sub">Generate a new API secret. Restarts your site.</div>
           </div>
           <span class="adv-action-arrow">→</span>
         </button>
@@ -191,23 +215,6 @@
 
       <div id="downMsg" class="down-msg" style="display:none">
         <strong>Your subscription is not active.</strong> Your Nightscout site has been suspended and is currently unreachable. Your data is safe — once you reactivate your subscription below, the site will come back online within a minute or two.
-      </div>
-
-      <div class="secret-box" id="secretBox">
-        <div class="warn">
-          <strong>Important:</strong> Changing your API secret will restart your site (about 1–3 minutes of downtime) and will <strong>stop your CGM data from uploading</strong> until you update the secret in your uploader app (xDrip, Loop, Dexcom bridge, etc.) to match.
-        </div>
-        <label style="display:block;font-size:.9rem;font-weight:500;margin-bottom:7px;text-align:center">New API secret</label>
-        <div class="inputrow">
-          <input id="newSecret" type="text" placeholder="At least 12 characters" autocomplete="off" spellcheck="false">
-          <button class="genbtn" id="genSecretBtn" type="button">Generate</button>
-        </div>
-        <div class="check" id="secretCheck"></div>
-        <div class="secret-actions">
-          <button class="btn small" id="saveSecretBtn" disabled>Update secret</button>
-          <button class="btn ghost small" id="cancelSecretBtn">Cancel</button>
-        </div>
-        <div class="secret-msg" id="secretMsg"></div>
       </div>
 
       <div class="loop-box" id="loopBox">
@@ -300,6 +307,7 @@
   const CHANGE_SECRET_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/change-secret";
   const BILLING_PORTAL_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/billing-portal";
   const LOOP_SETTINGS_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/loop-settings";
+  const SITE_SETTINGS_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/site-settings";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
   const LINKS = {
@@ -333,19 +341,34 @@
     }catch(e){ console.log("FACTORY CALL FAILED", e); }
   }
 
+  function rowMessage(cls, text){
+    const el = document.getElementById('rowMsg');
+    el.className = 'row-msg ' + cls;
+    el.textContent = text;
+  }
+  function clearRowMessage(){
+    const el = document.getElementById('rowMsg');
+    el.className = 'row-msg'; el.textContent = '';
+  }
+
   function renderLoopStatus(){
     const enabled = !!(currentSite && currentSite.loop_enabled);
     const label = enabled ? 'On' : 'Off';
-    const pillClass = 'planpill ' + (enabled ? '' : 'muted');
-    const rowPill = document.getElementById('loopPill');
-    rowPill.textContent = label; rowPill.className = pillClass;
-    document.getElementById('loopStatusRow').style.display = 'flex';
     const advPill = document.getElementById('loopAdvPill');
     advPill.textContent = label;
     advPill.className = 'planpill ' + (enabled ? '' : 'muted');
     advPill.style.fontSize = '.7rem'; advPill.style.padding = '2px 9px'; advPill.style.verticalAlign = 'middle';
     const boxPill = document.getElementById('loopBoxPill');
-    boxPill.textContent = label; boxPill.className = pillClass;
+    boxPill.textContent = label;
+    boxPill.className = 'planpill ' + (enabled ? '' : 'muted');
+  }
+
+  function renderUnits(){
+    const u = (currentSite && currentSite.display_units) || 'mg/dl';
+    document.getElementById('unitMgdl').className = 'unitpill' + (u === 'mg/dl' ? ' sel' : '');
+    document.getElementById('unitMmol').className = 'unitpill' + (u === 'mmol' ? ' sel' : '');
+    document.getElementById('unitSaveBtn').style.display = 'none';
+    pendingUnits = null;
   }
 
   function renderSite(site, billingStatus){
@@ -361,6 +384,7 @@
     document.getElementById('downMsg').style.display='none';
     document.getElementById('siteRows').style.display='none';
     document.getElementById('advToggle').style.display='none';
+    clearRowMessage();
 
     if(isSuspended){
       document.getElementById('siteDown').style.display='inline-flex';
@@ -377,6 +401,7 @@
       const a=document.getElementById('siteUrl'); a.href=url; a.textContent=url;
       document.getElementById('siteSecret').textContent = site.api_secret || '—';
       document.getElementById('advToggle').style.display='flex';
+      renderUnits();
       renderLoopStatus();
     } else {
       document.getElementById('sitePrep').style.display='inline-flex';
@@ -433,27 +458,41 @@
     }, 6000);
   }
 
+  // ----- inline API secret editing -----
   let secretOK = false;
   function setupSecretUI(){
-    const box = document.getElementById('secretBox');
+    const view = document.getElementById('secretView');
+    const edit = document.getElementById('secretEdit');
     const input = document.getElementById('newSecret');
-    const check = document.getElementById('secretCheck');
-    const saveBtn = document.getElementById('saveSecretBtn');
-    const cancelBtn = document.getElementById('cancelSecretBtn');
+    const saveBtn = document.getElementById('secretSaveBtn');
+    const cancelBtn = document.getElementById('secretCancelBtn');
     const genBtn = document.getElementById('genSecretBtn');
-    const msg = document.getElementById('secretMsg');
 
-    cancelBtn.addEventListener('click', ()=>{
-      box.style.display='none';
-      input.value=''; check.textContent=''; msg.style.display='none'; secretOK=false; saveBtn.disabled=true;
-    });
+    function openEdit(){
+      clearRowMessage();
+      view.style.display='none';
+      edit.style.display='flex';
+      input.value=''; secretOK=false; saveBtn.disabled=true;
+      input.focus();
+    }
+    function closeEdit(){
+      edit.style.display='none';
+      view.style.display='flex';
+      input.value=''; secretOK=false; saveBtn.disabled=true;
+    }
+
+    document.getElementById('secretEditBtn').addEventListener('click', openEdit);
+    cancelBtn.addEventListener('click', closeEdit);
 
     function validate(){
       const v = input.value;
-      if(v.length===0){ check.textContent=''; secretOK=false; }
-      else if(v.length<12){ check.className='check bad'; check.textContent='Needs at least 12 characters ('+v.length+'/12).'; secretOK=false; }
-      else { check.className='check ok'; check.textContent='✓ Looks good'; secretOK=true; }
+      secretOK = v.length >= 12;
       saveBtn.disabled = !secretOK;
+      if(v.length > 0 && !secretOK){
+        rowMessage('bad', 'API secret needs at least 12 characters (' + v.length + '/12).');
+      } else {
+        clearRowMessage();
+      }
     }
     input.addEventListener('input', validate);
 
@@ -467,8 +506,8 @@
     saveBtn.addEventListener('click', async ()=>{
       if(!secretOK) return;
       const newSecret = input.value;
-      if(!confirm("Are you sure? This will restart your site and your CGM uploader will stop working until you update the secret there too.")) return;
-      saveBtn.disabled=true; saveBtn.textContent='Updating…'; msg.style.display='none';
+      if(!confirm("Change your API secret? Your site will restart (1–3 min) and your CGM uploader will stop working until you update the secret there too.")) return;
+      saveBtn.disabled=true; clearRowMessage();
       try{
         const r = await fetch(CHANGE_SECRET_URL, {
           method:'POST',
@@ -477,20 +516,68 @@
         });
         const data = await r.json();
         if(r.ok && data.ok){
-          msg.className='secret-msg ok';
-          msg.textContent='✓ Secret updated. Your site is restarting (1–3 min). Remember to update the secret in your uploader.';
+          currentSite.api_secret = newSecret;
           document.getElementById('siteSecret').textContent = newSecret;
-          saveBtn.textContent='Update secret';
+          closeEdit();
+          rowMessage('ok', '✓ Secret updated. Site restarting (1–3 min) — update it in your uploader too.');
         } else {
-          msg.className='secret-msg bad';
-          msg.textContent='Could not update: ' + (data.error || 'unknown error');
-          saveBtn.disabled=false; saveBtn.textContent='Update secret';
+          rowMessage('bad', 'Could not update: ' + (data.error || 'unknown error'));
+          saveBtn.disabled=false;
         }
       }catch(e){
-        msg.className='secret-msg bad';
-        msg.textContent='Something went wrong. Please try again.';
-        saveBtn.disabled=false; saveBtn.textContent='Update secret';
+        rowMessage('bad', 'Something went wrong. Please try again.');
+        saveBtn.disabled=false;
       }
+    });
+  }
+
+  // ----- inline display units editing -----
+  let pendingUnits = null;
+  function setupUnitsUI(){
+    const pillMg = document.getElementById('unitMgdl');
+    const pillMmol = document.getElementById('unitMmol');
+    const saveBtn = document.getElementById('unitSaveBtn');
+
+    function currentUnits(){ return (currentSite && currentSite.display_units) || 'mg/dl'; }
+
+    function pick(u){
+      clearRowMessage();
+      if(u === currentUnits()){
+        // picking the already-active one cancels any pending change
+        renderUnits();
+        return;
+      }
+      pendingUnits = u;
+      pillMg.className = 'unitpill' + (currentUnits()==='mg/dl' ? ' sel' : '') + (u==='mg/dl' ? ' pending' : '');
+      pillMmol.className = 'unitpill' + (currentUnits()==='mmol' ? ' sel' : '') + (u==='mmol' ? ' pending' : '');
+      saveBtn.style.display = 'inline-flex';
+    }
+    pillMg.addEventListener('click', ()=>pick('mg/dl'));
+    pillMmol.addEventListener('click', ()=>pick('mmol'));
+
+    saveBtn.addEventListener('click', async ()=>{
+      if(!pendingUnits) return;
+      const label = pendingUnits === 'mmol' ? 'mmol/L' : 'mg/dL';
+      if(!confirm("Change display units to " + label + "? Your site will restart (1–3 minutes).")) return;
+      saveBtn.disabled = true; clearRowMessage();
+      try{
+        const r = await fetch(SITE_SETTINGS_URL, {
+          method:'POST',
+          headers:{ 'Authorization':'Bearer '+session.access_token, 'Content-Type':'application/json' },
+          body: JSON.stringify({ units: pendingUnits })
+        });
+        const data = await r.json();
+        if(r.ok && data.ok){
+          currentSite.display_units = pendingUnits;
+          renderUnits();
+          rowMessage('ok', '✓ Units changed to ' + label + '. Site restarting (1–3 min).');
+        } else {
+          rowMessage('bad', 'Could not change units: ' + (data.error || 'unknown error'));
+        }
+      }catch(e){
+        rowMessage('bad', 'Something went wrong. Please try again.');
+      }
+      saveBtn.disabled = false;
     });
   }
 
@@ -633,27 +720,17 @@
   function setupAdvancedDropdown(){
     const toggle = document.getElementById('advToggle');
     const drop = document.getElementById('advDrop');
-    const changeSecretItem = document.getElementById('openChangeSecret');
     const loopItem = document.getElementById('openLoopSettings');
 
     toggle.addEventListener('click', ()=>{
       const isOpen = drop.classList.toggle('open');
       toggle.classList.toggle('open', isOpen);
       if(!isOpen){
-        document.getElementById('secretBox').style.display='none';
         document.getElementById('loopBox').style.display='none';
       }
     });
 
-    changeSecretItem.addEventListener('click', ()=>{
-      document.getElementById('loopBox').style.display='none';
-      const box = document.getElementById('secretBox');
-      box.style.display='block';
-      setTimeout(()=>{ box.scrollIntoView({ behavior:'smooth', block:'center' }); }, 50);
-    });
-
     loopItem.addEventListener('click', ()=>{
-      document.getElementById('secretBox').style.display='none';
       if(window.__openLoopBox) window.__openLoopBox();
     });
   }
@@ -698,6 +775,7 @@
     document.getElementById('signOut').style.display = 'inline-block';
 
     setupSecretUI();
+    setupUnitsUI();
     setupLoopUI();
     setupAdvancedDropdown();
 
