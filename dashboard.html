@@ -28,6 +28,8 @@
   .btn.ghost{background:transparent;color:var(--teal);box-shadow:none;border:1.5px solid rgba(22,99,90,.25)}
   .btn.ghost:hover{background:rgba(22,99,90,.06);transform:none}
   .btn.small{padding:9px 18px;font-size:.9rem;box-shadow:none}
+  .btn.danger{background:transparent;color:var(--bad);box-shadow:none;border:1.5px solid rgba(180,69,47,.3)}
+  .btn.danger:hover{background:rgba(180,69,47,.06);transform:none}
   .backlink{display:inline-flex;align-items:center;gap:7px;color:var(--ink-soft);font-size:.92rem;cursor:pointer;margin-bottom:36px;transition:color .2s}
   .backlink:hover{color:var(--teal)}
   .backlink svg{width:16px;height:16px}
@@ -99,7 +101,23 @@
   .adv-action-sub{font-size:.85rem;color:var(--ink-soft);line-height:1.4}
   .adv-action-arrow{font-size:1.2rem;color:var(--teal);flex-shrink:0;transition:transform .2s}
   .adv-action:hover .adv-action-arrow{transform:translateX(3px)}
-  @media(max-width:680px){.planrow{grid-template-columns:1fr}}
+  /* Loop integration */
+  .loop-box{margin-top:22px;display:none;max-width:520px;margin-left:auto;margin-right:auto}
+  .loop-status-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:18px}
+  .field-label{display:block;font-size:.9rem;font-weight:500;margin-bottom:7px}
+  .field{margin-bottom:16px}
+  .field textarea{width:100%;border:1.5px solid rgba(28,43,41,.18);border-radius:12px;padding:13px 14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem;background:var(--white);color:var(--ink);outline:none;resize:vertical;min-height:120px;line-height:1.4}
+  .field textarea:focus{border-color:var(--teal)}
+  .field input[type=text]{width:100%;border:1.5px solid rgba(28,43,41,.18);border-radius:12px;padding:13px 14px;font-family:inherit;font-size:1rem;background:var(--white);color:var(--ink);outline:none}
+  .field input[type=text]:focus{border-color:var(--teal)}
+  .field .hint{font-size:.82rem;color:var(--ink-soft);margin-top:5px}
+  .buildpick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .buildopt{border:1.5px solid rgba(28,43,41,.14);border-radius:12px;padding:14px;cursor:pointer;text-align:center;transition:border-color .2s,background .2s;background:var(--white)}
+  .buildopt:hover{border-color:var(--teal)}
+  .buildopt.sel{border-color:var(--teal);background:rgba(22,99,90,.06)}
+  .buildopt .bt{font-weight:500;font-size:.95rem}
+  .buildopt .bs{font-size:.8rem;color:var(--ink-soft)}
+  @media(max-width:680px){.planrow{grid-template-columns:1fr}.buildpick{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -144,6 +162,7 @@
       <div id="siteRows" style="margin-top:18px;display:none">
         <div class="row"><span class="k">Your site</span><span class="v"><a id="siteUrl" href="#" target="_blank"></a></span></div>
         <div class="row"><span class="k">API secret</span><span class="v" id="siteSecret">—</span></div>
+        <div class="row" id="loopStatusRow" style="display:none"><span class="k">Loop remote control</span><span class="v"><span class="planpill" id="loopPill">Off</span></span></div>
       </div>
 
       <div id="downMsg" class="down-msg" style="display:none">
@@ -165,6 +184,58 @@
           <button class="btn ghost small" id="cancelSecretBtn">Cancel</button>
         </div>
         <div class="secret-msg" id="secretMsg"></div>
+      </div>
+
+      <div class="loop-box" id="loopBox">
+        <div class="loop-status-row">
+          <h3 style="font-size:1.1rem;margin:0">Loop remote control</h3>
+          <span class="planpill muted" id="loopBoxPill">Off</span>
+        </div>
+
+        <div id="loopEnableForm">
+          <div class="warn">
+            <strong>For Loop users:</strong> this lets you send remote overrides and commands from Nightscout to the Loop app on your iPhone. You'll need an <strong>APNS key</strong> from your Apple Developer account — the same account you used to build Loop. Saving restarts your site (1–3 minutes).
+          </div>
+          <div class="field">
+            <label class="field-label">APNS key (.p8 file contents)</label>
+            <textarea id="loopKey" placeholder="-----BEGIN PRIVATE KEY-----&#10;(paste the whole file here)&#10;-----END PRIVATE KEY-----" spellcheck="false"></textarea>
+            <div class="hint">Open the .p8 file you downloaded from Apple in any text editor and paste everything, including the BEGIN and END lines.</div>
+          </div>
+          <div class="field">
+            <label class="field-label">Key ID</label>
+            <input type="text" id="loopKeyId" placeholder="e.g. ABC123DEFG" maxlength="10" autocomplete="off" spellcheck="false">
+            <div class="hint">10 characters, shown next to your key in the Apple Developer portal (also in the file name: AuthKey_<b>ABC123DEFG</b>.p8).</div>
+          </div>
+          <div class="field">
+            <label class="field-label">Team ID</label>
+            <input type="text" id="loopTeamId" placeholder="e.g. A1B2C3D4E5" maxlength="10" autocomplete="off" spellcheck="false">
+            <div class="hint">10 characters, shown in the top-right of your Apple Developer account (Membership details).</div>
+          </div>
+          <div class="field">
+            <label class="field-label">How did you install Loop?</label>
+            <div class="buildpick">
+              <div class="buildopt" data-env="production" id="envProd"><div class="bt">TestFlight / Browser Build</div><div class="bs">Built with GitHub, installed via TestFlight</div></div>
+              <div class="buildopt" data-env="development" id="envDev"><div class="bt">Xcode on a Mac</div><div class="bs">Built and installed with a cable</div></div>
+            </div>
+          </div>
+          <div class="check" id="loopCheck"></div>
+          <div class="secret-actions">
+            <button class="btn small" id="loopSaveBtn">Enable Loop remote control</button>
+            <button class="btn ghost small" id="loopCancelBtn">Cancel</button>
+          </div>
+        </div>
+
+        <div id="loopManage" style="display:none;text-align:center">
+          <p style="color:var(--ink-soft);font-size:.95rem;margin-bottom:6px">Loop remote control is <strong style="color:var(--teal)">enabled</strong> on your site.</p>
+          <p style="color:var(--ink-soft);font-size:.88rem;margin-bottom:18px" id="loopManageDetail"></p>
+          <div class="secret-actions">
+            <button class="btn ghost small" id="loopUpdateBtn">Update settings</button>
+            <button class="btn danger small" id="loopDisableBtn">Disable</button>
+            <button class="btn ghost small" id="loopCloseBtn">Close</button>
+          </div>
+        </div>
+
+        <div class="secret-msg" id="loopMsg"></div>
       </div>
     </div>
 
@@ -203,6 +274,14 @@
     <h3>Advanced settings</h3>
     <p class="modal-intro">Tools for managing your Nightscout site.</p>
 
+    <button class="adv-action" id="openLoopSettings">
+      <div>
+        <div class="adv-action-title">Loop remote control <span class="planpill muted" id="loopAdvPill" style="font-size:.7rem;padding:2px 9px;vertical-align:middle">Off</span></div>
+        <div class="adv-action-sub">Send remote overrides from Nightscout to the Loop app on your iPhone.</div>
+      </div>
+      <span class="adv-action-arrow">→</span>
+    </button>
+
     <button class="adv-action" id="openChangeSecret">
       <div>
         <div class="adv-action-title">Change API secret</div>
@@ -228,6 +307,7 @@
   const FACTORY_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/Factory";
   const CHANGE_SECRET_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/change-secret";
   const BILLING_PORTAL_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/billing-portal";
+  const LOOP_SETTINGS_URL = "https://xuyodumcplbqwxmkfdyr.supabase.co/functions/v1/loop-settings";
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
   const LINKS = {
@@ -239,7 +319,7 @@
   const PLAN_PRICES = { monthly: "€5 / month", sixmonth: "€27 / 6 months", yearly: "€50 / year", unknown: "—" };
   const STATUS_LABELS = { active: "Active", past_due: "Past due", canceled: "Canceled" };
 
-  let currentEmail = "", session = null, user = null;
+  let currentEmail = "", session = null, user = null, currentSite = null;
 
   function show(id){ ['loading','gate','app'].forEach(x=>{ document.getElementById(x).style.display = (x===id ? (x==='app'?'block':'flex') : 'none'); }); }
   function goCheckout(plan){
@@ -261,7 +341,23 @@
     }catch(e){ console.log("FACTORY CALL FAILED", e); }
   }
 
+  function renderLoopStatus(){
+    const enabled = !!(currentSite && currentSite.loop_enabled);
+    const label = enabled ? 'On' : 'Off';
+    const pillClass = 'planpill ' + (enabled ? '' : 'muted');
+    const rowPill = document.getElementById('loopPill');
+    rowPill.textContent = label; rowPill.className = pillClass;
+    document.getElementById('loopStatusRow').style.display = 'flex';
+    const advPill = document.getElementById('loopAdvPill');
+    advPill.textContent = label;
+    advPill.className = 'planpill ' + (enabled ? '' : 'muted');
+    advPill.style.fontSize = '.7rem'; advPill.style.padding = '2px 9px'; advPill.style.verticalAlign = 'middle';
+    const boxPill = document.getElementById('loopBoxPill');
+    boxPill.textContent = label; boxPill.className = pillClass;
+  }
+
   function renderSite(site, billingStatus){
+    currentSite = site;
     document.getElementById('planPanel').style.display='none';
     document.getElementById('sitePanel').style.display='block';
     const url = 'https://' + (site.subdomain || (site.username + '.seravi.eu'));
@@ -289,6 +385,7 @@
       const a=document.getElementById('siteUrl'); a.href=url; a.textContent=url;
       document.getElementById('siteSecret').textContent = site.api_secret || '—';
       document.getElementById('advancedBtn').style.display='inline-flex';
+      renderLoopStatus();
     } else {
       document.getElementById('sitePrep').style.display='inline-flex';
       document.getElementById('siteMuted').textContent='We\u2019re building your site now.';
@@ -405,11 +502,148 @@
     });
   }
 
+  let loopEnv = null;
+  function setupLoopUI(){
+    const box = document.getElementById('loopBox');
+    const enableForm = document.getElementById('loopEnableForm');
+    const manage = document.getElementById('loopManage');
+    const keyInput = document.getElementById('loopKey');
+    const keyIdInput = document.getElementById('loopKeyId');
+    const teamIdInput = document.getElementById('loopTeamId');
+    const check = document.getElementById('loopCheck');
+    const msg = document.getElementById('loopMsg');
+    const saveBtn = document.getElementById('loopSaveBtn');
+    const cancelBtn = document.getElementById('loopCancelBtn');
+    const envProd = document.getElementById('envProd');
+    const envDev = document.getElementById('envDev');
+
+    function pickEnv(env){
+      loopEnv = env;
+      envProd.classList.toggle('sel', env === 'production');
+      envDev.classList.toggle('sel', env === 'development');
+    }
+    envProd.addEventListener('click', ()=>pickEnv('production'));
+    envDev.addEventListener('click', ()=>pickEnv('development'));
+
+    function openBox(){
+      box.style.display='block';
+      msg.style.display='none'; msg.className='secret-msg'; check.textContent='';
+      const enabled = !!(currentSite && currentSite.loop_enabled);
+      enableForm.style.display = enabled ? 'none' : 'block';
+      manage.style.display = enabled ? 'block' : 'none';
+      if(enabled){
+        document.getElementById('loopManageDetail').textContent =
+          'Key ID: ' + (currentSite.loop_key_id || '—') +
+          ' · Team ID: ' + (currentSite.loop_team_id || '—') +
+          ' · ' + (currentSite.loop_environment === 'development' ? 'Xcode build' : 'TestFlight / Browser Build');
+      } else {
+        if(currentSite && currentSite.loop_team_id){ teamIdInput.value = currentSite.loop_team_id; }
+      }
+      setTimeout(()=>{ box.scrollIntoView({ behavior:'smooth', block:'center' }); }, 50);
+    }
+    window.__openLoopBox = openBox;
+
+    function closeBox(){
+      box.style.display='none';
+      keyInput.value=''; check.textContent=''; msg.style.display='none';
+    }
+    cancelBtn.addEventListener('click', closeBox);
+    document.getElementById('loopCloseBtn').addEventListener('click', closeBox);
+
+    document.getElementById('loopUpdateBtn').addEventListener('click', ()=>{
+      enableForm.style.display='block';
+      manage.style.display='none';
+      if(currentSite){
+        keyIdInput.value = currentSite.loop_key_id || '';
+        teamIdInput.value = currentSite.loop_team_id || '';
+        if(currentSite.loop_environment) pickEnv(currentSite.loop_environment);
+      }
+    });
+
+    document.getElementById('loopDisableBtn').addEventListener('click', async ()=>{
+      if(!confirm("Disable Loop remote control? Remote overrides from Nightscout will stop working. Your site will restart (1–3 min).")) return;
+      msg.style.display='none';
+      const btn = document.getElementById('loopDisableBtn');
+      btn.disabled=true; btn.textContent='Disabling…';
+      try{
+        const r = await fetch(LOOP_SETTINGS_URL, {
+          method:'POST',
+          headers:{ 'Authorization':'Bearer '+session.access_token, 'Content-Type':'application/json' },
+          body: JSON.stringify({ action:'disable' })
+        });
+        const data = await r.json();
+        if(r.ok && data.ok){
+          currentSite.loop_enabled=false; currentSite.loop_apns_key=null; currentSite.loop_key_id=null; currentSite.loop_team_id=null; currentSite.loop_environment=null;
+          renderLoopStatus();
+          msg.className='secret-msg ok';
+          msg.textContent='✓ Loop remote control disabled. Your site is restarting (1–3 min).';
+          document.getElementById('loopManage').style.display='none';
+          document.getElementById('loopEnableForm').style.display='block';
+        } else {
+          msg.className='secret-msg bad';
+          msg.textContent='Could not disable: ' + (data.error || 'unknown error');
+        }
+      }catch(e){
+        msg.className='secret-msg bad';
+        msg.textContent='Something went wrong. Please try again.';
+      }
+      btn.disabled=false; btn.textContent='Disable';
+    });
+
+    saveBtn.addEventListener('click', async ()=>{
+      check.textContent='';
+      const key = keyInput.value.trim();
+      const keyId = keyIdInput.value.trim().toUpperCase();
+      const teamId = teamIdInput.value.trim().toUpperCase();
+      if(!key.includes('BEGIN PRIVATE KEY')){
+        check.className='check bad'; check.textContent='Please paste the full contents of your .p8 key file (including the BEGIN/END lines).'; return;
+      }
+      if(!/^[A-Z0-9]{10}$/.test(keyId)){
+        check.className='check bad'; check.textContent='Key ID should be exactly 10 letters/digits.'; return;
+      }
+      if(!/^[A-Z0-9]{10}$/.test(teamId)){
+        check.className='check bad'; check.textContent='Team ID should be exactly 10 letters/digits.'; return;
+      }
+      if(!loopEnv){
+        check.className='check bad'; check.textContent='Please choose how you installed Loop.'; return;
+      }
+      if(!confirm("Enable Loop remote control? Your site will restart (1–3 minutes).")) return;
+      saveBtn.disabled=true; saveBtn.textContent='Enabling…'; msg.style.display='none';
+      try{
+        const r = await fetch(LOOP_SETTINGS_URL, {
+          method:'POST',
+          headers:{ 'Authorization':'Bearer '+session.access_token, 'Content-Type':'application/json' },
+          body: JSON.stringify({ action:'enable', apns_key:key, key_id:keyId, team_id:teamId, environment:loopEnv })
+        });
+        const data = await r.json();
+        if(r.ok && data.ok){
+          currentSite.loop_enabled=true; currentSite.loop_key_id=keyId; currentSite.loop_team_id=teamId; currentSite.loop_environment=loopEnv;
+          renderLoopStatus();
+          msg.className='secret-msg ok';
+          msg.textContent='✓ Loop remote control enabled. Your site is restarting (1–3 min) — after that, remote commands from Nightscout should reach your Loop app.';
+          keyInput.value='';
+          document.getElementById('loopEnableForm').style.display='none';
+          document.getElementById('loopManage').style.display='block';
+          document.getElementById('loopManageDetail').textContent =
+            'Key ID: ' + keyId + ' · Team ID: ' + teamId + ' · ' + (loopEnv === 'development' ? 'Xcode build' : 'TestFlight / Browser Build');
+        } else {
+          msg.className='secret-msg bad';
+          msg.textContent='Could not enable: ' + (data.error || 'unknown error');
+        }
+      }catch(e){
+        msg.className='secret-msg bad';
+        msg.textContent='Something went wrong. Please try again.';
+      }
+      saveBtn.disabled=false; saveBtn.textContent='Enable Loop remote control';
+    });
+  }
+
   function setupAdvancedModal(){
     const modal = document.getElementById('advancedModal');
     const openBtn = document.getElementById('advancedBtn');
     const closeBtn = document.getElementById('advancedClose');
     const changeSecretItem = document.getElementById('openChangeSecret');
+    const loopItem = document.getElementById('openLoopSettings');
 
     openBtn.addEventListener('click', ()=>{ modal.classList.add('show'); });
     closeBtn.addEventListener('click', ()=>{ modal.classList.remove('show'); });
@@ -417,9 +651,16 @@
 
     changeSecretItem.addEventListener('click', ()=>{
       modal.classList.remove('show');
+      document.getElementById('loopBox').style.display='none';
       const box = document.getElementById('secretBox');
       box.style.display='block';
       setTimeout(()=>{ box.scrollIntoView({ behavior:'smooth', block:'center' }); }, 50);
+    });
+
+    loopItem.addEventListener('click', ()=>{
+      modal.classList.remove('show');
+      document.getElementById('secretBox').style.display='none';
+      if(window.__openLoopBox) window.__openLoopBox();
     });
   }
 
@@ -463,6 +704,7 @@
     document.getElementById('signOut').style.display = 'inline-block';
 
     setupSecretUI();
+    setupLoopUI();
     setupAdvancedModal();
 
     let payment = null;
